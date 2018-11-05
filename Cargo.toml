@@ -1,7 +1,17 @@
 [package]
-name = "git-ignore"
+name = "git-ignore-generator"
 version = "0.1.0"
 authors = ["Sondre Nilsen <nilsen.sondre@gmail.com>"]
+homepage = "https://github.com/sondr3/git-ignore"
+description = "Quickly and easily fetch .gitignore templates from www.gitignore.io"
+repository = "https://github.com/sondr3/git-ignore"
+documentation = "https://github.com/sondr3/git-ignore"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+
+[[bin]]
+name = "git-ignore"
+path = "src/main.rs"
 
 [features]
 fail-on-warnings = []
