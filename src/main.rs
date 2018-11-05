@@ -41,12 +41,14 @@ fn gitignore_list(templates: &[String]) -> Result<(), Box<std::error::Error>> {
         let mut list: Vec<String> = Vec::new();
 
         for entry in tmp {
-            if !all {
-                if templates.contains(&entry.to_string()) {
-                    list.push(entry.to_string());
-                }
-            } else {
+            if all {
                 list.push(entry.to_string());
+            } else {
+                for item in templates {
+                    if entry.to_string().starts_with(item) {
+                        list.push(entry.to_string());
+                    }
+                }
             }
         }
 
