@@ -8,3 +8,4 @@ fail-on-warnings = []
 
 [dependencies]
 structopt = "0.2"
+reqwest = "0.9"

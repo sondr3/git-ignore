@@ -17,15 +17,34 @@ raw(global_settings = "&[AppSettings::ColoredHelp]")
 enum Opt {
     #[structopt(name = "list")]
     /// List all available .gitignore templates
-    List,
+    List {
+        templates: Option<String>,
+    },
     #[structopt(name = "get")]
     /// Get listed templates
-    Get,
+    Get {
+        templates: Vec<String>,
+    },
 }
 
-fn main() {
+fn gitignore_list(templates: Option<String>) -> Result<(), Box<std::error::Error>> {
+    let url = "https://www.gitignore.io/api/list";
+    let mut res = reqwest::get(url)?;
+
+    let mut response = Vec::new();
+    res.read_to_end(&mut response)?;
+    let mut response = String::from_utf8(response)?;
+    println!("{:?}", response);
+
+    Ok(())
+}
+
+fn main() -> Result<(), Box<std::error::Error>> {
     match Opt::from_args() {
-        Opt::List => println!("List some shit"),
-        Opt::Get => println!("Get some shit"),
+        Opt::List { templates } => {
+            gitignore_list(templates)?
+        },
+        Opt::Get { templates } => println!("Get some shit"),
     }
+    Ok(())
 }
