@@ -2,7 +2,6 @@
 #![forbid(unsafe_code)]
 
 extern crate reqwest;
-#[macro_use]
 extern crate structopt;
 
 use std::io::Read;
@@ -63,7 +62,7 @@ fn gitignore_list(templates: &[String]) -> Result<(), Box<std::error::Error>> {
 fn main() -> Result<(), Box<std::error::Error>> {
     match Opt::from_args() {
         Opt::List { templates } => gitignore_list(&templates)?,
-        Opt::Get { templates } => println!("Get some shit"),
+        Opt::Get { templates: _ } => println!("Get some shit"),
     }
     Ok(())
 }
