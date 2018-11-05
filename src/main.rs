@@ -55,8 +55,6 @@ fn gitignore_list(templates: &[String]) -> Result<(), Box<std::error::Error>> {
         list
     };
     println!("{:#?}", response);
-    println!("{:?}", templates);
-    println!("{:?}", all);
 
     Ok(())
 }
@@ -76,8 +74,6 @@ fn get_gitignore(templates: &[String]) -> Result<(), Box<std::error::Error>> {
 
     let mut res = reqwest::get(&url)?;
     std::io::copy(&mut res, &mut std::io::stdout())?;
-
-    println!("{:?}", url);
 
     Ok(())
 }
