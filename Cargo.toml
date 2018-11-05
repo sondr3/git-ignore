@@ -1,0 +1,6 @@
+[package]
+name = "git-ignore"
+version = "0.1.0"
+authors = ["Sondre Nilsen <nilsen.sondre@gmail.com>"]
+
+[dependencies]
