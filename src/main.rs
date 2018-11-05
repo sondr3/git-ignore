@@ -61,10 +61,32 @@ fn gitignore_list(templates: &[String]) -> Result<(), Box<std::error::Error>> {
     Ok(())
 }
 
+fn get_gitignore(templates: &[String]) -> Result<(), Box<std::error::Error>> {
+    let url = {
+        let mut tmp = "https://www.gitignore.io/api/".to_string();
+        for entry in templates {
+            tmp.push_str(entry);
+            tmp.push_str(",");
+        }
+        let len = tmp.len() - 1;
+        tmp.remove(len);
+
+        tmp
+    };
+
+    let mut res = reqwest::get(&url)?;
+    std::io::copy(&mut res, &mut std::io::stdout())?;
+
+    println!("{:?}", url);
+
+    Ok(())
+}
+
 fn main() -> Result<(), Box<std::error::Error>> {
     match Opt::from_args() {
         Opt::List { templates } => gitignore_list(&templates)?,
-        Opt::Get { templates: _ } => println!("Get some shit"),
+        Opt::Get { templates } => get_gitignore(&templates)?,
     }
+
     Ok(())
 }
