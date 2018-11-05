@@ -11,9 +11,9 @@ use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
 #[structopt(
-name = "git ignore",
-about = "Quickly and easily add templates to .gitignore",
-raw(global_settings = "&[AppSettings::ColoredHelp]")
+    name = "git ignore",
+    about = "Quickly and easily add templates to .gitignore",
+    raw(global_settings = "&[AppSettings::ColoredHelp]")
 )]
 enum Opt {
     #[structopt(name = "list")]
@@ -24,23 +24,21 @@ enum Opt {
     },
     #[structopt(name = "get")]
     /// Get listed templates
-    Get {
-        templates: Vec<String>,
-    },
+    Get { templates: Vec<String> },
 }
 
-fn gitignore_list(templates: Vec<String>) -> Result<(), Box<std::error::Error>> {
+fn gitignore_list(templates: &[String]) -> Result<(), Box<std::error::Error>> {
     let url = "https://www.gitignore.io/api/list";
     let mut res = reqwest::get(url)?;
 
-    let all = if templates.is_empty() { true } else { false };
+    let all = templates.is_empty();
 
     let mut response = Vec::new();
     res.read_to_end(&mut response)?;
     let response = String::from_utf8(response)?;
     let response = {
         let tmp = response.replace("\n", ",");
-        let tmp = tmp.split(",");
+        let tmp = tmp.split(',');
         let mut list: Vec<String> = Vec::new();
 
         for entry in tmp {
@@ -64,7 +62,7 @@ fn gitignore_list(templates: Vec<String>) -> Result<(), Box<std::error::Error>> 
 
 fn main() -> Result<(), Box<std::error::Error>> {
     match Opt::from_args() {
-        Opt::List { templates } => gitignore_list(templates)?,
+        Opt::List { templates } => gitignore_list(&templates)?,
         Opt::Get { templates } => println!("Get some shit"),
     }
     Ok(())
