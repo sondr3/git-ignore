@@ -66,6 +66,7 @@
 //! Finally, if need be, you can always run `git ignore -h` to see more options
 //! --- spoiler alert, there are none.
 #![cfg_attr(feature = "fail-on-warnings", deny(warnings))]
+#![cfg_attr(feature = "cargo-clippy", deny(clippy))]
 #![forbid(unsafe_code)]
 #![deny(
     missing_docs,
