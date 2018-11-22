@@ -1,5 +1,13 @@
 #![cfg_attr(feature = "fail-on-warnings", deny(warnings))]
 #![forbid(unsafe_code)]
+#![deny(
+    missing_docs,
+    missing_debug_implementations,
+    missing_copy_implementations,
+    trivial_casts,
+    unused_import_braces,
+    unused_allocation
+)]
 
 extern crate reqwest;
 extern crate structopt;
