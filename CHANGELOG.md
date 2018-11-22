@@ -1,3 +1,17 @@
+## 0.2.0
+> 2018-11-23
+
+Minor refactoring of how the command line arguments work, instead of using
+subcommands we instead only have a single flag (`--list`) to toggle whether
+you're listing available templates or getting them. The rest are comments and
+behind-the-scenes fixes.
+
+* [[`fe802b4888`](https://github.com/sondr3/git-ignore/commit/fe802b4888)] - Document all the things!
+* [[`dfd8bbb235`](https://github.com/sondr3/git-ignore/commit/dfd8bbb235)] - Deny stupid things I shouldn't do
+* [[`710779fa05`](https://github.com/sondr3/git-ignore/commit/710779fa05)] - Update README \[ci skip\]
+* [[`44b49163f2`](https://github.com/sondr3/git-ignore/commit/44b49163f2)] - Go from subcommands to flags instead, because it makes more sense
+* [[`2bd95735db`](https://github.com/sondr3/git-ignore/commit/2bd95735db)] - Add changelog \[ci skip\]
+
 ## 0.1.1
 > 2018-11-05
 
