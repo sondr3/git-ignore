@@ -14,16 +14,13 @@ use structopt::StructOpt;
     about = "Quickly and easily add templates to .gitignore",
     raw(global_settings = "&[AppSettings::ColoredHelp]")
 )]
-enum Opt {
-    #[structopt(name = "list")]
-    /// List all available .gitignore templates
-    List {
-        #[structopt(raw(required = "false"))]
-        templates: Vec<String>,
-    },
-    #[structopt(name = "get")]
-    /// Get listed templates
-    Get { templates: Vec<String> },
+struct Opt {
+    /// List available .gitignore templates
+    #[structopt(short, long)]
+    list: bool,
+    /// List of .gitignore templates to fetch/list
+    #[structopt(raw(required = "false"))]
+    templates: Vec<String>,
 }
 
 fn gitignore_list(templates: &[String]) -> Result<(), Box<std::error::Error>> {
@@ -79,9 +76,11 @@ fn get_gitignore(templates: &[String]) -> Result<(), Box<std::error::Error>> {
 }
 
 fn main() -> Result<(), Box<std::error::Error>> {
-    match Opt::from_args() {
-        Opt::List { templates } => gitignore_list(&templates)?,
-        Opt::Get { templates } => get_gitignore(&templates)?,
+    let opt = Opt::from_args();
+    if opt.list {
+        gitignore_list(&opt.templates)?;
+    } else {
+        get_gitignore(&opt.templates)?;
     }
 
     Ok(())
