@@ -90,7 +90,7 @@ use structopt::{clap::AppSettings, StructOpt};
 #[structopt(
     name = "git ignore",
     about = "Quickly and easily add templates to .gitignore",
-    raw(global_settings = "&[AppSettings::ColoredHelp]")
+    raw(global_settings = "&[AppSettings::ColoredHelp, AppSettings::ArgRequiredElseHelp]")
 )]
 struct Opt {
     /// List available .gitignore templates
