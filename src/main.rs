@@ -79,7 +79,8 @@
 
 use directories::ProjectDirs;
 use reqwest;
-use std::io::Read;
+use std::fs::File;
+use std::io::{Read, Write};
 use std::path::PathBuf;
 use structopt::{clap::AppSettings, StructOpt};
 
@@ -93,6 +94,9 @@ struct Opt {
     /// List available .gitignore templates
     #[structopt(short, long)]
     list: bool,
+    /// Update templates from gitignore.io
+    #[structopt(short, long)]
+    update: bool,
     /// List of .gitignore templates to fetch/list
     #[structopt(raw(required = "false"))]
     templates: Vec<String>,
@@ -114,7 +118,7 @@ impl GitIgnore {
     }
 
     fn create_cache_dir(&self) -> std::io::Result<()> {
-        if !self.cache_dir.exists()() {
+        if !self.cache_dir.exists() {
             std::fs::create_dir(&self.cache_dir)?;
         }
         Ok(())
@@ -141,6 +145,17 @@ impl GitIgnore {
         };
 
         Ok(response)
+    }
+
+    fn write_gitignore_list(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let templates = self.get_gitignore_templates()?;
+        let file = self.cache_dir.to_str().unwrap();
+        let file: PathBuf = [file, "list.txt"].iter().collect();
+        let mut file = File::create(file)?;
+        for entry in templates {
+            write!(file, "{}\n", entry)?;
+        }
+        Ok(())
     }
 }
 
@@ -205,6 +220,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     app.get_gitignore_templates()?;
     if opt.list {
         gitignore_list(&opt.templates)?;
+    } else if opt.update {
+        app.write_gitignore_list()?;
     } else {
         get_gitignore(&opt.templates)?;
     }
