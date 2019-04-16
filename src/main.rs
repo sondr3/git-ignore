@@ -79,6 +79,8 @@
 
 use directories::ProjectDirs;
 use reqwest;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Read, Write};
 use std::path::PathBuf;
@@ -107,6 +109,15 @@ struct GitIgnore {
     server: String,
     cache_dir: PathBuf,
     ignore_file: PathBuf,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+struct Language {
+    key: String,
+    name: String,
+    #[serde(rename = "fileName")]
+    file_name: String,
+    contents: String,
 }
 
 impl GitIgnore {
@@ -160,25 +171,24 @@ impl GitIgnore {
             list
         };
 
-        let mut file = self.cache_dir.clone();
-        file.push("ignore.json");
-        let mut file = File::create(file)?;
+        let mut file = File::create(&self.ignore_file)?;
         for entry in response {
             writeln!(file, "{}", entry)?;
         }
 
         Ok(())
     }
-}
 
-fn read_file(path: &PathBuf) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-    let file = File::open(path)?;
-    let file = BufReader::new(file)
-        .lines()
-        .map(|l| l.expect("Could not read line."))
-        .collect();
+    fn read_file(&self) -> Result<HashMap<String, Language>, Box<dyn std::error::Error>> {
+        let file = File::open(&self.ignore_file)?;
+        let file: String = BufReader::new(file)
+            .lines()
+            .map(|l| l.expect("Could not read line."))
+            .collect();
 
-    Ok(file)
+        let result: HashMap<String, Language> = serde_json::from_str(&file)?;
+        Ok(result)
+    }
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
