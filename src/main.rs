@@ -77,8 +77,10 @@
     unused_allocation
 )]
 
+use directories::ProjectDirs;
 use reqwest;
 use std::io::Read;
+use std::path::PathBuf;
 use structopt::{clap::AppSettings, StructOpt};
 
 #[derive(StructOpt, Debug)]
@@ -94,6 +96,23 @@ struct Opt {
     /// List of .gitignore templates to fetch/list
     #[structopt(raw(required = "false"))]
     templates: Vec<String>,
+}
+
+#[derive(Debug)]
+struct App {
+    config_dir: PathBuf,
+    cache_dir: PathBuf,
+}
+
+impl App {
+    fn new() -> Self {
+        let proj_dir = ProjectDirs::from("com", "sondr3", "git-ignore")
+            .expect("Could not find project directory.");
+        App {
+            config_dir: proj_dir.config_dir().into(),
+            cache_dir: proj_dir.cache_dir().into(),
+        }
+    }
 }
 
 /// Returns a list of all templates matching the names given to this function,
@@ -153,6 +172,7 @@ fn get_gitignore(templates: &[String]) -> Result<(), Box<dyn std::error::Error>>
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let opt = Opt::from_args();
+    let app = App::new();
     if opt.list {
         gitignore_list(&opt.templates)?;
     } else {
