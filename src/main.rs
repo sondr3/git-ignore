@@ -77,6 +77,7 @@
     unused_allocation
 )]
 
+use colored::*;
 use directories::ProjectDirs;
 use reqwest;
 use serde::{Deserialize, Serialize};
@@ -235,6 +236,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = GitIgnore::new();
     if opt.update {
         app.update()?;
+    } else {
+        eprintln!(
+            "{}: {}",
+            "Info".bold().red(),
+            "You are using cached results, pass '-u' to update the cache"
+        );
     }
 
     if opt.list {
