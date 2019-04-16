@@ -79,7 +79,7 @@
 
 use directories::ProjectDirs;
 use reqwest;
-use std::fs::{write, File};
+use std::fs::File;
 use std::io::{BufRead, BufReader, Read, Write};
 use std::path::PathBuf;
 use structopt::{clap::AppSettings, StructOpt};
@@ -104,9 +104,8 @@ struct Opt {
 
 #[derive(Debug)]
 struct GitIgnore {
-    server: &'static str,
+    server: String,
     cache_dir: PathBuf,
-    cache_list_file: PathBuf,
 }
 
 impl GitIgnore {
@@ -114,14 +113,9 @@ impl GitIgnore {
         let proj_dir = ProjectDirs::from("com", "sondr3", "git-ignore")
             .expect("Could not find project directory.");
 
-        let cache_dir = proj_dir.cache_dir().to_path_buf();
-        let cache_list_file = cache_dir.to_str().unwrap();
-        let cache_list_file: PathBuf = [cache_list_file, "list.txt"].iter().collect();
-
         GitIgnore {
-            server: "https://www.gitignore.io/api/",
-            cache_dir,
-            cache_list_file,
+            server: "https://www.gitignore.io/api/list?format=json".into(),
+            cache_dir: proj_dir.cache_dir().into(),
         }
     }
 
@@ -133,21 +127,14 @@ impl GitIgnore {
     }
 
     fn update(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let templates = self.get_gitignore_templates()?;
-        self.write_gitignore_list(&templates)?;
-
-        for template in templates {
-            self.write_gitignore_template(template)?;
-        }
+        self.create_cache_dir()?;
+        self.fetch_gitignore()?;
 
         Ok(())
     }
 
-    fn get_gitignore_templates(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        self.create_cache_dir()?;
-
-        let url = [self.server, "list"].join("");
-        let mut res = reqwest::get(&url)?;
+    fn fetch_gitignore(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let mut res = reqwest::get(&self.server)?;
 
         let mut response = Vec::new();
         res.read_to_end(&mut response)?;
@@ -155,41 +142,18 @@ impl GitIgnore {
         let response = {
             let mut list: Vec<String> = Vec::new();
             for line in response.lines() {
-                for entry in line.split(",") {
-                    list.push(entry.to_string());
-                }
+                list.push(line.to_string());
             }
 
             list
         };
 
-        Ok(response)
-    }
-
-    fn get_gitignore_template(&self, template: &str) -> Result<String, Box<dyn std::error::Error>> {
-        let url = [self.server, template].join("");
-        let res = reqwest::get(&url)?;
-        let mut contents = String::new();
-        let mut reader = BufReader::new(res);
-        reader.read_to_string(&mut contents)?;
-
-        Ok(contents)
-    }
-
-    fn write_gitignore_list(&self, templates: &[String]) -> Result<(), Box<dyn std::error::Error>> {
-        let mut file = File::create(&self.cache_list_file)?;
-        for entry in templates {
+        let mut file = self.cache_dir.clone();
+        file.push("ignore.json");
+        let mut file = File::create(file)?;
+        for entry in response {
             writeln!(file, "{}", entry)?;
         }
-        Ok(())
-    }
-
-    fn write_gitignore_template(&self, template: String) -> Result<(), Box<dyn std::error::Error>> {
-        let mut path = self.cache_dir.clone();
-        path.push(&template);
-        File::create(&path)?;
-        let contents = self.get_gitignore_template(&template)?;
-        write(path, contents)?;
 
         Ok(())
     }
@@ -208,7 +172,7 @@ fn read_file(path: &PathBuf) -> Result<Vec<String>, Box<dyn std::error::Error>> 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let opt = Opt::from_args();
     let app = GitIgnore::new();
-    app.get_gitignore_templates()?;
+    app.fetch_gitignore()?;
     if opt.update {
         app.update()?;
     }
