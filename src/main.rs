@@ -144,8 +144,16 @@ impl GitIgnore {
         }
     }
 
+    fn cache_exists(&self) -> bool {
+        if !self.cache_dir.exists() || !self.ignore_file.exists() {
+            return false;
+        }
+
+        true
+    }
+
     fn create_cache_dir(&self) -> std::io::Result<()> {
-        if !self.cache_dir.exists() {
+        if !self.cache_exists() {
             std::fs::create_dir(&self.cache_dir)?;
         }
         Ok(())
@@ -237,6 +245,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let opt = Opt::from_args();
     let app = GitIgnore::new();
     if opt.update {
+        app.update()?;
+    } else if !app.cache_exists() {
+        eprintln!(
+            "{}: {}",
+            "Warning".bold().red(),
+            "Cache directory or ignore file not found, attempting update."
+        );
         app.update()?;
     } else {
         eprintln!(
