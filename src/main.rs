@@ -200,6 +200,7 @@ impl GitIgnore {
                 }
             }
 
+            result.sort_unstable();
             result
         };
 
