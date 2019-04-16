@@ -79,7 +79,7 @@
 
 use directories::ProjectDirs;
 use reqwest;
-use std::fs::File;
+use std::fs::{write, File};
 use std::io::{BufRead, BufReader, Read, Write};
 use std::path::PathBuf;
 use structopt::{clap::AppSettings, StructOpt};
@@ -134,7 +134,11 @@ impl GitIgnore {
 
     fn update(&self) -> Result<(), Box<dyn std::error::Error>> {
         let templates = self.get_gitignore_templates()?;
-        self.write_gitignore_list(&templates);
+        self.write_gitignore_list(&templates)?;
+
+        for template in templates {
+            self.write_gitignore_template(template)?;
+        }
 
         Ok(())
     }
@@ -162,19 +166,31 @@ impl GitIgnore {
         Ok(response)
     }
 
-    fn get_gitignore_template(&self, template: &str) -> Result<(), Box<dyn std::error::Error>> {
+    fn get_gitignore_template(&self, template: &str) -> Result<String, Box<dyn std::error::Error>> {
         let url = [self.server, template].join("");
-        let mut res = reqwest::get(&url)?;
-        std::io::copy(&mut res, &mut std::io::stdout())?;
+        let res = reqwest::get(&url)?;
+        let mut contents = String::new();
+        let mut reader = BufReader::new(res);
+        reader.read_to_string(&mut contents)?;
 
-        Ok(())
+        Ok(contents)
     }
 
     fn write_gitignore_list(&self, templates: &[String]) -> Result<(), Box<dyn std::error::Error>> {
         let mut file = File::create(&self.cache_list_file)?;
         for entry in templates {
-            write!(file, "{}\n", entry)?;
+            writeln!(file, "{}", entry)?;
         }
+        Ok(())
+    }
+
+    fn write_gitignore_template(&self, template: String) -> Result<(), Box<dyn std::error::Error>> {
+        let mut path = self.cache_dir.clone();
+        path.push(&template);
+        File::create(&path)?;
+        let contents = self.get_gitignore_template(&template)?;
+        write(path, contents)?;
+
         Ok(())
     }
 }
