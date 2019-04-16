@@ -80,7 +80,7 @@
 use directories::ProjectDirs;
 use reqwest;
 use std::fs::File;
-use std::io::{Read, Write};
+use std::io::{BufRead, BufReader, Read, Write};
 use std::path::PathBuf;
 use structopt::{clap::AppSettings, StructOpt};
 
@@ -161,6 +161,16 @@ impl GitIgnore {
         }
         Ok(())
     }
+}
+
+fn read_file(path: &PathBuf) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    let file = File::open(path)?;
+    let file = BufReader::new(file)
+        .lines()
+        .map(|l| l.expect("Could not read line."))
+        .collect();
+
+    Ok(file)
 }
 
 /// Returns a list of all templates matching the names given to this function,
