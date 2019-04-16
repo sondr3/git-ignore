@@ -104,6 +104,7 @@ struct Opt {
 
 #[derive(Debug)]
 struct GitIgnore {
+    server: &'static str,
     cache_dir: PathBuf,
     cache_list_file: PathBuf,
 }
@@ -118,6 +119,7 @@ impl GitIgnore {
         let cache_list_file: PathBuf = [cache_list_file, "list.txt"].iter().collect();
 
         GitIgnore {
+            server: "https://www.gitignore.io/api/",
             cache_dir,
             cache_list_file,
         }
@@ -130,11 +132,18 @@ impl GitIgnore {
         Ok(())
     }
 
+    fn update(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let templates = self.get_gitignore_templates()?;
+        self.write_gitignore_list(&templates);
+
+        Ok(())
+    }
+
     fn get_gitignore_templates(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         self.create_cache_dir()?;
 
-        let url = "https://www.gitignore.io/api/list";
-        let mut res = reqwest::get(url)?;
+        let url = [self.server, "list"].join("");
+        let mut res = reqwest::get(&url)?;
 
         let mut response = Vec::new();
         res.read_to_end(&mut response)?;
@@ -153,8 +162,15 @@ impl GitIgnore {
         Ok(response)
     }
 
-    fn write_gitignore_list(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let templates = self.get_gitignore_templates()?;
+    fn get_gitignore_template(&self, template: &str) -> Result<(), Box<dyn std::error::Error>> {
+        let url = [self.server, template].join("");
+        let mut res = reqwest::get(&url)?;
+        std::io::copy(&mut res, &mut std::io::stdout())?;
+
+        Ok(())
+    }
+
+    fn write_gitignore_list(&self, templates: &[String]) -> Result<(), Box<dyn std::error::Error>> {
         let mut file = File::create(&self.cache_list_file)?;
         for entry in templates {
             write!(file, "{}\n", entry)?;
@@ -173,71 +189,12 @@ fn read_file(path: &PathBuf) -> Result<Vec<String>, Box<dyn std::error::Error>> 
     Ok(file)
 }
 
-/// Returns a list of all templates matching the names given to this function,
-/// if none are passed it will display all available templates.
-fn gitignore_list(templates: &[String]) -> Result<(), Box<dyn std::error::Error>> {
-    let url = "https://www.gitignore.io/api/list";
-    let mut res = reqwest::get(url)?;
-
-    let all = templates.is_empty();
-
-    let mut response = Vec::new();
-    res.read_to_end(&mut response)?;
-    let response = String::from_utf8(response)?;
-    let response = {
-        let tmp = response.replace("\n", ",");
-        let tmp = tmp.split(',');
-        let mut list: Vec<String> = Vec::new();
-
-        for entry in tmp {
-            if all {
-                list.push(entry.to_string());
-            } else {
-                for item in templates {
-                    if entry.to_string().starts_with(item) {
-                        list.push(entry.to_string());
-                    }
-                }
-            }
-        }
-
-        list
-    };
-    println!("{:#?}", response);
-
-    Ok(())
-}
-
-/// Get the `.gitignore` templates matching the supplied names.
-fn get_gitignore(templates: &[String]) -> Result<(), Box<dyn std::error::Error>> {
-    let url = {
-        let mut tmp = "https://www.gitignore.io/api/".to_string();
-        for entry in templates {
-            tmp.push_str(entry);
-            tmp.push_str(",");
-        }
-        let len = tmp.len() - 1;
-        tmp.remove(len);
-
-        tmp
-    };
-
-    let mut res = reqwest::get(&url)?;
-    std::io::copy(&mut res, &mut std::io::stdout())?;
-
-    Ok(())
-}
-
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let opt = Opt::from_args();
     let app = GitIgnore::new();
     app.get_gitignore_templates()?;
-    if opt.list {
-        gitignore_list(&opt.templates)?;
-    } else if opt.update {
-        app.write_gitignore_list()?;
-    } else {
-        get_gitignore(&opt.templates)?;
+    if opt.update {
+        app.update()?;
     }
 
     Ok(())
