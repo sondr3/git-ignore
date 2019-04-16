@@ -112,6 +112,36 @@ impl GitIgnore {
             cache_dir: proj_dir.cache_dir().into(),
         }
     }
+
+    fn create_cache_dir(&self) -> std::io::Result<()> {
+        if !self.cache_dir.exists()() {
+            std::fs::create_dir(&self.cache_dir)?;
+        }
+        Ok(())
+    }
+
+    fn get_gitignore_templates(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        self.create_cache_dir()?;
+
+        let url = "https://www.gitignore.io/api/list";
+        let mut res = reqwest::get(url)?;
+
+        let mut response = Vec::new();
+        res.read_to_end(&mut response)?;
+        let response = String::from_utf8(response)?;
+        let response = {
+            let mut list: Vec<String> = Vec::new();
+            for line in response.lines() {
+                for entry in line.split(",") {
+                    list.push(entry.to_string());
+                }
+            }
+
+            list
+        };
+
+        Ok(response)
+    }
 }
 
 /// Returns a list of all templates matching the names given to this function,
@@ -172,6 +202,7 @@ fn get_gitignore(templates: &[String]) -> Result<(), Box<dyn std::error::Error>>
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let opt = Opt::from_args();
     let app = GitIgnore::new();
+    app.get_gitignore_templates()?;
     if opt.list {
         gitignore_list(&opt.templates)?;
     } else {
