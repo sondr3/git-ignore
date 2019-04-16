@@ -99,17 +99,16 @@ struct Opt {
 }
 
 #[derive(Debug)]
-struct App {
-    config_dir: PathBuf,
+struct GitIgnore {
     cache_dir: PathBuf,
 }
 
-impl App {
+impl GitIgnore {
     fn new() -> Self {
         let proj_dir = ProjectDirs::from("com", "sondr3", "git-ignore")
             .expect("Could not find project directory.");
-        App {
-            config_dir: proj_dir.config_dir().into(),
+
+        GitIgnore {
             cache_dir: proj_dir.cache_dir().into(),
         }
     }
@@ -172,7 +171,7 @@ fn get_gitignore(templates: &[String]) -> Result<(), Box<dyn std::error::Error>>
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let opt = Opt::from_args();
-    let app = App::new();
+    let app = GitIgnore::new();
     if opt.list {
         gitignore_list(&opt.templates)?;
     } else {
