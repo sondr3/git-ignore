@@ -15,8 +15,8 @@ build = "build.rs"
 name = "git-ignore"
 path = "src/main.rs"
 
-[profile.release]
-lto = "thin"
+# [profile.release]
+# lto = "thin"
 
 [features]
 fail-on-warnings = []
