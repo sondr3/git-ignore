@@ -105,6 +105,7 @@ struct Opt {
 #[derive(Debug)]
 struct GitIgnore {
     cache_dir: PathBuf,
+    cache_list_file: PathBuf,
 }
 
 impl GitIgnore {
@@ -112,8 +113,13 @@ impl GitIgnore {
         let proj_dir = ProjectDirs::from("com", "sondr3", "git-ignore")
             .expect("Could not find project directory.");
 
+        let cache_dir = proj_dir.cache_dir().to_path_buf();
+        let cache_list_file = cache_dir.to_str().unwrap();
+        let cache_list_file: PathBuf = [cache_list_file, "list.txt"].iter().collect();
+
         GitIgnore {
-            cache_dir: proj_dir.cache_dir().into(),
+            cache_dir,
+            cache_list_file,
         }
     }
 
@@ -149,9 +155,7 @@ impl GitIgnore {
 
     fn write_gitignore_list(&self) -> Result<(), Box<dyn std::error::Error>> {
         let templates = self.get_gitignore_templates()?;
-        let file = self.cache_dir.to_str().unwrap();
-        let file: PathBuf = [file, "list.txt"].iter().collect();
-        let mut file = File::create(file)?;
+        let mut file = File::create(&self.cache_list_file)?;
         for entry in templates {
             write!(file, "{}\n", entry)?;
         }
