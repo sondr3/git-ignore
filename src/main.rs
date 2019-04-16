@@ -179,6 +179,32 @@ impl GitIgnore {
         Ok(())
     }
 
+    fn get_template_names(
+        &self,
+        names: &[String],
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let templates = self.read_file()?;
+        let result = {
+            let mut result: Vec<String> = Vec::new();
+
+            for entry in templates.keys() {
+                if names.is_empty() {
+                    result.push(entry.to_string());
+                } else {
+                    for name in names {
+                        if entry.starts_with(name) {
+                            result.push(entry.to_string())
+                        }
+                    }
+                }
+            }
+
+            result
+        };
+
+        Ok(result)
+    }
+
     fn read_file(&self) -> Result<HashMap<String, Language>, Box<dyn std::error::Error>> {
         let file = File::open(&self.ignore_file)?;
         let file: String = BufReader::new(file)
@@ -194,9 +220,12 @@ impl GitIgnore {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let opt = Opt::from_args();
     let app = GitIgnore::new();
-    app.fetch_gitignore()?;
     if opt.update {
         app.update()?;
+    }
+
+    if opt.list {
+        println!("{:#?}", app.get_template_names(&opt.templates)?);
     }
 
     Ok(())
