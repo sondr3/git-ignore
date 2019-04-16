@@ -14,6 +14,9 @@ edition = "2018"
 name = "git-ignore"
 path = "src/main.rs"
 
+[profile.release]
+lto = "thin"
+
 [features]
 fail-on-warnings = []
 
