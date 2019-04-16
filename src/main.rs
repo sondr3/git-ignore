@@ -205,6 +205,19 @@ impl GitIgnore {
         Ok(result)
     }
 
+    fn get_templates(&self, names: &[String]) -> Result<(), Box<dyn std::error::Error>> {
+        let mut templates = self.read_file()?;
+        templates.retain(|k, _| names.contains(k));
+        let mut result = String::new();
+
+        for language in templates.values() {
+            result.push_str(&language.contents);
+        }
+
+        println!("{}", result);
+        Ok(())
+    }
+
     fn read_file(&self) -> Result<HashMap<String, Language>, Box<dyn std::error::Error>> {
         let file = File::open(&self.ignore_file)?;
         let file: String = BufReader::new(file)
@@ -226,6 +239,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     if opt.list {
         println!("{:#?}", app.get_template_names(&opt.templates)?);
+    } else {
+        app.get_templates(&opt.templates)?;
     }
 
     Ok(())
