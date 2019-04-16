@@ -66,7 +66,7 @@
 //! Finally, if need be, you can always run `git ignore -h` to see more options
 //! --- spoiler alert, there are none.
 #![cfg_attr(feature = "fail-on-warnings", deny(warnings))]
-#![cfg_attr(feature = "cargo-clippy", deny(clippy))]
+#![deny(clippy::all)]
 #![forbid(unsafe_code)]
 #![deny(
     missing_docs,
@@ -77,12 +77,9 @@
     unused_allocation
 )]
 
-extern crate reqwest;
-extern crate structopt;
-
+use reqwest;
 use std::io::Read;
-use structopt::clap::AppSettings;
-use structopt::StructOpt;
+use structopt::{clap::AppSettings, StructOpt};
 
 #[derive(StructOpt, Debug)]
 #[structopt(
@@ -101,7 +98,7 @@ struct Opt {
 
 /// Returns a list of all templates matching the names given to this function,
 /// if none are passed it will display all available templates.
-fn gitignore_list(templates: &[String]) -> Result<(), Box<std::error::Error>> {
+fn gitignore_list(templates: &[String]) -> Result<(), Box<dyn std::error::Error>> {
     let url = "https://www.gitignore.io/api/list";
     let mut res = reqwest::get(url)?;
 
@@ -135,7 +132,7 @@ fn gitignore_list(templates: &[String]) -> Result<(), Box<std::error::Error>> {
 }
 
 /// Get the `.gitignore` templates matching the supplied names.
-fn get_gitignore(templates: &[String]) -> Result<(), Box<std::error::Error>> {
+fn get_gitignore(templates: &[String]) -> Result<(), Box<dyn std::error::Error>> {
     let url = {
         let mut tmp = "https://www.gitignore.io/api/".to_string();
         for entry in templates {
@@ -154,7 +151,7 @@ fn get_gitignore(templates: &[String]) -> Result<(), Box<std::error::Error>> {
     Ok(())
 }
 
-fn main() -> Result<(), Box<std::error::Error>> {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let opt = Opt::from_args();
     if opt.list {
         gitignore_list(&opt.templates)?;

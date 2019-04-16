@@ -8,6 +8,7 @@ repository = "https://github.com/sondr3/git-ignore"
 documentation = "https://github.com/sondr3/git-ignore"
 readme = "README.md"
 license = "GPL-3.0-or-later"
+edition = "2018"
 
 [[bin]]
 name = "git-ignore"
