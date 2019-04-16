@@ -106,6 +106,7 @@ struct Opt {
 struct GitIgnore {
     server: String,
     cache_dir: PathBuf,
+    ignore_file: PathBuf,
 }
 
 impl GitIgnore {
@@ -113,9 +114,20 @@ impl GitIgnore {
         let proj_dir = ProjectDirs::from("com", "sondr3", "git-ignore")
             .expect("Could not find project directory.");
 
+        let cache_dir: PathBuf = proj_dir.cache_dir().into();
+        let ignore_file: PathBuf = [
+            cache_dir
+                .to_str()
+                .expect("Could not unwrap cache directory."),
+            "ignore.json",
+        ]
+        .iter()
+        .collect();
+
         GitIgnore {
             server: "https://www.gitignore.io/api/list?format=json".into(),
-            cache_dir: proj_dir.cache_dir().into(),
+            cache_dir,
+            ignore_file,
         }
     }
 
