@@ -94,13 +94,14 @@ use structopt::{clap::AppSettings, StructOpt};
     raw(global_settings = "&[AppSettings::ColoredHelp, AppSettings::ArgRequiredElseHelp]")
 )]
 struct Opt {
-    /// List available .gitignore templates
+    /// List .gitignore templates matching the names in `templates` or list all
+    /// available templates.
     #[structopt(short, long)]
     list: bool,
-    /// Update templates from gitignore.io
+    /// Update templates by fetching them from gitignore.io
     #[structopt(short, long)]
     update: bool,
-    /// List of .gitignore templates to fetch/list
+    /// List of .gitignore templates to show/search for
     #[structopt(raw(required = "false"))]
     templates: Vec<String>,
 }

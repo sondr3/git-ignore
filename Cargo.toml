@@ -9,6 +9,7 @@ documentation = "https://github.com/sondr3/git-ignore"
 readme = "README.md"
 license = "GPL-3.0-or-later"
 edition = "2018"
+build = "build.rs"
 
 [[bin]]
 name = "git-ignore"
@@ -27,3 +28,6 @@ directories = "1.0.2"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 colored = "1.7.0"
+
+[build-dependencies]
+man = "0.3.0"
