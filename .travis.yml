@@ -1,44 +1,76 @@
+# Based on the "trust" template v0.1.2
+# https://github.com/japaric/trust/tree/v0.1.
 language: rust
-sudo: false
+dist: xenial
+sudo: required
 cache: cargo
+
+env:
+  global:
+  - CRATE_NAME=git-ignore
 
 matrix:
   allow_failures:
   - rust: nightly
-  - os: windows
   fast_finish: true
 
   include:
-  - rust: stable
-  - rust: beta
-  - rust: nightly
+    # Linux
+    - env: TARGET=x86_64-unknown-linux-gnu
+    - env: TARGET=x86_64-unknown-linux-musl
 
-  - name: "Clippy"
-    rust: stable
-    before_script: rustup component add clippy-preview
-    script: cargo clippy --all -- -D clippy
+    # BSD
+    - env: TARGET=x86_64-unknown-freebsd DISABLE_TESTS=1
+    - env: TARGET=x86_64-unknown-netbsd DISABLE_TESTS=1
 
-  - name: "rustfmt"
-    rust: stable
-    before_script: rustup component add rustfmt-preview
-    script: cargo fmt --all -- --check
+    # macOS
+    - env: TARGET=x86_64-apple-darwin
+      os: osx
 
-  - name: "warnings"
-    rust: stable
-    script: cargo check --all --features=fail-on-warnings
+    # Testing other channels
+    - env: TARGET=x86_64-unknown-linux-gnu
+      rust: beta
+    - env: TARGET=x86_64-unknown-linux-gnu
+      rust: nightly
 
-  - name: "release"
-    rust: stable
-    script:
-    - cargo build --verbose --all --release
-    - cargo test --verbose --all --release
-    - cargo doc --verbose --all --release
 
-  - os: osx
-    osx_image: xcode10
-  - os: windows
+before_install:
+  - set -e
+  - rustup self update
+
+install:
+  - sh ci/install.sh
+  - source ~/.cargo/env || true
 
 script:
-- cargo build --all --verbose
-- cargo test --all --verbose
-- cargo doc --all --verbose
+  - bash ci/script.sh
+
+after_script: set +e
+
+before_deploy:
+  - sh ci/before_deploy.sh
+
+before_cache:
+  # Travis can't cache files that are not readable by "others"
+  - chmod -R a+r $HOME/.cargo
+
+deploy:
+  api_key:
+    secure: "a9RgVif1+Hm05qnKROH2ye+3YNuHQcXosQz0+UJn0khyPN2LEK2eT0H/m0zvvsLVHnRXJ6sAaXZTWvpliKaDl/f+xGqtGKbdkb9Ik7N5ZyiA88dOLf63L5qNIg8T1KL1qMpsDBIVL42gDO6NiE+a4yyoV+by9jjZDrMjkR77hqbI9vLxIXZNPk7JkQ1/osRTW8Ip4SW7/9AsJXc7ipFHCGCCDwBdxPZ0EHu8b1TfAjqJJ2EgMU6x97XAg46oY+J+9itm4gsclvhSFEq3QWYO3w7Y8c/JwHHXvwFpIoCpfDMXA6Hei4uZxg+lwAV0u9tCOUa0ALyOYA8tuS7btNKVGXHoQ20yCigcULV+jgHaoe5bfby44nRET5fuSsA4yuwuCub/9IKZFN3cpLKyuzaq1wNN2cEvCYqyDGc282A4qZyGeekEVHS5FbBss2jtuO0d2kYM0cOPmbK3NTF57lFDxPesY8dYcJdGfrJVmNNGn961ejgcQF2RWRRMIgn3FxRejikmQ4gup9KHGcQkJmMm3Gjfy2ar+9ENMT1oeSI33v/DhhfEmHRU9GthrpToqiuabxKzjbdyI9dZ3woot5gZm/wSKOCVLJ55R+GOhwCTvTXyCsE+bTx3OOiI4n4DDPsUtaHQ/kMOiPSiYWq79maGUIVRhqk7q9j+MNHEn5NzOvs="
+  file_glob: true
+  file: $CRATE_NAME-$TRAVIS_TAG-$TARGET.*
+  on:
+    condition: $TRAVIS_RUST_VERSION=stable
+    tags: true
+  provider: releases
+  skip_cleanup: true
+
+branches:
+  only:
+    # release tags
+    - /^v\d+\.\d+\.\d+.*$/
+    - master
+
+notifications:
+  email:
+    on_success: never

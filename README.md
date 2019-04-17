@@ -1,4 +1,4 @@
-# git-ignore [![Build Status](https://travis-ci.com/sondr3/git-ignore.svg?token=jVZ9BLfdPx6kBm4z8gXS&branch=master)](https://travis-ci.com/sondr3/git-ignore) [![Crates.io](https://img.shields.io/crates/v/git-ignore-generator.svg)](https://crates.io/crates/git-ignore-generator)
+# git-ignore [![Crates.io](https://img.shields.io/crates/v/git-ignore-generator.svg)](https://crates.io/crates/git-ignore-generator) [![Build Status](https://travis-ci.com/sondr3/git-ignore.svg?token=jVZ9BLfdPx6kBm4z8gXS&branch=master)](https://travis-ci.com/sondr3/git-ignore) [![Build status](https://ci.appveyor.com/api/projects/status/7lq5tr6fkoe2jx19/branch/master?svg=true)](https://ci.appveyor.com/project/sondr3/git-ignore/branch/master)
 
 ## What and why
 

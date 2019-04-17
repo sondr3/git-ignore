@@ -1,6 +1,8 @@
 use man::prelude::*;
 use std::fs::File;
 use std::io::Write;
+use std::path::Path;
+use std::{env, fs, process};
 
 fn main() {
     let man = Manual::new("git ignore")
@@ -70,7 +72,20 @@ printing the template does. When listing it matches any template starting with e
         )
         .render();
 
-    let mut file = File::create("./target/git-ignore.1").expect("Unable to create man page.");
-    file.write_all(man.as_bytes())
+    // OUT_DIR is set by Cargo and it's where any additional build artifacts
+    // are written.
+    let out_dir = match env::var_os("OUT_DIR") {
+        Some(out_dir) => out_dir,
+        None => {
+            eprintln!("Oh no");
+            process::exit(1);
+        }
+    };
+    fs::create_dir_all(&out_dir).unwrap();
+
+    let file = Path::new(&out_dir).join("git-ignore.1");
+    File::create(&file)
+        .expect("Couldn't open man pages")
+        .write_all(man.as_bytes())
         .expect("Unable to write man page.");
 }
