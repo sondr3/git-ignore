@@ -221,6 +221,7 @@ impl GitIgnore {
         templates.retain(|k, _| names.contains(k));
         let mut result = String::new();
 
+        result.push_str("### Created by https://www.gitignore.io");
         for language in templates.values() {
             result.push_str(&language.contents);
         }
@@ -255,7 +256,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         app.update()?;
     } else {
         eprintln!(
-            "{}: {}",
+            "{}: {}\n",
             "Info".bold().red(),
             "You are using cached results, pass '-u' to update the cache"
         );
