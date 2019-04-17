@@ -26,6 +26,14 @@ pages.
 
 # Usage
 
+To download and cache all available templates, use `--update`. This can also be
+used in combination with any of the other flags/arguments, or be ran as a
+standalone flag.
+
+``` sh
+$ git ignore -u
+```
+
 To list all the available templates:
 
 ```sh
@@ -58,7 +66,8 @@ $ git ignore rust intellij --list
 
 Then you can print the templates by omitting `--list`. **Note:** While listing
 do not require exact matches, printing templates do. Use `--list` to find
-templates, and then print them by omitting it:
+templates. There will also be a notice about using cached results, this is
+printed to `stderr` as to not interfere with piping.
 
 ```sh
 $ git ignore rust intellij+all
