@@ -14,14 +14,13 @@ $HOME/.cache directory. It is also reliable and efficient, thanks to Rust.")
             Flag::new()
                 .short("-h")
                 .long("--help")
-                .help("Show help or these man pages."),
+                .help("Show short help or these man pages."),
         )
         .flag(
             Flag::new()
                 .short("-l")
                 .long("--list")
-                .help("List .gitignore templates matching the names supplied in TEMPLATES or list \
-all available templates.")
+                .help("List TEMPLATES or all available templates.")
         )
         .flag(
             Flag::new()
@@ -47,7 +46,7 @@ all available templates.")
         )
         .example(
             Example::new()
-                .text("List all matching templates")
+                .text("List all matching TEMPLATES")
                 .prompt("$")
                 .command("git ignore [-l/--list] rust intellij")
                 .output("[ rust intellij intellij+all intellij+iml ]")
@@ -67,7 +66,7 @@ will be made to download it. This requires an internet connection, but only once
 cached templates, this is printed to STDERR so it will not interfere with piping etc.")
                 .paragraph("Note that listing templates doesn't require exact matches while \
 printing the template does. When listing it matches any template starting with each query, i.e. \
-'intellij' matches all templates starting with 'intellij' (see example below).")
+`intellij` matches all templates starting with `intellij` (see example below).")
         )
         .render();
 
