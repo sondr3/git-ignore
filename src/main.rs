@@ -259,9 +259,14 @@ impl GitIgnore {
         templates.retain(|k, _| names.contains(k));
         let mut result = String::new();
 
-        result.push_str("### Created by https://www.gitignore.io");
         for language in templates.values() {
             result.push_str(&language.contents);
+        }
+
+        if result.len() > 0 {
+            let mut header = "\n\n### Created by https://www.gitignore.io".to_string();
+            header.push_str(&result);
+            result = header;
         }
 
         println!("{}", result);
