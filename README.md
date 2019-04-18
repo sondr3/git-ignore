@@ -11,18 +11,27 @@ even works offline by caching the templates!
 
 # Installation
 
-There are two ways of installing it, either via Cargo (easiest) or via Nix
-(authors preference). See installation and usage instructions below.
+There are a couple of ways of installing it. See installation and usage
+instructions below.
 
 ## Cargo
 
-Make sure you have Rust installed (I recommend installing via
-[rustup](https://rustup.rs/)), then run `cargo install git-ignore-generator`.
+`cargo install git-ignore-generator`.
 
 ## Nix
 
-Run `nix-env -iA nixpkgs.gitAndTools.git-ignore`. This version also includes man
-pages.
+Run `nix-env -iA nixpkgs.gitAndTools.git-ignore`. This includes man pages.
+
+## Homebrew
+
+Add my personal Homebrew taps repository with `brew tap sondr3/homebrew-taps`
+and then install it with `brew install git-ignore`. This includes man pages.
+
+## Arch
+
+It's available as a binary package from
+[AUR](https://aur.archlinux.org/packages/git-ignore-bin/). Install it with your
+favorite AUR helper. `yay git-ignore`. This includes man pages.
 
 # Usage
 
