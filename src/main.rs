@@ -192,6 +192,7 @@ impl GitIgnore {
         self.create_cache_dir()?;
         self.fetch_gitignore()?;
 
+        eprintln!("{}: {}", "Info".bold().green(), "Update successful");
         Ok(())
     }
 
@@ -297,7 +298,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         eprintln!(
             "{}: {}\n",
-            "Info".bold().red(),
+            "Info".bold().green(),
             "You are using cached results, pass '-u' to update the cache"
         );
     }
