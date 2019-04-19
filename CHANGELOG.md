@@ -1,3 +1,50 @@
+## 1.0.0
+> 2019-04-19
+
+First major release of `git-ignore`. Workflow stays the same, the major feature
+this release is offline caching of templates from
+[gitignore.io](https://www.gitignore.io/). This is fetched via the JSON API,
+parsed and converted by [Serde](https://serde.rs/) and stored in your OS' cache
+location thanks to [directories-rs](https://github.com/soc/directories-rs).
+
+Usage stays the same, I've added a new `--update` flag for fetching the
+templates, updated the code to Rust 2018 and some spring cleaning throughout the
+code. Added [Travis CI](https://travis-ci.com/) and
+[Appveyor](https://www.appveyor.com/) for automatic testing and releasing of
+`git-ignore` across Linux, *BSD, Windows and macOS.
+
+* [[`94d14f84d5`](https://github.com/sondr3/git-ignore/commit/94d14f84d5)] - Add installation instructions, release checklist \[ci skip\]
+* [[`a4c098064c`](https://github.com/sondr3/git-ignore/commit/a4c098064c)] - Configure CI properly, do a trial prerelease
+* [[`0e06b44e8f`](https://github.com/sondr3/git-ignore/commit/0e06b44e8f)] - Only add the header when we actually generate a template
+* [[`07b2f23dd9`](https://github.com/sondr3/git-ignore/commit/07b2f23dd9)] - Add notice for update success, print info in green color
+* [[`33c01fe116`](https://github.com/sondr3/git-ignore/commit/33c01fe116)] - Remove how to apply GPL, I always forget this comes with the templace \[ci skip\]
+* [[`94f35830dd`](https://github.com/sondr3/git-ignore/commit/94f35830dd)] - Add mentions about `--update` \[ci skip\]
+* [[`f522ca92ec`](https://github.com/sondr3/git-ignore/commit/f522ca92ec)] - Update documentation \[ci skip\]
+* [[`cab5907989`](https://github.com/sondr3/git-ignore/commit/cab5907989)] - Add attribution and a newline after info statement
+* [[`af1d85fe4c`](https://github.com/sondr3/git-ignore/commit/af1d85fe4c)] - Disable thinLTO for the moment
+* [[`0075815beb`](https://github.com/sondr3/git-ignore/commit/0075815beb)] - Fix program panicking if ignore file is missing
+* [[`cc4eafd6d0`](https://github.com/sondr3/git-ignore/commit/cc4eafd6d0)] - Automatically generate man pages for git-ignore
+* [[`bf29e37f06`](https://github.com/sondr3/git-ignore/commit/bf29e37f06)] - Sort list of templates
+* [[`bb0a18204f`](https://github.com/sondr3/git-ignore/commit/bb0a18204f)] - Add a colorful warning message when using cached results
+* [[`7cc2e16cec`](https://github.com/sondr3/git-ignore/commit/7cc2e16cec)] - Compile release versions with thinLTO
+* [[`f4c3782cd2`](https://github.com/sondr3/git-ignore/commit/f4c3782cd2)] - Fix running program without arguments returning nothing
+* [[`f05f2d7cd0`](https://github.com/sondr3/git-ignore/commit/f05f2d7cd0)] - Re-implement printing of templates
+* [[`22d291c8a8`](https://github.com/sondr3/git-ignore/commit/22d291c8a8)] - Re-implement function to find all matching template names
+* [[`cd64d722f6`](https://github.com/sondr3/git-ignore/commit/cd64d722f6)] - Read ignore.json file and serialize to HashMap\<String, Language\>
+* [[`dfd0189e3b`](https://github.com/sondr3/git-ignore/commit/dfd0189e3b)] - Extract out ignore file location, will be used later
+* [[`79bddef0a3`](https://github.com/sondr3/git-ignore/commit/79bddef0a3)] - Fetch all templates at once using JSON
+* [[`c2c8ee441c`](https://github.com/sondr3/git-ignore/commit/c2c8ee441c)] - Fetch and store all templates available on gitignore.io
+* [[`aa68f7506b`](https://github.com/sondr3/git-ignore/commit/aa68f7506b)] - Implement fetching singular templates, remove unneeded methods
+* [[`24de14f91a`](https://github.com/sondr3/git-ignore/commit/24de14f91a)] - Create function to read contents of a file to a vec
+* [[`9e947714d1`](https://github.com/sondr3/git-ignore/commit/9e947714d1)] - Extract cache list file to be its own field in GitIgnore struct
+* [[`aef28b85de`](https://github.com/sondr3/git-ignore/commit/aef28b85de)] - Write list of templates to cache dir when -u/--update is used
+* [[`20a96d2d36`](https://github.com/sondr3/git-ignore/commit/20a96d2d36)] - Create cache dir if required, fetch all ignore templates
+* [[`652e19326b`](https://github.com/sondr3/git-ignore/commit/652e19326b)] - Rename App -\> GitIgnore, remove config\_dir
+* [[`f06bed4bfb`](https://github.com/sondr3/git-ignore/commit/f06bed4bfb)] - Add directories-rs, create app struct for configuring application
+* [[`e224e07251`](https://github.com/sondr3/git-ignore/commit/e224e07251)] - Update git-ignore to Rust 2018
+* [[`be5db126bc`](https://github.com/sondr3/git-ignore/commit/be5db126bc)] - Add shell.nix for building on NixOS \[ci skip\]
+* [[`3daf562915`](https://github.com/sondr3/git-ignore/commit/3daf562915)] - Deny Clippy warnings, we want things safe and idiomatic
+
 ## 0.2.0
 > 2018-11-23
 
