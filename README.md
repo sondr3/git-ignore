@@ -33,6 +33,14 @@ It's available as a binary package from
 [AUR](https://aur.archlinux.org/packages/git-ignore-bin/). Install it with your
 favorite AUR helper. `yay git-ignore`. This includes man pages.
 
+## Release pages
+
+You can also download the matching release from the [release
+tab](https://github.com/sondr3/git-ignore/releases), extracting the archive and
+placing the binary in your `$PATH`. Note that for Linux the
+`unknown-linux-musl.tar.gz` is preferred as it is statically linked and thus
+should run on any Linux distribution.
+
 # Usage
 
 To download and cache all available templates, use `--update`. This can also be
