@@ -263,7 +263,7 @@ impl GitIgnore {
             result.push_str(&language.contents);
         }
 
-        if result.len() > 0 {
+        if !result.is_empty() {
             let mut header = "\n\n### Created by https://www.gitignore.io".to_string();
             header.push_str(&result);
             result = header;
