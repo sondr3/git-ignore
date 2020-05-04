@@ -83,17 +83,7 @@
 //!
 //! Finally, help is always available with `git ignore -h` (or `--help` if you used
 //! Nix).
-#![cfg_attr(feature = "fail-on-warnings", deny(warnings))]
-#![deny(clippy::all)]
 #![forbid(unsafe_code)]
-#![deny(
-    missing_docs,
-    missing_debug_implementations,
-    missing_copy_implementations,
-    trivial_casts,
-    unused_import_braces,
-    unused_allocation
-)]
 
 use attohttpc;
 use colored::*;
