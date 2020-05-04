@@ -85,7 +85,6 @@
 //! Nix).
 #![forbid(unsafe_code)]
 
-use attohttpc;
 use colored::*;
 use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
@@ -188,7 +187,7 @@ impl GitIgnore {
         let res = attohttpc::get(&self.server).send()?;
 
         let mut file = File::create(&self.ignore_file)?;
-        file.write(&res.bytes()?)?;
+        file.write_all(&res.bytes()?)?;
 
         Ok(())
     }
