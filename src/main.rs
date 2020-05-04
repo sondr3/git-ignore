@@ -95,22 +95,22 @@
     unused_allocation
 )]
 
+use attohttpc;
 use colored::*;
 use directories::ProjectDirs;
-use reqwest;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::{BufRead, BufReader, Read, Write};
-use std::path::PathBuf;
+use std::fs::{read_to_string, File};
+use std::io::Write;
+use std::path::{Path, PathBuf};
 use structopt::{clap::AppSettings, StructOpt};
 
 #[derive(StructOpt, Debug)]
 #[structopt(
     name = "git ignore",
-    about = "Quickly and easily add templates to .gitignore",
-    raw(global_settings = "&[AppSettings::ColoredHelp, AppSettings::ArgRequiredElseHelp]")
+    global_settings = &[AppSettings::ColoredHelp, AppSettings::ArgRequiredElseHelp]
 )]
+/// Quickly and easily add templates to .gitignore
 struct Opt {
     /// List <templates> or all available templates.
     #[structopt(short, long)]
@@ -119,7 +119,7 @@ struct Opt {
     #[structopt(short, long)]
     update: bool,
     /// Names of templates to show/search for
-    #[structopt(raw(required = "false"))]
+    #[structopt(required = false)]
     templates: Vec<String>,
 }
 
@@ -168,11 +168,7 @@ impl GitIgnore {
     /// Returns true if the cache directory or `ignore.json` file exists, false
     /// otherwise.
     fn cache_exists(&self) -> bool {
-        if !self.cache_dir.exists() || !self.ignore_file.exists() {
-            return false;
-        }
-
-        true
+        self.cache_dir.exists() || self.ignore_file.exists()
     }
 
     /// Creates the cache dir if it doesn't exist.
@@ -196,28 +192,13 @@ impl GitIgnore {
         Ok(())
     }
 
-    /// Fetches all the templates as a JSON using `reqwest`, creates the
-    /// `ignore.json` file (or overwrites it) and writes all the contents from
-    /// the server into it.
+    /// Fetches all the templates from [gitignore.io](http://gitignore.io/),
+    /// and writes the contents to the cache for easy future retrieval.
     fn fetch_gitignore(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let mut res = reqwest::get(&self.server)?;
-
-        let mut response = Vec::new();
-        res.read_to_end(&mut response)?;
-        let response = String::from_utf8(response)?;
-        let response = {
-            let mut list: Vec<String> = Vec::new();
-            for line in response.lines() {
-                list.push(line.to_string());
-            }
-
-            list
-        };
+        let res = attohttpc::get(&self.server).send()?;
 
         let mut file = File::create(&self.ignore_file)?;
-        for entry in response {
-            writeln!(file, "{}", entry)?;
-        }
+        file.write(&res.bytes()?)?;
 
         Ok(())
     }
@@ -277,11 +258,8 @@ impl GitIgnore {
     /// the keys are each individual template and the value the contents (and
     /// some other stuff).
     fn read_file(&self) -> Result<HashMap<String, Language>, Box<dyn std::error::Error>> {
-        let file = File::open(&self.ignore_file)?;
-        let file: String = BufReader::new(file)
-            .lines()
-            .map(|l| l.expect("Could not read line."))
-            .collect();
+        let file = Path::new(&self.ignore_file);
+        let file = read_to_string(file)?;
 
         let result: HashMap<String, Language> = serde_json::from_str(&file)?;
         Ok(result)
