@@ -1,3 +1,20 @@
+## 1.1.0
+> 2020-05-04
+
+The first minor release of `git-ignore`, this is mostly a behind-the-scenes
+upgrade where nothing should really affect you. In the background we've gone
+from using `reqwest` to using `attohtppc` for managing our requests, primarily
+to reduce dependencies and binary size. Other than that we've also simplified
+some code and moved to using GitHub Actions as our CI instead of a combination
+of Travis CI and Appveyor.
+
+* [[`0ea4c1d5b1`](https://github.com/sondr3/git-ignore/commit/0ea4c1d5b1)] - Remove TravisCI, AppVeyor badges, add GitHub Actions badge 
+* [[`c88c331f4f`](https://github.com/sondr3/git-ignore/commit/c88c331f4f)] - Fix clippy warnings 
+* [[`3fcabc99cb`](https://github.com/sondr3/git-ignore/commit/3fcabc99cb)] - Move to GitHub Actions for CI 
+* [[`e91acece58`](https://github.com/sondr3/git-ignore/commit/e91acece58)] - Move from reqwest to attohttpc, refactor and simplify code 
+* [[`47a4686701`](https://github.com/sondr3/git-ignore/commit/47a4686701)] - Fix a new clippy lint 
+* [[`367e269b0e`](https://github.com/sondr3/git-ignore/commit/367e269b0e)] - Add download instructions for release tab \[ci skip\] 
+
 ## 1.0.0
 > 2019-04-19
 
