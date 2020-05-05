@@ -1,3 +1,12 @@
+## 1.1.1
+> 2020-05-05
+
+A minor bugfix release: we now recursively create the cache directory if it is
+missing.
+
+* [[`01027328b4`](https://github.com/sondr3/git-ignore/commit/01027328b4)] - Reenable publishing to Cargo 
+* [[`20c05d42f8`](https://github.com/sondr3/git-ignore/commit/20c05d42f8)] - Create missing directories recursively 
+
 ## 1.1.0
 > 2020-05-04
 
