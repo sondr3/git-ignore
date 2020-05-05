@@ -163,7 +163,7 @@ impl GitIgnore {
     /// Creates the cache dir if it doesn't exist.
     fn create_cache_dir(&self) -> std::io::Result<()> {
         if !self.cache_exists() {
-            std::fs::create_dir(&self.cache_dir)?;
+            std::fs::create_dir_all(&self.cache_dir)?;
         }
 
         Ok(())
