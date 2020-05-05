@@ -189,7 +189,7 @@ dependencies = [
 
 [[package]]
 name = "git-ignore-generator"
-version = "1.1.0"
+version = "1.1.1"
 dependencies = [
  "attohttpc 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "colored 1.9.3 (registry+https://github.com/rust-lang/crates.io-index)",

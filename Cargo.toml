@@ -1,6 +1,6 @@
 [package]
 name = "git-ignore-generator"
-version = "1.1.0"
+version = "1.1.1"
 authors = ["Sondre Nilsen <nilsen.sondre@gmail.com>"]
 homepage = "https://github.com/sondr3/git-ignore"
 description = "Quickly and easily fetch .gitignore templates from www.gitignore.io"
