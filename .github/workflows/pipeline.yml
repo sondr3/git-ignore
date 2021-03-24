@@ -189,14 +189,16 @@ jobs:
         run: |
           cd target/${{ matrix.target }}/release
           strip git-ignore.exe
-          7z a ../../../${{ matrix.name }} git-ignore.exe
+          cp ../assets/git-ignore.1 .
+          7z a ../../../${{ matrix.name }} git-ignore.exe git-ignore.1
           cd -
       - name: Prepare build artifacts [-nix]
         if: matrix.os != 'windows-latest'
         run: |
           cd target/${{ matrix.target }}/release
           strip git-ignore
-          tar czvf ../../../${{ matrix.name }} git-ignore
+          cp ../assets/git-ignore.1 .
+          tar czvf ../../../${{ matrix.name }} git-ignore git-ignore.1
           cd -
       - name: Upload build artifact
         uses: actions/upload-artifact@v1
