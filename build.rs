@@ -1,8 +1,8 @@
 use man::prelude::*;
-use std::fs::File;
 use std::io::Write;
 use std::path::Path;
 use std::{env, fs, process};
+use std::{fs::File, path::PathBuf};
 
 fn main() {
     let man = Manual::new("git ignore")
@@ -87,9 +87,12 @@ printing the template does. When listing it matches any template starting with e
             process::exit(1);
         }
     };
-    fs::create_dir_all(&out_dir).unwrap();
+    let out_path = PathBuf::from(&out_dir);
+    let mut path = out_path.ancestors().nth(4).unwrap().to_owned();
+    path.push("assets");
+    fs::create_dir_all(&path).unwrap();
 
-    let file = Path::new(&out_dir).join("git-ignore.1");
+    let file = Path::new(&path).join("git-ignore.1");
     File::create(&file)
         .expect("Couldn't open man pages")
         .write_all(man.as_bytes())
