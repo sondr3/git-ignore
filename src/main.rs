@@ -177,7 +177,7 @@ impl GitIgnore {
         self.create_cache_dir()?;
         self.fetch_gitignore()?;
 
-        eprintln!("{}: {}", "Info".bold().green(), "Update successful");
+        eprintln!("{}: Update successful", "Info".bold().green());
         Ok(())
     }
 
@@ -262,16 +262,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         app.update()?;
     } else if !app.cache_exists() {
         eprintln!(
-            "{}: {}",
+            "{}: Cache directory or ignore file not found, attempting update.",
             "Warning".bold().red(),
-            "Cache directory or ignore file not found, attempting update."
         );
         app.update()?;
     } else {
         eprintln!(
-            "{}: {}\n",
+            "{}: You are using cached results, pass '-u' to update the cache\n",
             "Info".bold().green(),
-            "You are using cached results, pass '-u' to update the cache"
         );
     }
 
