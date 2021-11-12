@@ -92,6 +92,7 @@ use std::collections::HashMap;
 use std::fs::{read_to_string, File};
 use std::io::Write;
 use std::path::{Path, PathBuf};
+use std::process::exit;
 use structopt::{clap::AppSettings, StructOpt};
 
 #[derive(StructOpt, Debug)]
@@ -107,6 +108,9 @@ struct Opt {
     /// Update templates by fetching them from gitignore.io
     #[structopt(short, long)]
     update: bool,
+    /// Create a new config file
+    #[structopt(short, long)]
+    init: bool,
     /// Names of templates to show/search for
     #[structopt(required = false)]
     templates: Vec<String>,
@@ -117,6 +121,7 @@ struct GitIgnore {
     server: String,
     cache_dir: PathBuf,
     ignore_file: PathBuf,
+    config: Option<Config>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -128,15 +133,61 @@ struct Language {
     contents: String,
 }
 
+#[derive(Deserialize, Serialize, Debug)]
+struct Config {
+    aliases: HashMap<String, String>,
+    templates: HashMap<String, String>,
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            aliases: Default::default(),
+            templates: Default::default(),
+        }
+    }
+}
+
+impl Config {
+    fn create(path: &Path) -> Result<(), Box<dyn std::error::Error>> {
+        Config::create_dir(path);
+
+        let path: PathBuf = [path.to_str().unwrap(), "config.toml"].iter().collect();
+        let config = Config::default();
+        let mut file = File::create(path)?;
+        file.write_all(toml::to_string_pretty(&config)?.as_bytes())?;
+
+        Ok(())
+    }
+
+    fn from_dir(path: &Path) -> Option<Self> {
+        if path.exists() {
+            let file = Path::new(path);
+            let file = read_to_string(file).unwrap();
+
+            let result: Config = toml::from_str(&file).unwrap();
+            Some(result)
+        } else {
+            None
+        }
+    }
+
+    fn create_dir(path: &Path) {
+        if let Some(parent) = path.parent() {
+            if !parent.exists() {
+                std::fs::create_dir_all(parent).expect("Could not create config directory");
+            }
+        }
+    }
+}
+
 impl GitIgnore {
     /// Creates a new instance of the `git-ignore` program. Thanks to
     /// `directories` we support crossplatform caching of our results, the cache
     /// directories works on macOS, Linux and Windows. See the documentation for
     /// their locations.
     fn new() -> Self {
-        let proj_dir = ProjectDirs::from("com", "Sondre Nilsen", "git-ignore")
-            .expect("Could not find project directory.");
-
+        let proj_dir = project_dirs();
         let cache_dir: PathBuf = proj_dir.cache_dir().into();
         let ignore_file: PathBuf = [
             cache_dir
@@ -147,10 +198,23 @@ impl GitIgnore {
         .iter()
         .collect();
 
+        let config_file: PathBuf = [
+            proj_dir
+                .config_dir()
+                .to_str()
+                .expect("Could not unwrap config directory"),
+            "config.toml",
+        ]
+        .iter()
+        .collect();
+
+        let config = Config::from_dir(&config_file);
+
         GitIgnore {
             server: "https://www.gitignore.io/api/list?format=json".into(),
             cache_dir,
             ignore_file,
+            config,
         }
     }
 
@@ -161,7 +225,7 @@ impl GitIgnore {
     }
 
     /// Creates the cache dir if it doesn't exist.
-    fn create_cache_dir(&self) -> std::io::Result<()> {
+    fn create_dirs(&self) -> std::io::Result<()> {
         if !self.cache_exists() {
             std::fs::create_dir_all(&self.cache_dir)?;
         }
@@ -174,7 +238,7 @@ impl GitIgnore {
     /// [gitignore.io](https://www.gitignore.io), saving them in the cache
     /// directory.
     fn update(&self) -> Result<(), Box<dyn std::error::Error>> {
-        self.create_cache_dir()?;
+        self.create_dirs()?;
         self.fetch_gitignore()?;
 
         eprintln!("{}: Update successful", "Info".bold().green());
@@ -255,9 +319,23 @@ impl GitIgnore {
     }
 }
 
+fn project_dirs() -> ProjectDirs {
+    ProjectDirs::from("com", "Sondre Nilsen", "git-ignore")
+        .expect("Could not find project directory.")
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let opt = Opt::from_args();
     let app = GitIgnore::new();
+
+    // println!("{:#?}", app);
+
+    if opt.init {
+        let dirs = project_dirs();
+        Config::create(dirs.config_dir())?;
+        exit(0);
+    }
+
     if opt.update {
         app.update()?;
     } else if !app.cache_exists() {
