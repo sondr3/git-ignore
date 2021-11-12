@@ -86,28 +86,28 @@ struct Language {
 struct Config {
     aliases: HashMap<String, Vec<String>>,
     templates: HashMap<String, PathBuf>,
-}
-
-impl Default for Config {
-    fn default() -> Self {
-        Self {
-            aliases: Default::default(),
-            templates: Default::default(),
-        }
-    }
+    #[serde(skip)]
+    path: PathBuf,
 }
 
 impl Config {
+    fn new(path: PathBuf) -> Self {
+        Self {
+            aliases: Default::default(),
+            templates: Default::default(),
+            path,
+        }
+    }
+
     fn create(path: &Path) -> Result<(), Box<dyn std::error::Error>> {
         Config::create_dir(path);
 
-        let config = Config::default();
-        config.write(path)
+        let config = Config::new(path.to_path_buf());
+        config.write()
     }
 
-    fn write(&self, path: &Path) -> Result<(), Box<dyn std::error::Error>> {
-        let path: PathBuf = [path.to_str().unwrap(), "config.toml"].iter().collect();
-        let mut file = File::create(path)?;
+    fn write(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let mut file = File::create(&self.path)?;
         file.write_all(toml::to_string_pretty(self)?.as_bytes())?;
 
         Ok(())
@@ -281,12 +281,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let opt = Opt::from_args();
     let app = GitIgnore::new();
 
-    // println!("{:#?}", app);
-
     match opt.cmd {
         Some(Cmds::Init { .. }) => {
             let dirs = project_dirs();
-            Config::create(dirs.config_dir())?;
+
+            let config_file: PathBuf = [
+                dirs.config_dir()
+                    .to_str()
+                    .expect("Could not unwrap config directory"),
+                "config.toml",
+            ]
+            .iter()
+            .collect();
+
+            Config::create(&config_file)?;
             return Ok(());
         }
         Some(Cmds::Alias(cmd)) => match cmd {
@@ -299,18 +307,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 return Ok(());
             }
             AliasCmd::Add { name, aliases } => {
-                let dirs = project_dirs();
                 if let Some(mut config) = app.config {
                     config.aliases.insert(name, aliases);
-                    config.write(dirs.config_dir())?;
+                    config.write()?;
                 }
                 return Ok(());
             }
             AliasCmd::Remove { name } => {
-                let dirs = project_dirs();
                 if let Some(mut config) = app.config {
                     config.aliases.remove(&name);
-                    config.write(dirs.config_dir())?;
+                    config.write()?;
                 }
                 return Ok(());
             }
@@ -325,18 +331,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 return Ok(());
             }
             TemplateCmd::Add { name, path } => {
-                let dirs = project_dirs();
                 if let Some(mut config) = app.config {
                     config.templates.insert(name, path);
-                    config.write(dirs.config_dir())?;
+                    config.write()?;
                 }
                 return Ok(());
             }
             TemplateCmd::Remove { name } => {
-                let dirs = project_dirs();
                 if let Some(mut config) = app.config {
                     config.templates.remove(&name);
-                    config.write(dirs.config_dir())?;
+                    config.write()?;
                 }
                 return Ok(());
             }
