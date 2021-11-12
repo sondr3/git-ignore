@@ -92,7 +92,6 @@ use std::collections::HashMap;
 use std::fs::{read_to_string, File};
 use std::io::Write;
 use std::path::{Path, PathBuf};
-use std::process::exit;
 use structopt::{clap::AppSettings, StructOpt};
 
 #[derive(StructOpt, Debug)]
@@ -111,6 +110,9 @@ struct Opt {
     /// Create a new config file
     #[structopt(short, long)]
     init: bool,
+    /// Create a new alias
+    #[structopt(short, long, min_values = 2, name = "ALIAS aliases")]
+    alias: Vec<String>,
     /// Names of templates to show/search for
     #[structopt(required = false)]
     templates: Vec<String>,
@@ -135,7 +137,7 @@ struct Language {
 
 #[derive(Deserialize, Serialize, Debug)]
 struct Config {
-    aliases: HashMap<String, String>,
+    aliases: HashMap<String, Vec<String>>,
     templates: HashMap<String, String>,
 }
 
@@ -152,17 +154,21 @@ impl Config {
     fn create(path: &Path) -> Result<(), Box<dyn std::error::Error>> {
         Config::create_dir(path);
 
-        let path: PathBuf = [path.to_str().unwrap(), "config.toml"].iter().collect();
         let config = Config::default();
+        config.write(path)
+    }
+
+    fn write(&self, path: &Path) -> Result<(), Box<dyn std::error::Error>> {
+        let path: PathBuf = [path.to_str().unwrap(), "config.toml"].iter().collect();
         let mut file = File::create(path)?;
-        file.write_all(toml::to_string_pretty(&config)?.as_bytes())?;
+        file.write_all(toml::to_string_pretty(self)?.as_bytes())?;
 
         Ok(())
     }
 
     fn from_dir(path: &Path) -> Option<Self> {
         if path.exists() {
-            let file = Path::new(path);
+            let file = Path::new(&path);
             let file = read_to_string(file).unwrap();
 
             let result: Config = toml::from_str(&file).unwrap();
@@ -326,15 +332,27 @@ fn project_dirs() -> ProjectDirs {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let opt = Opt::from_args();
-    let app = GitIgnore::new();
 
     // println!("{:#?}", app);
 
     if opt.init {
         let dirs = project_dirs();
         Config::create(dirs.config_dir())?;
-        exit(0);
+        return Ok(());
     }
+
+    if !opt.alias.is_empty() {
+        let dirs = project_dirs();
+        if let Some(mut config) = Config::from_dir(dirs.config_dir()) {
+            config
+                .aliases
+                .insert(opt.alias[0].clone(), opt.alias[1..].to_vec());
+            config.write(dirs.config_dir())?;
+        }
+        return Ok(());
+    }
+
+    let app = GitIgnore::new();
 
     if opt.update {
         app.update()?;
