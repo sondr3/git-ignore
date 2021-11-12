@@ -107,15 +107,46 @@ struct Opt {
     /// Update templates by fetching them from gitignore.io
     #[structopt(short, long)]
     update: bool,
-    /// Create a new config file
-    #[structopt(short, long)]
-    init: bool,
-    /// Create a new alias
-    #[structopt(short, long, min_values = 2, name = "ALIAS aliases")]
-    alias: Vec<String>,
+    /// Configuration management
+    #[structopt(subcommand)]
+    cmd: Option<Cmds>,
     /// Names of templates to show/search for
     #[structopt(required = false)]
     templates: Vec<String>,
+}
+
+#[derive(StructOpt, Debug)]
+enum Cmds {
+    /// Manage local aliases
+    Alias(AliasCmd),
+    /// Manage local templates
+    Template(TemplateCmd),
+    /// Initialize configuration
+    Init {
+        /// Forcefully create config, possibly overwrite existing
+        #[structopt(long)]
+        force: bool,
+    },
+}
+
+#[derive(StructOpt, Debug)]
+enum AliasCmd {
+    /// List available aliases
+    List,
+    /// Add a new alias
+    Add { name: String, aliases: Vec<String> },
+    /// Remove an alias
+    Remove { name: String },
+}
+
+#[derive(StructOpt, Debug)]
+enum TemplateCmd {
+    /// List available templates
+    List,
+    /// Add a new template
+    Add { name: String, path: PathBuf },
+    /// Remove a template
+    Remove { name: String },
 }
 
 #[derive(Debug)]
@@ -332,27 +363,36 @@ fn project_dirs() -> ProjectDirs {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let opt = Opt::from_args();
+    let app = GitIgnore::new();
 
     // println!("{:#?}", app);
 
-    if opt.init {
-        let dirs = project_dirs();
-        Config::create(dirs.config_dir())?;
-        return Ok(());
-    }
-
-    if !opt.alias.is_empty() {
-        let dirs = project_dirs();
-        if let Some(mut config) = Config::from_dir(dirs.config_dir()) {
-            config
-                .aliases
-                .insert(opt.alias[0].clone(), opt.alias[1..].to_vec());
-            config.write(dirs.config_dir())?;
+    match opt.cmd {
+        Some(Cmds::Init { .. }) => {
+            let dirs = project_dirs();
+            Config::create(dirs.config_dir())?;
+            return Ok(());
         }
-        return Ok(());
-    }
-
-    let app = GitIgnore::new();
+        Some(Cmds::Alias(cmd)) => match cmd {
+            AliasCmd::List => todo!(),
+            AliasCmd::Add { name, aliases } => {
+                let dirs = project_dirs();
+                if let Some(mut config) = app.config {
+                    config.aliases.insert(name, aliases);
+                    config.write(dirs.config_dir())?;
+                }
+                return Ok(());
+            }
+            AliasCmd::Remove { name } => {
+                if let Some(mut config) = app.config {
+                    config.aliases.remove(&name);
+                }
+                return Ok(());
+            }
+        },
+        Some(Cmds::Template(..)) => {}
+        _ => {}
+    };
 
     if opt.update {
         app.update()?;
