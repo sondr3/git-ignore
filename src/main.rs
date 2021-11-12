@@ -97,7 +97,7 @@ use structopt::{clap::AppSettings, StructOpt};
 #[derive(StructOpt, Debug)]
 #[structopt(
     name = "git ignore",
-    global_settings = &[AppSettings::ColoredHelp, AppSettings::ArgRequiredElseHelp]
+    global_settings = &[AppSettings::ColoredHelp]
 )]
 /// Quickly and easily add templates to .gitignore
 struct Opt {
@@ -169,7 +169,7 @@ struct Language {
 #[derive(Deserialize, Serialize, Debug)]
 struct Config {
     aliases: HashMap<String, Vec<String>>,
-    templates: HashMap<String, String>,
+    templates: HashMap<String, PathBuf>,
 }
 
 impl Default for Config {
@@ -374,7 +374,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             return Ok(());
         }
         Some(Cmds::Alias(cmd)) => match cmd {
-            AliasCmd::List => todo!(),
+            AliasCmd::List => {
+                if let Some(config) = app.config {
+                    for (name, aliases) in config.aliases.iter() {
+                        println!("{}: {:?}", name, aliases);
+                    }
+                }
+                return Ok(());
+            }
             AliasCmd::Add { name, aliases } => {
                 let dirs = project_dirs();
                 if let Some(mut config) = app.config {
@@ -384,13 +391,40 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 return Ok(());
             }
             AliasCmd::Remove { name } => {
+                let dirs = project_dirs();
                 if let Some(mut config) = app.config {
                     config.aliases.remove(&name);
+                    config.write(dirs.config_dir())?;
                 }
                 return Ok(());
             }
         },
-        Some(Cmds::Template(..)) => {}
+        Some(Cmds::Template(cmd)) => match cmd {
+            TemplateCmd::List => {
+                if let Some(config) = app.config {
+                    for (name, path) in config.templates.iter() {
+                        println!("{}: {:?}", name, path);
+                    }
+                }
+                return Ok(());
+            }
+            TemplateCmd::Add { name, path } => {
+                let dirs = project_dirs();
+                if let Some(mut config) = app.config {
+                    config.templates.insert(name, path);
+                    config.write(dirs.config_dir())?;
+                }
+                return Ok(());
+            }
+            TemplateCmd::Remove { name } => {
+                let dirs = project_dirs();
+                if let Some(mut config) = app.config {
+                    config.templates.remove(&name);
+                    config.write(dirs.config_dir())?;
+                }
+                return Ok(());
+            }
+        },
         _ => {}
     };
 
