@@ -1,6 +1,10 @@
 #![doc = include_str!("../README.md")]
 #![forbid(unsafe_code)]
 
+use clap::{
+    crate_authors, crate_description, crate_license, crate_version, AppSettings, IntoApp, Parser,
+    Subcommand,
+};
 use colored::*;
 use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
@@ -8,44 +12,48 @@ use std::collections::HashMap;
 use std::fs::{read_to_string, File};
 use std::io::Write;
 use std::path::{Path, PathBuf};
-use structopt::{clap::AppSettings, StructOpt};
 
-#[derive(StructOpt, Debug)]
-#[structopt(
+#[derive(Parser, Debug)]
+#[clap(
     name = "git ignore",
-    global_settings = &[AppSettings::ColoredHelp]
+    about = crate_description!(),
+    version = crate_version!(),
+    author = crate_authors!(),
+    license = crate_license!(),
+    global_setting = AppSettings::DeriveDisplayOrder,
 )]
 /// Quickly and easily add templates to .gitignore
 struct Opt {
     /// List <templates> or all available templates.
-    #[structopt(short, long)]
+    #[clap(short, long)]
     list: bool,
     /// Update templates by fetching them from gitignore.io
-    #[structopt(short, long)]
+    #[clap(short, long)]
     update: bool,
     /// Configuration management
-    #[structopt(subcommand)]
+    #[clap(subcommand)]
     cmd: Option<Cmds>,
     /// Names of templates to show/search for
-    #[structopt(required = false)]
     templates: Vec<String>,
 }
 
-#[derive(StructOpt, Debug)]
+#[derive(Subcommand, Debug)]
 enum Cmds {
     /// Manage local aliases
+    #[clap(subcommand)]
     Alias(AliasCmd),
     /// Manage local templates
+    #[clap(subcommand)]
     Template(TemplateCmd),
     /// Initialize configuration
     Init {
         /// Forcefully create config, possibly overwrite existing
-        #[structopt(long)]
+        #[clap(long)]
         force: bool,
     },
 }
 
-#[derive(StructOpt, Debug)]
+#[derive(Subcommand, Debug)]
 enum AliasCmd {
     /// List available aliases
     List,
@@ -55,7 +63,7 @@ enum AliasCmd {
     Remove { name: String },
 }
 
-#[derive(StructOpt, Debug)]
+#[derive(Subcommand, Debug)]
 enum TemplateCmd {
     /// List available templates
     List,
@@ -278,7 +286,7 @@ fn project_dirs() -> ProjectDirs {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let opt = Opt::from_args();
+    let opt = Opt::parse();
     let app = GitIgnore::new();
 
     match opt.cmd {
@@ -365,6 +373,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     if opt.list {
         println!("{:#?}", app.get_template_names(&opt.templates)?);
+    } else if opt.templates.is_empty() {
+        let mut app = Opt::into_app();
+        app.print_help()?;
     } else {
         app.get_templates(&opt.templates)?;
     }

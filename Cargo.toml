@@ -20,12 +20,15 @@ lto = "fat"
 
 [dependencies]
 attohttpc = { version = "0.18.0", default-features = false, features = ["json", "compress", "tls-rustls"] }
+clap = "3.0.0-beta.5"
+clap_generate = "3.0.0-beta.5"
 colored = "2.0.0"
 directories = "4.0.1"
 serde = { version = "1.0.130", features = ["derive"] }
 serde_json = "1.0.68"
-structopt = "0.3.25"
 toml = "0.5"
 
 [build-dependencies]
 man = "0.3.0"
+clap = "3.0.0-beta.5"
+clap_generate = "3.0.0-beta.5"
