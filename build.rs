@@ -1,10 +1,10 @@
-use man::prelude::*;
 use clap::{ArgEnum, IntoApp};
 use clap_generate::generate_to;
+use man::prelude::*;
+use std::fs::File;
 use std::io::Write;
 use std::path::Path;
 use std::{env, fs, process};
-use std::fs::File;
 
 include!("src/cli.rs");
 

@@ -1,5 +1,5 @@
-use clap::{App, AppSettings, Parser, Subcommand, crate_authors, crate_description, crate_license, crate_version};
-use clap_generate::{Generator, Shell, generate};
+use clap::{crate_authors, crate_description, crate_version, App, AppSettings, Parser, Subcommand};
+use clap_generate::{generate, Generator, Shell};
 use std::{io, path::PathBuf};
 
 #[derive(Parser, Debug)]
@@ -8,7 +8,6 @@ use std::{io, path::PathBuf};
     about = crate_description!(),
     version = crate_version!(),
     author = crate_authors!(),
-    license = crate_license!(),
     global_setting = AppSettings::DeriveDisplayOrder,
 )]
 #[allow(clippy::upper_case_acronyms)]

@@ -76,8 +76,7 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 [[package]]
 name = "clap"
 version = "3.0.0-beta.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "feff3878564edb93745d58cf63e17b63f24142506e7a20c87a5521ed7bfb1d63"
+source = "git+https://github.com/clap-rs/clap?branch=master#ca3e14ca2d705fd9a7a05c868ea9139849027588"
 dependencies = [
  "atty",
  "bitflags",
@@ -94,8 +93,7 @@ dependencies = [
 [[package]]
 name = "clap_derive"
 version = "3.0.0-beta.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8b15c6b4f786ffb6192ffe65a36855bc1fc2444bcd0945ae16748dcd6ed7d0d3"
+source = "git+https://github.com/clap-rs/clap?branch=master#ca3e14ca2d705fd9a7a05c868ea9139849027588"
 dependencies = [
  "heck",
  "proc-macro-error",
@@ -107,8 +105,7 @@ dependencies = [
 [[package]]
 name = "clap_generate"
 version = "3.0.0-beta.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "097ab5db1c3417442270cd57c8dd39f6c3114d3ce09d595f9efddbb1fcfaa799"
+source = "git+https://github.com/clap-rs/clap?branch=master#ca3e14ca2d705fd9a7a05c868ea9139849027588"
 dependencies = [
  "clap",
 ]

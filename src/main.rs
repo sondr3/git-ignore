@@ -3,8 +3,8 @@
 
 mod cli;
 
-use clap::{Parser, IntoApp};
-use cli::{AliasCmd, CLI, Cmds, TemplateCmd, print_completion};
+use clap::{IntoApp, Parser};
+use cli::{print_completion, AliasCmd, Cmds, TemplateCmd, CLI};
 use colored::*;
 use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
