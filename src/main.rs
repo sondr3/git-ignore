@@ -1,10 +1,10 @@
 #![doc = include_str!("../README.md")]
 #![forbid(unsafe_code)]
 
-use clap::{
-    crate_authors, crate_description, crate_license, crate_version, AppSettings, IntoApp, Parser,
-    Subcommand,
-};
+mod cli;
+
+use clap::{Parser, IntoApp};
+use cli::{AliasCmd, CLI, Cmds, TemplateCmd, print_completion};
 use colored::*;
 use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
@@ -12,66 +12,6 @@ use std::collections::HashMap;
 use std::fs::{read_to_string, File};
 use std::io::Write;
 use std::path::{Path, PathBuf};
-
-#[derive(Parser, Debug)]
-#[clap(
-    name = "git ignore",
-    about = crate_description!(),
-    version = crate_version!(),
-    author = crate_authors!(),
-    license = crate_license!(),
-    global_setting = AppSettings::DeriveDisplayOrder,
-)]
-/// Quickly and easily add templates to .gitignore
-struct Opt {
-    /// List <templates> or all available templates.
-    #[clap(short, long)]
-    list: bool,
-    /// Update templates by fetching them from gitignore.io
-    #[clap(short, long)]
-    update: bool,
-    /// Configuration management
-    #[clap(subcommand)]
-    cmd: Option<Cmds>,
-    /// Names of templates to show/search for
-    templates: Vec<String>,
-}
-
-#[derive(Subcommand, Debug)]
-enum Cmds {
-    /// Manage local aliases
-    #[clap(subcommand)]
-    Alias(AliasCmd),
-    /// Manage local templates
-    #[clap(subcommand)]
-    Template(TemplateCmd),
-    /// Initialize configuration
-    Init {
-        /// Forcefully create config, possibly overwrite existing
-        #[clap(long)]
-        force: bool,
-    },
-}
-
-#[derive(Subcommand, Debug)]
-enum AliasCmd {
-    /// List available aliases
-    List,
-    /// Add a new alias
-    Add { name: String, aliases: Vec<String> },
-    /// Remove an alias
-    Remove { name: String },
-}
-
-#[derive(Subcommand, Debug)]
-enum TemplateCmd {
-    /// List available templates
-    List,
-    /// Add a new template
-    Add { name: String, path: PathBuf },
-    /// Remove a template
-    Remove { name: String },
-}
 
 #[derive(Debug)]
 struct GitIgnore {
@@ -286,7 +226,7 @@ fn project_dirs() -> ProjectDirs {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let opt = Opt::parse();
+    let opt = CLI::parse();
     let app = GitIgnore::new();
 
     match opt.cmd {
@@ -353,6 +293,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 return Ok(());
             }
         },
+        Some(Cmds::Completion { shell }) => {
+            let mut app = CLI::into_app();
+            print_completion(shell, &mut app);
+            return Ok(());
+        }
         _ => {}
     };
 
@@ -374,7 +319,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     if opt.list {
         println!("{:#?}", app.get_template_names(&opt.templates)?);
     } else if opt.templates.is_empty() {
-        let mut app = Opt::into_app();
+        let mut app = CLI::into_app();
         app.print_help()?;
     } else {
         app.get_templates(&opt.templates)?;

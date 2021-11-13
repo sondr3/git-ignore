@@ -1,11 +1,15 @@
 use man::prelude::*;
+use clap::{ArgEnum, IntoApp};
+use clap_generate::generate_to;
 use std::io::Write;
 use std::path::Path;
 use std::{env, fs, process};
-use std::{fs::File, path::PathBuf};
+use std::fs::File;
+
+include!("src/cli.rs");
 
 fn main() {
-    let man = Manual::new("git ignore")
+    let man = Manual::new("git-ignore")
         .about("Quickly and easily list and fetch .gitignore templates from www.gitignore.io")
         .description(
             "git-ignore is a small utility to quickly create or add templates from \
@@ -91,6 +95,13 @@ printing the template does. When listing it matches any template starting with e
     let mut path = out_path.ancestors().nth(4).unwrap().to_owned();
     path.push("assets");
     fs::create_dir_all(&path).unwrap();
+
+    let mut app = CLI::into_app();
+    let shells = Shell::value_variants();
+
+    for shell in shells {
+        generate_to(*shell, &mut app, "git-ignore", &path).unwrap();
+    }
 
     let file = Path::new(&path).join("git-ignore.1");
     File::create(&file)
