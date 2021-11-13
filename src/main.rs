@@ -2,10 +2,12 @@
 #![forbid(unsafe_code)]
 
 mod cli;
+mod config;
 
 use clap::{IntoApp, Parser};
 use cli::{print_completion, AliasCmd, Cmds, TemplateCmd, CLI};
 use colored::*;
+use config::Config;
 use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -28,58 +30,6 @@ struct Language {
     #[serde(rename = "fileName")]
     file_name: String,
     contents: String,
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-struct Config {
-    aliases: HashMap<String, Vec<String>>,
-    templates: HashMap<String, PathBuf>,
-    #[serde(skip)]
-    path: PathBuf,
-}
-
-impl Config {
-    fn new(path: PathBuf) -> Self {
-        Self {
-            aliases: Default::default(),
-            templates: Default::default(),
-            path,
-        }
-    }
-
-    fn create(path: &Path) -> Result<(), Box<dyn std::error::Error>> {
-        Config::create_dir(path);
-
-        let config = Config::new(path.to_path_buf());
-        config.write()
-    }
-
-    fn write(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let mut file = File::create(&self.path)?;
-        file.write_all(toml::to_string_pretty(self)?.as_bytes())?;
-
-        Ok(())
-    }
-
-    fn from_dir(path: &Path) -> Option<Self> {
-        if path.exists() {
-            let file = Path::new(&path);
-            let file = read_to_string(file).unwrap();
-
-            let result: Config = toml::from_str(&file).unwrap();
-            Some(result)
-        } else {
-            None
-        }
-    }
-
-    fn create_dir(path: &Path) {
-        if let Some(parent) = path.parent() {
-            if !parent.exists() {
-                std::fs::create_dir_all(parent).expect("Could not create config directory");
-            }
-        }
-    }
 }
 
 impl GitIgnore {
@@ -256,15 +206,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             AliasCmd::Add { name, aliases } => {
                 if let Some(mut config) = app.config {
-                    config.aliases.insert(name, aliases);
-                    config.write()?;
+                    config.add_alias(name, aliases)?;
                 }
                 return Ok(());
             }
             AliasCmd::Remove { name } => {
                 if let Some(mut config) = app.config {
-                    config.aliases.remove(&name);
-                    config.write()?;
+                    config.remove_alias(name)?;
                 }
                 return Ok(());
             }
@@ -280,15 +228,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             TemplateCmd::Add { name, path } => {
                 if let Some(mut config) = app.config {
-                    config.templates.insert(name, path);
-                    config.write()?;
+                    config.add_template(name, path)?;
                 }
                 return Ok(());
             }
             TemplateCmd::Remove { name } => {
                 if let Some(mut config) = app.config {
-                    config.templates.remove(&name);
-                    config.write()?;
+                    config.remove_template(name)?;
                 }
                 return Ok(());
             }
