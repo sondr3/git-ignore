@@ -1,3 +1,4 @@
+use colored::*;
 use serde::{Deserialize, Serialize};
 use std::{
     collections::HashMap,
@@ -34,6 +35,13 @@ impl Config {
         }
     }
 
+    pub fn list_aliases(&self) {
+        println!("{}", "Available aliases:".bold().green());
+        for (name, aliases) in self.aliases.iter() {
+            println!("{} => {:?}", name.blue(), aliases);
+        }
+    }
+
     pub fn add_alias(
         &mut self,
         name: String,
@@ -46,6 +54,13 @@ impl Config {
     pub fn remove_alias(&mut self, name: String) -> Result<(), Box<dyn std::error::Error>> {
         self.aliases.remove(&name);
         self.write()
+    }
+
+    pub fn list_templates(&self) {
+        println!("{}", "Available templates:".bold().green());
+        for (name, path) in self.templates.iter() {
+            println!("{} => {:?}", name.blue(), path);
+        }
     }
 
     pub fn add_template(
