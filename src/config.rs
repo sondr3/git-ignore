@@ -82,7 +82,11 @@ impl Config {
     }
 
     pub fn remove_alias(&mut self, name: String) -> Result<(), Box<dyn std::error::Error>> {
-        self.aliases.remove(&name);
+        if let Some(_) = self.aliases.remove(&name) {
+            println!("Removed alias {}", name.blue());
+        } else {
+            println!("No alias named {} found", name.blue());
+        }
         self.write()
     }
 
@@ -107,7 +111,11 @@ impl Config {
     }
 
     pub fn remove_template(&mut self, name: String) -> Result<(), Box<dyn std::error::Error>> {
-        self.templates.remove(&name);
+        if let Some(_) = self.templates.remove(&name) {
+            println!("Removed template {}", name.blue());
+        } else {
+            println!("No template named {} found", name.blue());
+        }
         self.write()
     }
 
