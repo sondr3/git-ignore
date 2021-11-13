@@ -8,12 +8,12 @@ use std::{
     path::{Path, PathBuf},
 };
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Config {
-    pub aliases: HashMap<String, Vec<String>>,
-    pub templates: HashMap<String, PathBuf>,
     #[serde(skip)]
     pub path: PathBuf,
+    pub aliases: HashMap<String, Vec<String>>,
+    pub templates: HashMap<String, PathBuf>,
 }
 
 impl Config {
@@ -49,8 +49,13 @@ impl Config {
             let file = Path::new(&path);
             let file = read_to_string(file).unwrap();
 
-            let result: Config = toml::from_str(&file).unwrap();
-            Some(result)
+            match toml::from_str::<Config>(&file).as_mut() {
+                Ok(config) => {
+                    config.path = path.to_path_buf();
+                    Some(config.clone())
+                }
+                Err(_) => None,
+            }
         } else {
             None
         }
