@@ -34,22 +34,30 @@ impl Config {
         }
     }
 
-    pub fn add_alias(&mut self, name: String, aliases: Vec<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn add_alias(
+        &mut self,
+        name: String,
+        aliases: Vec<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         self.aliases.insert(name, aliases);
         self.write()
     }
 
-    pub fn remove_alias(&mut self, name: String) -> Result<(), Box<dyn std::error::Error>>{
+    pub fn remove_alias(&mut self, name: String) -> Result<(), Box<dyn std::error::Error>> {
         self.aliases.remove(&name);
         self.write()
     }
 
-    pub fn add_template(&mut self, name: String, path: PathBuf) -> Result<(), Box<dyn std::error::Error>>{
+    pub fn add_template(
+        &mut self,
+        name: String,
+        path: PathBuf,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         self.templates.insert(name, path);
         self.write()
     }
 
-    pub fn remove_template(&mut self, name: String) -> Result<(), Box<dyn std::error::Error>>{
+    pub fn remove_template(&mut self, name: String) -> Result<(), Box<dyn std::error::Error>> {
         self.templates.remove(&name);
         self.write()
     }
@@ -68,7 +76,6 @@ impl Config {
 
         Ok(())
     }
-
 
     fn create_dir(path: &Path) {
         if let Some(parent) = path.parent() {
