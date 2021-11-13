@@ -12,6 +12,36 @@ use config::Config;
 use ignore::{project_dirs, GitIgnore};
 use std::path::PathBuf;
 
+macro_rules! config_or {
+    ($sel:ident, $fun:ident) => {{
+        if let Some(config) = $sel.config {
+            config.$fun();
+        } else {
+            eprintln!("{}", "No config found".bold().yellow());
+        }
+
+        return Ok(());
+    }};
+    ($sel:ident, $fun:ident, $name:expr) => {{
+        if let Some(mut config) = $sel.config {
+            config.$fun($name)?;
+        } else {
+            eprintln!("{}", "No config found".bold().yellow());
+        }
+
+        return Ok(());
+    }};
+    ($sel:ident, $fun:ident, $name:expr, $vals:expr) => {{
+        if let Some(mut config) = $sel.config {
+            config.$fun($name, $vals)?;
+        } else {
+            eprintln!("{}", "No config found".bold().yellow());
+        }
+
+        return Ok(());
+    }};
+}
+
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let opt = CLI::parse();
     let app = GitIgnore::new();
@@ -33,48 +63,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             return Ok(());
         }
         Some(Cmds::Alias(cmd)) => match cmd {
-            AliasCmd::List => {
-                if let Some(config) = app.config {
-                    for (name, aliases) in config.aliases.iter() {
-                        println!("{}: {:?}", name, aliases);
-                    }
-                }
-                return Ok(());
-            }
-            AliasCmd::Add { name, aliases } => {
-                if let Some(mut config) = app.config {
-                    config.add_alias(name, aliases)?;
-                }
-                return Ok(());
-            }
-            AliasCmd::Remove { name } => {
-                if let Some(mut config) = app.config {
-                    config.remove_alias(name)?;
-                }
-                return Ok(());
-            }
+            AliasCmd::List => config_or!(app, list_aliases),
+            AliasCmd::Add { name, aliases } => config_or!(app, add_alias, name, aliases),
+            AliasCmd::Remove { name } => config_or!(app, remove_alias, name),
         },
         Some(Cmds::Template(cmd)) => match cmd {
-            TemplateCmd::List => {
-                if let Some(config) = app.config {
-                    for (name, path) in config.templates.iter() {
-                        println!("{}: {:?}", name, path);
-                    }
-                }
-                return Ok(());
-            }
-            TemplateCmd::Add { name, path } => {
-                if let Some(mut config) = app.config {
-                    config.add_template(name, path)?;
-                }
-                return Ok(());
-            }
-            TemplateCmd::Remove { name } => {
-                if let Some(mut config) = app.config {
-                    config.remove_template(name)?;
-                }
-                return Ok(());
-            }
+            TemplateCmd::List => config_or!(app, list_templates),
+            TemplateCmd::Add { name, path } => config_or!(app, add_template, name, path),
+            TemplateCmd::Remove { name } => config_or!(app, remove_template, name),
         },
         Some(Cmds::Completion { shell }) => {
             let mut app = CLI::into_app();
