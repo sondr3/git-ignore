@@ -9,8 +9,7 @@ use clap::{IntoApp, Parser};
 use cli::{print_completion, AliasCmd, Cmds, TemplateCmd, CLI};
 use colored::*;
 use config::Config;
-use ignore::{project_dirs, GitIgnore};
-use std::path::PathBuf;
+use ignore::GitIgnore;
 
 macro_rules! config_or {
     ($sel:ident, $fun:ident) => {{
@@ -47,21 +46,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = GitIgnore::new();
 
     match opt.cmd {
-        Some(Cmds::Init { .. }) => {
-            let dirs = project_dirs();
-
-            let config_file: PathBuf = [
-                dirs.config_dir()
-                    .to_str()
-                    .expect("Could not unwrap config directory"),
-                "config.toml",
-            ]
-            .iter()
-            .collect();
-
-            Config::create(&config_file)?;
-            return Ok(());
-        }
+        Some(Cmds::Init { force }) => return Config::create(force),
         Some(Cmds::Alias(cmd)) => match cmd {
             AliasCmd::List => config_or!(app, list_aliases),
             AliasCmd::Add { name, aliases } => config_or!(app, add_alias, name, aliases),

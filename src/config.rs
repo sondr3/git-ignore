@@ -1,3 +1,4 @@
+use crate::ignore::project_dirs;
 use colored::*;
 use serde::{Deserialize, Serialize};
 use std::{
@@ -16,10 +17,30 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn create(path: &Path) -> Result<(), Box<dyn std::error::Error>> {
-        Config::create_dir(path);
+    pub fn create(force: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let dirs = project_dirs();
 
-        let config = Config::new(path.to_path_buf());
+        let config_file: PathBuf = [
+            dirs.config_dir()
+                .to_str()
+                .expect("Could not unwrap config directory"),
+            "config.toml",
+        ]
+        .iter()
+        .collect();
+
+        Config::create_dir(dirs.config_dir());
+
+        if config_file.exists() && !force {
+            println!("{}: config already exist", "INFO".bold().blue());
+            return Ok(());
+        }
+
+        if config_file.exists() && force {
+            eprintln!("{}: overwriting existing config file", "WARN".bold().red());
+        }
+
+        let config = Config::new(config_file);
         config.write()
     }
 
@@ -36,6 +57,10 @@ impl Config {
     }
 
     pub fn list_aliases(&self) {
+        if self.aliases.is_empty() {
+            return println!("{}", "No aliases defined".blue());
+        }
+
         println!("{}", "Available aliases:".bold().green());
         for (name, aliases) in self.aliases.iter() {
             println!("{} => {:?}", name.blue(), aliases);
@@ -57,6 +82,10 @@ impl Config {
     }
 
     pub fn list_templates(&self) {
+        if self.templates.is_empty() {
+            return println!("{}", "No templates defined".blue());
+        }
+
         println!("{}", "Available templates:".bold().green());
         for (name, path) in self.templates.iter() {
             println!("{} => {:?}", name.blue(), path);
@@ -93,10 +122,8 @@ impl Config {
     }
 
     fn create_dir(path: &Path) {
-        if let Some(parent) = path.parent() {
-            if !parent.exists() {
-                std::fs::create_dir_all(parent).expect("Could not create config directory");
-            }
+        if !path.exists() {
+            std::fs::create_dir_all(path).expect("Could not create config directory");
         }
     }
 }
