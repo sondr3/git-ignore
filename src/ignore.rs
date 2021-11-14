@@ -86,7 +86,7 @@ impl GitIgnore {
                     result.push(entry.to_string());
                 } else {
                     for name in names {
-                        if entry.starts_with(name) {
+                        if entry.contains(name) {
                             result.push(entry.to_string());
                         }
                     }
