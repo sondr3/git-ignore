@@ -123,6 +123,17 @@ impl Config {
         self.write()
     }
 
+    pub fn names(&self) -> Vec<String> {
+        let aliases = self.aliases.keys();
+        let templates = self.templates.keys();
+
+        let mut res = Vec::from_iter(aliases.cloned());
+        res.extend(templates.cloned());
+        res.sort_unstable();
+
+        res
+    }
+
     fn new(path: PathBuf) -> Self {
         Self {
             aliases: Default::default(),

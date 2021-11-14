@@ -3,7 +3,7 @@ use colored::*;
 use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
 use std::{
-    collections::HashMap,
+    collections::{HashMap, HashSet},
     fs::{read_to_string, File},
     io::Write,
     path::{Path, PathBuf},
@@ -77,17 +77,17 @@ impl GitIgnore {
         &self,
         names: &[String],
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let templates = self.read_file()?;
+        let templates = self.all_names()?;
         let result = {
             let mut result: Vec<String> = Vec::new();
 
-            for entry in templates.keys() {
+            for entry in templates {
                 if names.is_empty() {
                     result.push(entry.to_string());
                 } else {
                     for name in names {
                         if entry.starts_with(name) {
-                            result.push(entry.to_string())
+                            result.push(entry.to_string());
                         }
                     }
                 }
@@ -103,12 +103,24 @@ impl GitIgnore {
     /// Writes the `content` field for each entry in templates from `read_file`
     /// to `stdout`.
     pub fn get_templates(&self, names: &[String]) -> Result<(), Box<dyn std::error::Error>> {
-        let mut templates = self.read_file()?;
-        templates.retain(|k, _| names.contains(k));
+        let aliases = match &self.config {
+            Some(config) => config.aliases.clone(),
+            None => HashMap::new(),
+        };
+
+        let templates = self.read_file()?;
         let mut result = String::new();
 
-        for language in templates.values() {
-            result.push_str(&language.contents);
+        for name in names {
+            if let Some(val) = aliases.get(name) {
+                for alias in val {
+                    if let Some(language) = templates.get(alias) {
+                        result.push_str(&language.contents);
+                    }
+                }
+            } else if let Some(language) = templates.get(name) {
+                result.push_str(&language.contents);
+            }
         }
 
         if !result.is_empty() {
@@ -119,6 +131,19 @@ impl GitIgnore {
 
         println!("{}", result);
         Ok(())
+    }
+
+    fn all_names(&self) -> Result<HashSet<String>, Box<dyn std::error::Error>> {
+        let templates = self.read_file()?;
+        let config_names = match &self.config {
+            Some(config) => config.names(),
+            _ => vec![],
+        };
+
+        let mut combined: HashSet<String> = HashSet::from_iter(config_names.into_iter());
+        combined.extend(templates.keys().cloned());
+
+        Ok(combined)
     }
 
     /// Fetches all the templates from [gitignore.io](http://gitignore.io/),
