@@ -8,6 +8,19 @@ use std::{
     path::{Path, PathBuf},
 };
 
+fn config_file() -> PathBuf {
+    let dirs = project_dirs();
+
+    [
+        dirs.config_dir()
+            .to_str()
+            .expect("Could not unwrap config directory"),
+        "config.toml",
+    ]
+    .iter()
+    .collect()
+}
+
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Config {
     #[serde(skip)]
@@ -18,18 +31,8 @@ pub struct Config {
 
 impl Config {
     pub fn create(force: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let dirs = project_dirs();
-
-        let config_file: PathBuf = [
-            dirs.config_dir()
-                .to_str()
-                .expect("Could not unwrap config directory"),
-            "config.toml",
-        ]
-        .iter()
-        .collect();
-
-        Config::create_dir(dirs.config_dir());
+        let config_file = config_file();
+        Config::create_dir(config_file.parent().unwrap());
 
         if config_file.exists() && !force {
             println!("{}: config already exist", "INFO".bold().blue());
@@ -44,14 +47,15 @@ impl Config {
         config.write()
     }
 
-    pub fn from_dir(path: &Path) -> Option<Self> {
-        if path.exists() {
-            let file = Path::new(&path);
+    pub fn from_dir() -> Option<Self> {
+        let config_file = config_file();
+        if config_file.exists() {
+            let file = Path::new(&config_file);
             let file = read_to_string(file).unwrap();
 
             match toml::from_str::<Config>(&file).as_mut() {
                 Ok(config) => {
-                    config.path = path.to_path_buf();
+                    config.path = config_file;
                     Some(config.clone())
                 }
                 Err(_) => None,

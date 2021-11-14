@@ -48,17 +48,7 @@ impl GitIgnore {
         .iter()
         .collect();
 
-        let config_file: PathBuf = [
-            proj_dir
-                .config_dir()
-                .to_str()
-                .expect("Could not unwrap config directory"),
-            "config.toml",
-        ]
-        .iter()
-        .collect();
-
-        let config = Config::from_dir(&config_file);
+        let config = Config::from_dir();
 
         GitIgnore {
             server: "https://www.gitignore.io/api/list?format=json".into(),
