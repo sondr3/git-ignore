@@ -1,4 +1,4 @@
-use crate::config::Config;
+use crate::{config::Config, detector::Detectors};
 use anyhow::Result;
 use colored::Colorize;
 use directories::ProjectDirs;
@@ -6,8 +6,9 @@ use serde::{Deserialize, Serialize};
 use std::{
     cmp::Ordering,
     collections::{HashMap, HashSet},
+    env::current_dir,
     fmt::{write, Display},
-    fs::{read_to_string, File},
+    fs::{read_dir, read_to_string, DirEntry, File},
     hash::{Hash, Hasher},
     io::Write,
     path::{Path, PathBuf},
@@ -23,6 +24,7 @@ pub struct Core {
     server: String,
     cache_dir: PathBuf,
     ignore_file: PathBuf,
+    detectors: Detectors,
     pub config: Option<Config>,
 }
 
@@ -114,6 +116,7 @@ impl Core {
             server: "https://www.gitignore.io/api/list?format=json".into(),
             cache_dir,
             ignore_file,
+            detectors: Detectors::default(),
             config,
         }
     }
@@ -190,6 +193,11 @@ impl Core {
 
         println!("{}", result);
         Ok(())
+    }
+
+    pub fn autodetect_templates(&self) -> Result<Vec<String>> {
+        let entries: Vec<DirEntry> = read_dir(current_dir()?)?.map(|e| e.unwrap()).collect();
+        Ok(self.detectors.detects(entries.as_slice()))
     }
 
     fn all_names(&self, simple: bool) -> Result<HashSet<Type>> {

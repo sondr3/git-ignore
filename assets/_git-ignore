@@ -25,6 +25,8 @@ _git-ignore() {
 '--update[Update templates by fetching them from gitignore.io]' \
 '-s[Ignore all user defined aliases and templates]' \
 '--simple[Ignore all user defined aliases and templates]' \
+'-a[Autodetect templates based on the existing files]' \
+'--auto[Autodetect templates based on the existing files]' \
 '*::templates -- Names of templates to show/search for:' \
 ":: :_git-ignore_commands" \
 "*::: :->git ignore" \

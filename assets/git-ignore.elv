@@ -28,6 +28,8 @@ set edit:completion:arg-completer[git-ignore] = [@words]{
             cand --update 'Update templates by fetching them from gitignore.io'
             cand -s 'Ignore all user defined aliases and templates'
             cand --simple 'Ignore all user defined aliases and templates'
+            cand -a 'Autodetect templates based on the existing files'
+            cand --auto 'Autodetect templates based on the existing files'
             cand alias 'Manage local aliases'
             cand template 'Manage local templates'
             cand init 'Initialize user configuration'

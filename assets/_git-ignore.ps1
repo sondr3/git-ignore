@@ -30,6 +30,8 @@ Register-ArgumentCompleter -Native -CommandName 'git-ignore' -ScriptBlock {
             [CompletionResult]::new('--update', 'update', [CompletionResultType]::ParameterName, 'Update templates by fetching them from gitignore.io')
             [CompletionResult]::new('-s', 's', [CompletionResultType]::ParameterName, 'Ignore all user defined aliases and templates')
             [CompletionResult]::new('--simple', 'simple', [CompletionResultType]::ParameterName, 'Ignore all user defined aliases and templates')
+            [CompletionResult]::new('-a', 'a', [CompletionResultType]::ParameterName, 'Autodetect templates based on the existing files')
+            [CompletionResult]::new('--auto', 'auto', [CompletionResultType]::ParameterName, 'Autodetect templates based on the existing files')
             [CompletionResult]::new('alias', 'alias', [CompletionResultType]::ParameterValue, 'Manage local aliases')
             [CompletionResult]::new('template', 'template', [CompletionResultType]::ParameterValue, 'Manage local templates')
             [CompletionResult]::new('init', 'init', [CompletionResultType]::ParameterValue, 'Initialize user configuration')
