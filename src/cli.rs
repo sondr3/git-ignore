@@ -23,6 +23,9 @@ pub struct CLI {
     /// Ignore all user defined aliases and templates
     #[clap(short, long)]
     pub simple: bool,
+    /// Autodetect templates based on the existing files
+    #[clap(short, long)]
+    pub auto: bool,
     /// Configuration management
     #[clap(subcommand)]
     pub cmd: Option<Cmds>,

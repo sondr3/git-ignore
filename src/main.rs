@@ -3,6 +3,7 @@
 
 mod cli;
 mod config;
+mod detector;
 mod ignore;
 
 use anyhow::Result;
@@ -11,6 +12,7 @@ use cli::{print_completion, AliasCmd, Cmds, TemplateCmd, CLI};
 use colored::Colorize;
 use config::Config;
 use ignore::Core;
+use std::collections::HashSet;
 
 macro_rules! config_or {
     ($sel:ident, $fun:ident) => {{
@@ -96,17 +98,26 @@ fn main() -> Result<()> {
         app.update()?;
     }
 
-    if opt.update && opt.templates.is_empty() {
+    let mut all_templates: HashSet<String> = opt.templates.into_iter().collect();
+    if opt.auto {
+        for template in app.autodetect_templates()? {
+            all_templates.insert(template);
+        }
+    }
+
+    let templates: Vec<String> = all_templates.iter().cloned().collect();
+
+    if opt.update && templates.is_empty() {
         return Ok(());
     }
 
     if opt.list {
-        app.list(&opt.templates, opt.simple)?;
-    } else if opt.templates.is_empty() {
+        app.list(templates.as_slice(), opt.simple)?;
+    } else if templates.is_empty() {
         let mut app = CLI::into_app();
         app.print_help()?;
     } else {
-        app.get_templates(&opt.templates, opt.simple)?;
+        app.get_templates(templates.as_slice(), opt.simple)?;
     }
 
     Ok(())

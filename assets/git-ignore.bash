@@ -43,7 +43,7 @@ _git-ignore() {
 
     case "${cmd}" in
         git__ignore)
-            opts="-h -V -l -u -s --help --version --list --update --simple <TEMPLATES>... alias template init completion help"
+            opts="-h -V -l -u -s -a --help --version --list --update --simple --auto <TEMPLATES>... alias template init completion help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0

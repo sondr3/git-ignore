@@ -3,6 +3,7 @@ complete -c git-ignore -n "__fish_use_subcommand" -s V -l version -d 'Print vers
 complete -c git-ignore -n "__fish_use_subcommand" -s l -l list -d 'List <templates> or all available templates'
 complete -c git-ignore -n "__fish_use_subcommand" -s u -l update -d 'Update templates by fetching them from gitignore.io'
 complete -c git-ignore -n "__fish_use_subcommand" -s s -l simple -d 'Ignore all user defined aliases and templates'
+complete -c git-ignore -n "__fish_use_subcommand" -s a -l auto -d 'Autodetect templates based on the existing files'
 complete -c git-ignore -n "__fish_use_subcommand" -f -a "alias" -d 'Manage local aliases'
 complete -c git-ignore -n "__fish_use_subcommand" -f -a "template" -d 'Manage local templates'
 complete -c git-ignore -n "__fish_use_subcommand" -f -a "init" -d 'Initialize user configuration'
