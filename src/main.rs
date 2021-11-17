@@ -54,7 +54,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         },
         Some(Cmds::Template(cmd)) => match cmd {
             TemplateCmd::List => config_or!(app, list_templates),
-            TemplateCmd::Add { name, path } => config_or!(app, add_template, name, path),
+            TemplateCmd::Add { name, file_name } => config_or!(app, add_template, name, file_name),
             TemplateCmd::Remove { name } => config_or!(app, remove_template, &name),
         },
         Some(Cmds::Completion { shell }) => {

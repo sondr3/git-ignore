@@ -26,7 +26,7 @@ pub struct Config {
     #[serde(skip)]
     pub path: PathBuf,
     pub aliases: HashMap<String, Vec<String>>,
-    pub templates: HashMap<String, PathBuf>,
+    pub templates: HashMap<String, String>,
 }
 
 impl Config {
@@ -108,9 +108,18 @@ impl Config {
     pub fn add_template(
         &mut self,
         name: String,
-        path: PathBuf,
+        file_name: String,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        self.templates.insert(name, path);
+        let file = self
+            .path
+            .parent()
+            .unwrap()
+            .join("templates")
+            .join(&file_name);
+        let mut file = File::create(file)?;
+        file.write_all(format!("\n### {} ###\n", name).as_bytes())?;
+
+        self.templates.insert(name, file_name);
         self.write()
     }
 
@@ -134,6 +143,13 @@ impl Config {
         res
     }
 
+    pub fn read_template(path: &str) -> Result<String, Box<dyn std::error::Error>> {
+        let dir = project_dirs().config_dir().join("templates").join(path);
+        let content = read_to_string(dir)?;
+
+        Ok(content)
+    }
+
     fn new(path: PathBuf) -> Self {
         Self {
             aliases: HashMap::default(),
@@ -151,7 +167,12 @@ impl Config {
 
     fn create_dir(path: &Path) {
         if !path.exists() {
-            std::fs::create_dir_all(path).expect("Could not create config directory");
+            std::fs::create_dir_all(&path).expect("Could not create config directory");
+        }
+
+        let path = path.join("templates");
+        if !path.exists() {
+            std::fs::create_dir_all(&path).expect("Could not create config directory");
         }
     }
 }

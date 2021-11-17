@@ -158,22 +158,25 @@ impl Core {
     /// Writes the `content` field for each entry in templates from `read_file`
     /// to `stdout`.
     pub fn get_templates(&self, names: &[String]) -> Result<(), Box<dyn std::error::Error>> {
-        let aliases = match &self.config {
-            Some(config) => config.aliases.clone(),
-            None => HashMap::new(),
+        let (aliases, templates) = match &self.config {
+            Some(config) => (config.aliases.clone(), config.templates.clone()),
+            None => (HashMap::new(), HashMap::new()),
         };
 
-        let templates = self.read_file()?;
+        let ignore_file = self.read_file()?;
         let mut result = String::new();
 
         for name in names {
-            if let Some(val) = aliases.get(name) {
+            if let Some(val) = templates.get(name) {
+                let template = Config::read_template(val)?;
+                result.push_str(&template);
+            } else if let Some(val) = aliases.get(name) {
                 for alias in val {
-                    if let Some(language) = templates.get(&Type::Alias(alias.to_string())) {
+                    if let Some(language) = ignore_file.get(&Type::Alias(alias.to_string())) {
                         result.push_str(&language.contents);
                     }
                 }
-            } else if let Some(language) = templates.get(&Type::Normal(name.to_string())) {
+            } else if let Some(language) = ignore_file.get(&Type::Normal(name.to_string())) {
                 result.push_str(&language.contents);
             }
         }

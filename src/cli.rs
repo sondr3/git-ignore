@@ -1,6 +1,6 @@
 use clap::{crate_authors, crate_description, crate_version, App, AppSettings, Parser, Subcommand};
 use clap_generate::{generate, Generator, Shell};
-use std::{io, path::PathBuf};
+use std::io;
 
 #[derive(Parser, Debug)]
 #[clap(
@@ -63,7 +63,7 @@ pub enum TemplateCmd {
     /// List available templates
     List,
     /// Add a new template
-    Add { name: String, path: PathBuf },
+    Add { name: String, file_name: String },
     /// Remove a template
     Remove { name: String },
 }
