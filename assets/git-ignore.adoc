@@ -1,0 +1,109 @@
+= git-ignore(1)
+Sondre Nilsen <nilsen.sondre@gmail.com>
+v1.1.2
+:doctype: manpage
+:man source: git-ignore v1.1.2
+
+== Name
+
+git-ignore - quickly and easily list and fetch .gitignore templates from www.gitignore.io
+
+== Description
+
+git-ignore is a small utility to quickly create or add templates from www.gitignore.io 
+to your .gitignore files. The main difference to other similar utilities is that
+it works offline, it does this by caching all available templates and storing them in your
+$HOME/.cache directory. It is also reliable and efficient, thanks to Rust.
+
+== Synopsis
+
+**git-ignore** [-V|--version] [-h|--help] [-l|--list] [-s|--simple] [-u|--update] [subcommand] *<templates>*
+
+== Flags
+
+*-h, --help*::
+  Print help information
+
+*-V, --version*::
+  Print version information
+
+*-l, --list*::
+  List your selected templates, or all available
+
+*-s, --simple*::
+  Ignore your user defined aliases and templates
+
+*-u, --update*::
+  Update the local cache from www.gitignore.io
+
+== Commands
+
+*git-ignore init*::
+  Initialize user configuration
+
+*git-ignore completion*::
+  Generate shell completion
+
+*git-ignore alias list*::
+  List your created aliases
+
+*git-ignore alias add <name> <aliases>*::
+  Add a new alias that maps to a list of one or more other templates
+
+*git-ignore alias remove <name>*::
+  Remove an alias
+
+*git-ignore template list*::
+  List your created templates
+
+*git-ignore template add <name> <path>*::
+  Add a new template, note that the path is just the file name and should be *haskell.txt* and not
+  a full path.
+
+*git-ignore template remove <name>*::
+  Remove a template.
+
+== Usage notes
+
+If the required `ignore.json` file does not exist, an attempt will be made to 
+download it. This requires an internet connection, but only once.
+
+The program will print a small notice when you are only using cached templates, 
+this is printed to STDERR so it will not interfere with piping etc.",
+
+Note that listing templates doesn't require exact matches while printing the 
+template does. When listing it matches any template starting with each query, 
+i.e. `intellij` matches all templates starting with `intellij` (see example below).
+
+== Examples
+
+List all available templates::
+  $ git ignore --list +
+  [ list of all templates ]
+
+List all matching *<templates>*::
+  $ git ignore --list rust intellij +
+  [ rust intellij intellij+all intellij+iml ]
+
+Print matching templates to STDOUT::
+  $ git ignore rust intellij +
+  ### RUST ### [...]
+
+Add an alias for *rust* to *rust, visualstudiocode*::
+  $ git ignore alias add rust rust visualstudiocode +
+  Created alias rust for ["rust", "visualstudiocode"]
+
+== Version
+
+v1.1.2
+
+== Resources
+
+*Project web site:* https://github.com/sondr3/git-ignore
+
+*Source code:* https://github.com/sondr3/git-ignore
+
+== Copying
+
+Free use of this software is granted under the terms of either the MIT or Apache-2.0 license.
+

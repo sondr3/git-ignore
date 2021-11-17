@@ -1,0 +1,164 @@
+'\" t
+.\"     Title: git-ignore
+.\"    Author: Sondre Nilsen
+.\" Generator: Asciidoctor 2.0.16
+.\"      Date: 2021-11-17
+.\"    Manual: \ \&
+.\"    Source: git-ignore v1.1.2
+.\"  Language: English
+.\"
+.TH "GIT\-IGNORE" "1" "2021-11-17" "git\-ignore v1.1.2" "\ \&"
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.ss \n[.ss] 0
+.nh
+.ad l
+.de URL
+\fI\\$2\fP <\\$1>\\$3
+..
+.als MTO URL
+.if \n[.g] \{\
+.  mso www.tmac
+.  am URL
+.    ad l
+.  .
+.  am MTO
+.    ad l
+.  .
+.  LINKSTYLE blue R < >
+.\}
+.SH "NAME"
+git-ignore \- quickly and easily list and fetch .gitignore templates from www.gitignore.io
+.SH "DESCRIPTION"
+.sp
+git\-ignore is a small utility to quickly create or add templates from www.gitignore.io
+to your .gitignore files. The main difference to other similar utilities is that
+it works offline, it does this by caching all available templates and storing them in your
+$HOME/.cache directory. It is also reliable and efficient, thanks to Rust.
+.SH "SYNOPSIS"
+.sp
+\fBgit\-ignore\fP [\-V|\-\-version] [\-h|\-\-help] [\-l|\-\-list] [\-s|\-\-simple] [\-u|\-\-update] [subcommand] \fB<templates>\fP
+.SH "FLAGS"
+.sp
+\fB\-h, \-\-help\fP
+.RS 4
+Print help information
+.RE
+.sp
+\fB\-V, \-\-version\fP
+.RS 4
+Print version information
+.RE
+.sp
+\fB\-l, \-\-list\fP
+.RS 4
+List your selected templates, or all available
+.RE
+.sp
+\fB\-s, \-\-simple\fP
+.RS 4
+Ignore your user defined aliases and templates
+.RE
+.sp
+\fB\-u, \-\-update\fP
+.RS 4
+Update the local cache from www.gitignore.io
+.RE
+.SH "COMMANDS"
+.sp
+\fBgit\-ignore init\fP
+.RS 4
+Initialize user configuration
+.RE
+.sp
+\fBgit\-ignore completion\fP
+.RS 4
+Generate shell completion
+.RE
+.sp
+\fBgit\-ignore alias list\fP
+.RS 4
+List your created aliases
+.RE
+.sp
+\fBgit\-ignore alias add <name> <aliases>\fP
+.RS 4
+Add a new alias that maps to a list of one or more other templates
+.RE
+.sp
+\fBgit\-ignore alias remove <name>\fP
+.RS 4
+Remove an alias
+.RE
+.sp
+\fBgit\-ignore template list\fP
+.RS 4
+List your created templates
+.RE
+.sp
+\fBgit\-ignore template add <name> <path>\fP
+.RS 4
+Add a new template, note that the path is just the file name and should be \fBhaskell.txt\fP and not
+a full path.
+.RE
+.sp
+\fBgit\-ignore template remove <name>\fP
+.RS 4
+Remove a template.
+.RE
+.SH "USAGE NOTES"
+.sp
+If the required \f(CRignore.json\fP file does not exist, an attempt will be made to
+download it. This requires an internet connection, but only once.
+.sp
+The program will print a small notice when you are only using cached templates,
+this is printed to STDERR so it will not interfere with piping etc.",
+.sp
+Note that listing templates doesn\(cqt require exact matches while printing the
+template does. When listing it matches any template starting with each query,
+i.e. \f(CRintellij\fP matches all templates starting with \f(CRintellij\fP (see example below).
+.SH "EXAMPLES"
+.sp
+List all available templates
+.RS 4
+$ git ignore \-\-list
+.br
+[ list of all templates ]
+.RE
+.sp
+List all matching \fB<templates>\fP
+.RS 4
+$ git ignore \-\-list rust intellij
+.br
+[ rust intellij intellij+all intellij+iml ]
+.RE
+.sp
+Print matching templates to STDOUT
+.RS 4
+$ git ignore rust intellij
+.br
+# RUST # [...]
+.RE
+.sp
+Add an alias for \fBrust\fP to \fBrust, visualstudiocode\fP
+.RS 4
+$ git ignore alias add rust rust visualstudiocode
+.br
+Created alias rust for ["rust", "visualstudiocode"]
+.RE
+.SH "VERSION"
+.sp
+v1.1.2
+.SH "RESOURCES"
+.sp
+\fBProject web site:\fP \c
+.URL "https://github.com/sondr3/git\-ignore" "" ""
+.sp
+\fBSource code:\fP \c
+.URL "https://github.com/sondr3/git\-ignore" "" ""
+.SH "COPYING"
+.sp
+Free use of this software is granted under the terms of either the MIT or Apache\-2.0 license.
+.SH "AUTHOR"
+.sp
+Sondre Nilsen
