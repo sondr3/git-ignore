@@ -19,7 +19,7 @@ pub struct CLI {
     /// Update templates by fetching them from gitignore.io
     #[clap(short, long)]
     pub update: bool,
-    /// Ignore all creates aliases and templates
+    /// Ignore all user defined aliases and templates
     #[clap(short, long)]
     pub simple: bool,
     /// Configuration management
@@ -37,7 +37,7 @@ pub enum Cmds {
     /// Manage local templates
     #[clap(subcommand)]
     Template(TemplateCmd),
-    /// Initialize configuration
+    /// Initialize user configuration
     Init {
         /// Forcefully create config, possibly overwrite existing
         #[clap(long)]

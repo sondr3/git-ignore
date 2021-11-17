@@ -41,10 +41,17 @@ $HOME/.cache directory. It is also reliable and efficient, thanks to Rust.",
         )
         .flag(
             Flag::new()
+                .short("-s")
+                .long("--simple")
+                .help("Ignore all user defined aliases and templates"),
+        )
+        .flag(
+            Flag::new()
                 .short("-V")
                 .long("--version")
                 .help("Print version of git-ignore."),
         )
+        .arg(Arg::new("[SUBCOMMAND]"))
         .arg(Arg::new("TEMPLATES"))
         .example(
             Example::new()
