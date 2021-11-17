@@ -4,7 +4,7 @@ use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
 use std::{
     cmp::Ordering,
-    collections::{hash_map::Keys, HashMap, HashSet},
+    collections::{HashMap, HashSet},
     fmt::{write, Display},
     fs::{read_to_string, File},
     hash::{Hash, Hasher},
@@ -32,26 +32,6 @@ struct Language {
     #[serde(rename = "fileName")]
     file_name: String,
     contents: String,
-}
-
-struct TypeMap(HashMap<Type, Language>);
-
-impl TypeMap {
-    fn new() -> Self {
-        TypeMap(HashMap::new())
-    }
-
-    fn extend_from(&mut self, map: HashMap<Type, Language>) {
-        self.0.extend(map)
-    }
-
-    fn keys(&self) -> Keys<Type, Language> {
-        self.0.keys()
-    }
-
-    fn get(&self, name: &Type) -> Option<&Language> {
-        self.0.get(name)
-    }
 }
 
 #[derive(Debug, Clone)]
@@ -98,11 +78,9 @@ impl Hash for Type {
 }
 
 impl Type {
-    fn inner<'a>(&'a self) -> &'a str {
+    fn inner(&self) -> &str {
         match self {
-            Type::Normal(name) => name,
-            Type::Alias(name) => name,
-            Type::Template(name) => name,
+            Type::Normal(name) | Type::Alias(name) | Type::Template(name) => name,
         }
     }
 
@@ -153,7 +131,22 @@ impl Core {
 
     pub fn list(&self, names: &[String]) -> Result<(), Box<dyn std::error::Error>> {
         let templates = self.all_names()?;
-        let result = self.get_template_names(templates, names);
+        let mut result = if names.is_empty() {
+            templates.into_iter().collect::<Vec<_>>()
+        } else {
+            let mut result = Vec::new();
+
+            for entry in templates {
+                for name in names {
+                    if entry.contains(name) {
+                        result.push(entry.clone());
+                    }
+                }
+            }
+            result
+        };
+
+        result.sort_unstable();
 
         for entry in result {
             println!("  {}", entry);
@@ -193,26 +186,6 @@ impl Core {
 
         println!("{}", result);
         Ok(())
-    }
-
-    fn get_template_names(&self, templates: HashSet<Type>, names: &[String]) -> Vec<Type> {
-        let mut result = if names.is_empty() {
-            templates.into_iter().collect::<Vec<_>>()
-        } else {
-            let mut result = Vec::new();
-
-            for entry in templates {
-                for name in names {
-                    if entry.contains(name) {
-                        result.push(entry.clone());
-                    }
-                }
-            }
-            result
-        };
-
-        result.sort_unstable();
-        result
     }
 
     fn all_names(&self) -> Result<HashSet<Type>, Box<dyn std::error::Error>> {
@@ -257,7 +230,7 @@ impl Core {
     /// Reads the `ignore.json` and serializes it using Serde to a `HashMap` where
     /// the keys are each individual template and the value the contents (and
     /// some other stuff).
-    fn read_file(&self) -> Result<TypeMap, Box<dyn std::error::Error>> {
+    fn read_file(&self) -> Result<HashMap<Type, Language>, Box<dyn std::error::Error>> {
         let file = Path::new(&self.ignore_file);
         let file = read_to_string(file)?;
 
@@ -267,6 +240,6 @@ impl Core {
             .map(|(k, v)| (Type::Normal(k), v))
             .collect();
 
-        Ok(TypeMap(result))
+        Ok(result)
     }
 }

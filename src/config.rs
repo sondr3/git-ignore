@@ -127,8 +127,8 @@ impl Config {
         let aliases = self.aliases.keys();
         let templates = self.templates.keys();
 
-        let mut res: Vec<_> = aliases.cloned().map(|k| Type::Alias(k)).collect();
-        res.extend(templates.cloned().map(|k| Type::Template(k)));
+        let mut res: Vec<_> = aliases.cloned().map(Type::Alias).collect();
+        res.extend(templates.cloned().map(Type::Template));
         res.sort_unstable();
 
         res
