@@ -19,6 +19,9 @@ pub struct CLI {
     /// Update templates by fetching them from gitignore.io
     #[clap(short, long)]
     pub update: bool,
+    /// Ignore all creates aliases and templates
+    #[clap(short, long)]
+    pub simple: bool,
     /// Configuration management
     #[clap(subcommand)]
     pub cmd: Option<Cmds>,

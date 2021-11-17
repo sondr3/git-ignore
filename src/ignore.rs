@@ -129,8 +129,8 @@ impl Core {
         Ok(())
     }
 
-    pub fn list(&self, names: &[String]) -> Result<(), Box<dyn std::error::Error>> {
-        let templates = self.all_names()?;
+    pub fn list(&self, names: &[String], simple: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let templates = self.all_names(simple)?;
         let mut result = if names.is_empty() {
             templates.into_iter().collect::<Vec<_>>()
         } else {
@@ -157,10 +157,14 @@ impl Core {
 
     /// Writes the `content` field for each entry in templates from `read_file`
     /// to `stdout`.
-    pub fn get_templates(&self, names: &[String]) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn get_templates(
+        &self,
+        names: &[String],
+        simple: bool,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let (aliases, templates) = match &self.config {
-            Some(config) => (config.aliases.clone(), config.templates.clone()),
-            None => (HashMap::new(), HashMap::new()),
+            Some(config) if !simple => (config.aliases.clone(), config.templates.clone()),
+            _ => (HashMap::new(), HashMap::new()),
         };
 
         let ignore_file = self.read_file()?;
@@ -191,8 +195,13 @@ impl Core {
         Ok(())
     }
 
-    fn all_names(&self) -> Result<HashSet<Type>, Box<dyn std::error::Error>> {
+    fn all_names(&self, simple: bool) -> Result<HashSet<Type>, Box<dyn std::error::Error>> {
         let templates = self.read_file()?;
+
+        if simple {
+            return Ok(templates.keys().cloned().collect());
+        }
+
         let config_names = match &self.config {
             Some(config) => config.names(),
             _ => vec![],

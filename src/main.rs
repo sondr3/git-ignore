@@ -81,12 +81,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     if opt.list {
-        app.list(&opt.templates)?;
+        app.list(&opt.templates, opt.simple)?;
     } else if opt.templates.is_empty() {
         let mut app = CLI::into_app();
         app.print_help()?;
     } else {
-        app.get_templates(&opt.templates)?;
+        app.get_templates(&opt.templates, opt.simple)?;
     }
 
     Ok(())

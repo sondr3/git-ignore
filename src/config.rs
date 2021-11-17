@@ -81,6 +81,7 @@ impl Config {
         name: String,
         aliases: Vec<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        println!("Created alias {} for {:?}", name.blue(), aliases);
         self.aliases.insert(name, aliases);
         self.write()
     }
@@ -116,6 +117,13 @@ impl Config {
             .unwrap()
             .join("templates")
             .join(&file_name);
+
+        println!(
+            "Created template {} at {}",
+            name.blue(),
+            file.to_str().unwrap_or_default().yellow()
+        );
+
         let mut file = File::create(file)?;
         file.write_all(format!("\n### {} ###\n", name).as_bytes())?;
 
