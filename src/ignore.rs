@@ -3,8 +3,11 @@ use colored::Colorize;
 use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
 use std::{
-    collections::{HashMap, HashSet},
+    cmp::Ordering,
+    collections::{hash_map::Keys, HashMap, HashSet},
+    fmt::{write, Display},
     fs::{read_to_string, File},
+    hash::{Hash, Hasher},
     io::Write,
     path::{Path, PathBuf},
 };
@@ -29,6 +32,84 @@ struct Language {
     #[serde(rename = "fileName")]
     file_name: String,
     contents: String,
+}
+
+struct TypeMap(HashMap<Type, Language>);
+
+impl TypeMap {
+    fn new() -> Self {
+        TypeMap(HashMap::new())
+    }
+
+    fn extend_from(&mut self, map: HashMap<Type, Language>) {
+        self.0.extend(map)
+    }
+
+    fn keys(&self) -> Keys<Type, Language> {
+        self.0.keys()
+    }
+
+    fn get(&self, name: &Type) -> Option<&Language> {
+        self.0.get(name)
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum Type {
+    Normal(String),
+    Alias(String),
+    Template(String),
+}
+
+impl Display for Type {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Type::Normal(name) => write(f, format_args!("{}", name)),
+            Type::Alias(name) => write(f, format_args!("{}", name.yellow())),
+            Type::Template(name) => write(f, format_args!("{}", name.blue())),
+        }
+    }
+}
+
+impl PartialEq for Type {
+    fn eq(&self, other: &Self) -> bool {
+        self.inner() == other.inner()
+    }
+}
+
+impl Eq for Type {}
+
+impl PartialOrd for Type {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Type {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.inner().cmp(other.inner())
+    }
+}
+
+impl Hash for Type {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.inner().hash(state);
+    }
+}
+
+impl Type {
+    fn inner<'a>(&'a self) -> &'a str {
+        match self {
+            Type::Normal(name) => name,
+            Type::Alias(name) => name,
+            Type::Template(name) => name,
+        }
+    }
+
+    fn contains(&self, name: &str) -> bool {
+        let inner = self.inner();
+        inner.contains(name)
+    }
 }
 
 impl Core {
@@ -70,34 +151,15 @@ impl Core {
         Ok(())
     }
 
-    /// Iterates over the `HashMap` from `read_file` and either filters out
-    /// entries not in the `names` Vector or adds all of them, finally sorting
-    /// them for consistent output.
-    pub fn get_template_names(
-        &self,
-        names: &[String],
-    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn list(&self, names: &[String]) -> Result<(), Box<dyn std::error::Error>> {
         let templates = self.all_names()?;
-        let result = {
-            let mut result: Vec<String> = Vec::new();
+        let result = self.get_template_names(templates, names);
 
-            for entry in templates {
-                if names.is_empty() {
-                    result.push(entry.to_string());
-                } else {
-                    for name in names {
-                        if entry.contains(name) {
-                            result.push(entry.to_string());
-                        }
-                    }
-                }
-            }
+        for entry in result {
+            println!("  {}", entry);
+        }
 
-            result.sort_unstable();
-            result
-        };
-
-        Ok(result)
+        Ok(())
     }
 
     /// Writes the `content` field for each entry in templates from `read_file`
@@ -114,11 +176,11 @@ impl Core {
         for name in names {
             if let Some(val) = aliases.get(name) {
                 for alias in val {
-                    if let Some(language) = templates.get(alias) {
+                    if let Some(language) = templates.get(&Type::Alias(alias.to_string())) {
                         result.push_str(&language.contents);
                     }
                 }
-            } else if let Some(language) = templates.get(name) {
+            } else if let Some(language) = templates.get(&Type::Normal(name.to_string())) {
                 result.push_str(&language.contents);
             }
         }
@@ -133,14 +195,34 @@ impl Core {
         Ok(())
     }
 
-    fn all_names(&self) -> Result<HashSet<String>, Box<dyn std::error::Error>> {
+    fn get_template_names(&self, templates: HashSet<Type>, names: &[String]) -> Vec<Type> {
+        let mut result = if names.is_empty() {
+            templates.into_iter().collect::<Vec<_>>()
+        } else {
+            let mut result = Vec::new();
+
+            for entry in templates {
+                for name in names {
+                    if entry.contains(name) {
+                        result.push(entry.clone());
+                    }
+                }
+            }
+            result
+        };
+
+        result.sort_unstable();
+        result
+    }
+
+    fn all_names(&self) -> Result<HashSet<Type>, Box<dyn std::error::Error>> {
         let templates = self.read_file()?;
         let config_names = match &self.config {
             Some(config) => config.names(),
             _ => vec![],
         };
 
-        let mut combined: HashSet<String> = config_names.into_iter().collect();
+        let mut combined: HashSet<Type> = config_names.into_iter().collect();
         combined.extend(templates.keys().cloned());
 
         Ok(combined)
@@ -175,11 +257,16 @@ impl Core {
     /// Reads the `ignore.json` and serializes it using Serde to a `HashMap` where
     /// the keys are each individual template and the value the contents (and
     /// some other stuff).
-    fn read_file(&self) -> Result<HashMap<String, Language>, Box<dyn std::error::Error>> {
+    fn read_file(&self) -> Result<TypeMap, Box<dyn std::error::Error>> {
         let file = Path::new(&self.ignore_file);
         let file = read_to_string(file)?;
 
         let result: HashMap<String, Language> = serde_json::from_str(&file)?;
-        Ok(result)
+        let result: HashMap<Type, Language> = result
+            .into_iter()
+            .map(|(k, v)| (Type::Normal(k), v))
+            .collect();
+
+        Ok(TypeMap(result))
     }
 }

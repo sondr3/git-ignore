@@ -1,4 +1,4 @@
-use crate::ignore::project_dirs;
+use crate::ignore::{project_dirs, Type};
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
 use std::{
@@ -123,12 +123,12 @@ impl Config {
         self.write()
     }
 
-    pub fn names(&self) -> Vec<String> {
+    pub fn names(&self) -> Vec<Type> {
         let aliases = self.aliases.keys();
         let templates = self.templates.keys();
 
-        let mut res: Vec<_> = aliases.cloned().collect();
-        res.extend(templates.cloned());
+        let mut res: Vec<_> = aliases.cloned().map(|k| Type::Alias(k)).collect();
+        res.extend(templates.cloned().map(|k| Type::Template(k)));
         res.sort_unstable();
 
         res
