@@ -1,4 +1,5 @@
 use crate::ignore::{project_dirs, Type};
+use anyhow::Result;
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
 use std::{
@@ -30,7 +31,7 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn create(force: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn create(force: bool) -> Result<()> {
         let config_file = config_file();
         Config::create_dir(config_file.parent().unwrap());
 
@@ -76,17 +77,13 @@ impl Config {
         }
     }
 
-    pub fn add_alias(
-        &mut self,
-        name: String,
-        aliases: Vec<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn add_alias(&mut self, name: String, aliases: Vec<String>) -> Result<()> {
         println!("Created alias {} for {:?}", name.blue(), aliases);
         self.aliases.insert(name, aliases);
         self.write()
     }
 
-    pub fn remove_alias(&mut self, name: &str) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn remove_alias(&mut self, name: &str) -> Result<()> {
         if self.aliases.remove(name).is_some() {
             println!("Removed alias {}", name.blue());
         } else {
@@ -106,11 +103,7 @@ impl Config {
         }
     }
 
-    pub fn add_template(
-        &mut self,
-        name: String,
-        file_name: String,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn add_template(&mut self, name: String, file_name: String) -> Result<()> {
         let file = self
             .path
             .parent()
@@ -131,7 +124,7 @@ impl Config {
         self.write()
     }
 
-    pub fn remove_template(&mut self, name: &str) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn remove_template(&mut self, name: &str) -> Result<()> {
         if self.templates.remove(name).is_some() {
             println!("Removed template {}", name.blue());
         } else {
@@ -151,7 +144,7 @@ impl Config {
         res
     }
 
-    pub fn read_template(path: &str) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn read_template(path: &str) -> Result<String> {
         let dir = project_dirs().config_dir().join("templates").join(path);
         let content = read_to_string(dir)?;
 
@@ -166,7 +159,7 @@ impl Config {
         }
     }
 
-    fn write(&self) -> Result<(), Box<dyn std::error::Error>> {
+    fn write(&self) -> Result<()> {
         let mut file = File::create(&self.path)?;
         file.write_all(toml::to_string_pretty(self)?.as_bytes())?;
 

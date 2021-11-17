@@ -5,6 +5,7 @@ mod cli;
 mod config;
 mod ignore;
 
+use anyhow::Result;
 use clap::{IntoApp, Parser};
 use cli::{print_completion, AliasCmd, Cmds, TemplateCmd, CLI};
 use colored::Colorize;
@@ -41,7 +42,7 @@ macro_rules! config_or {
     }};
 }
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn main() -> Result<()> {
     let opt = CLI::parse();
     let app = Core::new();
 

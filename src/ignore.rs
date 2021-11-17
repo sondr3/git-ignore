@@ -1,4 +1,5 @@
 use crate::config::Config;
+use anyhow::Result;
 use colored::Colorize;
 use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
@@ -121,7 +122,7 @@ impl Core {
     /// if it doesn't exist and then downloads the templates from
     /// [gitignore.io](https://www.gitignore.io), saving them in the cache
     /// directory.
-    pub fn update(&self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn update(&self) -> Result<()> {
         self.create_dirs()?;
         self.fetch_gitignore()?;
 
@@ -129,7 +130,7 @@ impl Core {
         Ok(())
     }
 
-    pub fn list(&self, names: &[String], simple: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn list(&self, names: &[String], simple: bool) -> Result<()> {
         let templates = self.all_names(simple)?;
         let mut result = if names.is_empty() {
             templates.into_iter().collect::<Vec<_>>()
@@ -157,11 +158,7 @@ impl Core {
 
     /// Writes the `content` field for each entry in templates from `read_file`
     /// to `stdout`.
-    pub fn get_templates(
-        &self,
-        names: &[String],
-        simple: bool,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn get_templates(&self, names: &[String], simple: bool) -> Result<()> {
         let (aliases, templates) = match &self.config {
             Some(config) if !simple => (config.aliases.clone(), config.templates.clone()),
             _ => (HashMap::new(), HashMap::new()),
@@ -195,7 +192,7 @@ impl Core {
         Ok(())
     }
 
-    fn all_names(&self, simple: bool) -> Result<HashSet<Type>, Box<dyn std::error::Error>> {
+    fn all_names(&self, simple: bool) -> Result<HashSet<Type>> {
         let templates = self.read_file()?;
 
         if simple {
@@ -215,7 +212,7 @@ impl Core {
 
     /// Fetches all the templates from [gitignore.io](http://gitignore.io/),
     /// and writes the contents to the cache for easy future retrieval.
-    fn fetch_gitignore(&self) -> Result<(), Box<dyn std::error::Error>> {
+    fn fetch_gitignore(&self) -> Result<()> {
         let res = attohttpc::get(&self.server).send()?;
 
         let mut file = File::create(&self.ignore_file)?;
@@ -242,7 +239,7 @@ impl Core {
     /// Reads the `ignore.json` and serializes it using Serde to a `HashMap` where
     /// the keys are each individual template and the value the contents (and
     /// some other stuff).
-    fn read_file(&self) -> Result<HashMap<Type, Language>, Box<dyn std::error::Error>> {
+    fn read_file(&self) -> Result<HashMap<Type, Language>> {
         let file = Path::new(&self.ignore_file);
         let file = read_to_string(file)?;
 
