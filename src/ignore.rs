@@ -102,7 +102,7 @@ impl Core {
         let ignore_file: PathBuf = [
             cache_dir
                 .to_str()
-                .expect("Could not unwrap cache directory."),
+                .expect("Could not parse config directory name, this should never happen"),
             "ignore.json",
         ]
         .iter()

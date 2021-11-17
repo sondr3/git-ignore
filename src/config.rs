@@ -1,5 +1,5 @@
 use crate::ignore::{project_dirs, Type};
-use anyhow::Result;
+use anyhow::{Context, Result};
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
 use std::{
@@ -15,7 +15,7 @@ fn config_file() -> PathBuf {
     [
         dirs.config_dir()
             .to_str()
-            .expect("Could not unwrap config directory"),
+            .expect("Could not parse config directory name, this should never happen"),
         "config.toml",
     ]
     .iter()
@@ -33,7 +33,11 @@ pub struct Config {
 impl Config {
     pub fn create(force: bool) -> Result<()> {
         let config_file = config_file();
-        Config::create_dir(config_file.parent().unwrap());
+        Config::create_dir(
+            config_file
+                .parent()
+                .context("No parent dir for the config_file")?,
+        );
 
         if config_file.exists() && !force {
             println!("{}: config already exist", "INFO".bold().blue());
@@ -52,7 +56,10 @@ impl Config {
         let config_file = config_file();
         if config_file.exists() {
             let file = Path::new(&config_file);
-            let file = read_to_string(file).unwrap();
+            let file = match read_to_string(file) {
+                Ok(content) => content,
+                Err(_) => return None,
+            };
 
             match toml::from_str::<Config>(&file).as_mut() {
                 Ok(config) => {
@@ -107,7 +114,7 @@ impl Config {
         let file = self
             .path
             .parent()
-            .unwrap()
+            .context("Could not get parent directory of config file")?
             .join("templates")
             .join(&file_name);
 
