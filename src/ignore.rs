@@ -1,5 +1,5 @@
 use crate::config::Config;
-use colored::*;
+use colored::Colorize;
 use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
 use std::{
@@ -15,7 +15,7 @@ pub fn project_dirs() -> ProjectDirs {
 }
 
 #[derive(Debug)]
-pub struct GitIgnore {
+pub struct Core {
     server: String,
     cache_dir: PathBuf,
     ignore_file: PathBuf,
@@ -31,7 +31,7 @@ struct Language {
     contents: String,
 }
 
-impl GitIgnore {
+impl Core {
     /// Creates a new instance of the `git-ignore` program. Thanks to
     /// `directories` we support crossplatform caching of our results, the cache
     /// directories works on macOS, Linux and Windows. See the documentation for
@@ -50,7 +50,7 @@ impl GitIgnore {
 
         let config = Config::from_dir();
 
-        GitIgnore {
+        Core {
             server: "https://www.gitignore.io/api/list?format=json".into(),
             cache_dir,
             ignore_file,
@@ -70,7 +70,7 @@ impl GitIgnore {
         Ok(())
     }
 
-    /// Iterates over the HashMap from `read_file` and either filters out
+    /// Iterates over the `HashMap` from `read_file` and either filters out
     /// entries not in the `names` Vector or adds all of them, finally sorting
     /// them for consistent output.
     pub fn get_template_names(
@@ -140,7 +140,7 @@ impl GitIgnore {
             _ => vec![],
         };
 
-        let mut combined: HashSet<String> = HashSet::from_iter(config_names.into_iter());
+        let mut combined: HashSet<String> = config_names.into_iter().collect();
         combined.extend(templates.keys().cloned());
 
         Ok(combined)
@@ -172,7 +172,7 @@ impl GitIgnore {
         Ok(())
     }
 
-    /// Reads the `ignore.json` and serializes it using Serde to a HashMap where
+    /// Reads the `ignore.json` and serializes it using Serde to a `HashMap` where
     /// the keys are each individual template and the value the contents (and
     /// some other stuff).
     fn read_file(&self) -> Result<HashMap<String, Language>, Box<dyn std::error::Error>> {

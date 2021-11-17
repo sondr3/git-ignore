@@ -1,5 +1,5 @@
 use crate::ignore::project_dirs;
-use colored::*;
+use colored::Colorize;
 use serde::{Deserialize, Serialize};
 use std::{
     collections::HashMap,
@@ -71,7 +71,7 @@ impl Config {
         }
 
         println!("{}", "Available aliases:".bold().green());
-        for (name, aliases) in self.aliases.iter() {
+        for (name, aliases) in &self.aliases {
             println!("{} => {:?}", name.blue(), aliases);
         }
     }
@@ -85,8 +85,8 @@ impl Config {
         self.write()
     }
 
-    pub fn remove_alias(&mut self, name: String) -> Result<(), Box<dyn std::error::Error>> {
-        if self.aliases.remove(&name).is_some() {
+    pub fn remove_alias(&mut self, name: &str) -> Result<(), Box<dyn std::error::Error>> {
+        if self.aliases.remove(name).is_some() {
             println!("Removed alias {}", name.blue());
         } else {
             println!("No alias named {} found", name.blue());
@@ -100,7 +100,7 @@ impl Config {
         }
 
         println!("{}", "Available templates:".bold().green());
-        for (name, path) in self.templates.iter() {
+        for (name, path) in &self.templates {
             println!("{} => {:?}", name.blue(), path);
         }
     }
@@ -114,8 +114,8 @@ impl Config {
         self.write()
     }
 
-    pub fn remove_template(&mut self, name: String) -> Result<(), Box<dyn std::error::Error>> {
-        if self.templates.remove(&name).is_some() {
+    pub fn remove_template(&mut self, name: &str) -> Result<(), Box<dyn std::error::Error>> {
+        if self.templates.remove(name).is_some() {
             println!("Removed template {}", name.blue());
         } else {
             println!("No template named {} found", name.blue());
@@ -127,7 +127,7 @@ impl Config {
         let aliases = self.aliases.keys();
         let templates = self.templates.keys();
 
-        let mut res = Vec::from_iter(aliases.cloned());
+        let mut res: Vec<_> = aliases.cloned().collect();
         res.extend(templates.cloned());
         res.sort_unstable();
 
@@ -136,8 +136,8 @@ impl Config {
 
     fn new(path: PathBuf) -> Self {
         Self {
-            aliases: Default::default(),
-            templates: Default::default(),
+            aliases: HashMap::default(),
+            templates: HashMap::default(),
             path,
         }
     }

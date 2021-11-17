@@ -84,13 +84,13 @@ printing the template does. When listing it matches any template starting with e
 
     // OUT_DIR is set by Cargo and it's where any additional build artifacts
     // are written.
-    let out_dir = match env::var_os("OUT_DIR") {
-        Some(out_dir) => out_dir,
-        None => {
-            eprintln!("Oh no");
-            process::exit(1);
-        }
+    let out_dir = if let Some(out_dir) = env::var_os("OUT_DIR") {
+        out_dir
+    } else {
+        eprintln!("Oh no");
+        process::exit(1);
     };
+
     let out_path = PathBuf::from(&out_dir);
     let mut path = out_path.ancestors().nth(4).unwrap().to_owned();
     path.push("assets");
