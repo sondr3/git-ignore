@@ -81,6 +81,10 @@ fn main() -> Result<()> {
         app.update()?;
     }
 
+    if opt.update && opt.templates.is_empty() {
+        return Ok(());
+    }
+
     if opt.list {
         app.list(&opt.templates, opt.simple)?;
     } else if opt.templates.is_empty() {
