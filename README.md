@@ -8,9 +8,9 @@
     <b>Create .gitignores with templates from www.gitignore.io, your own aliases and templates</b>
 </p>
 
-- **Simple**: `git ignore node` to get the `.gitignore` template.
+- **Simple**: `git ignore node` to print the `node` template.
 - **Offline first**: Automatically caches templates for offline support.
-- **Aliases, templates**: Create aliases for commonly used templates, or make your own custom ones.
+- **Aliases, templates**: Create aliases for commonly combined templates, or make your own custom ones.
 - **Magic**: Automatically generate your `.gitignore` by matching common files against templates.
 
 <details>
@@ -26,11 +26,12 @@
 # What and why
 
 Tired of visiting [gitignore.io](https://www.gitignore.io/) to get templates for your
-`.gitignore` all the time? I was. So I [automatied](https://xkcd.com/1319/) [it](https://xkcd.com/1205/).
+`.gitignore` all the time? I was. So I [automated](https://xkcd.com/1319/) [it](https://xkcd.com/1205/).
 
-`git ignore` allows you to easily and quickly get all the available templates, even
-while offline. For even more power, you can also define your own aliases for common
-combinations of templates, or create your own completely custom ones.
+`git ignore` allows you to easily and quickly get all the available templates from 
+[gitignore.io](https://www.gitignore.io/), even while offline. You can also define 
+your own aliases for common combinations of templates, or create your own completely 
+custom ones for even more power.
 
 # Usage
 
@@ -229,7 +230,7 @@ Currently the package is available a couple of places, including Homebrew, AUR a
   </dd>
 
   <dt>Arch</dt>
-  <dd><code>paru git-ignore</code></dd>
+  <dd><code>paru git-ignore-bin</code></dd>
 </dl>
 
 ## Release pages
