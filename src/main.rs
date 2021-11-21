@@ -17,7 +17,12 @@ macro_rules! config_or {
         if let Some(config) = $sel.config {
             config.$fun();
         } else {
-            eprintln!("{}", "No config found, run `git ignore init` to create it.".bold().yellow());
+            eprintln!(
+                "{}",
+                "No config found, run `git ignore init` to create it."
+                    .bold()
+                    .yellow()
+            );
         }
 
         return Ok(());
@@ -26,7 +31,12 @@ macro_rules! config_or {
         if let Some(mut config) = $sel.config {
             config.$fun($name)?;
         } else {
-            eprintln!("{}", "No config found, run `git ignore init` to create it.".bold().yellow());
+            eprintln!(
+                "{}",
+                "No config found, run `git ignore init` to create it."
+                    .bold()
+                    .yellow()
+            );
         }
 
         return Ok(());
@@ -35,7 +45,12 @@ macro_rules! config_or {
         if let Some(mut config) = $sel.config {
             config.$fun($name, $vals)?;
         } else {
-            eprintln!("{}", "No config found, run `git ignore init` to create it.".bold().yellow());
+            eprintln!(
+                "{}",
+                "No config found, run `git ignore init` to create it."
+                    .bold()
+                    .yellow()
+            );
         }
 
         return Ok(());
