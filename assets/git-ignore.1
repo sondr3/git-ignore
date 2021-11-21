@@ -2,12 +2,12 @@
 .\"     Title: git-ignore
 .\"    Author: Sondre Nilsen
 .\" Generator: Asciidoctor 2.0.16
-.\"      Date: 2021-11-17
+.\"      Date: 2021-11-21
 .\"    Manual: \ \&
 .\"    Source: git-ignore v1.1.2
 .\"  Language: English
 .\"
-.TH "GIT\-IGNORE" "1" "2021-11-17" "git\-ignore v1.1.2" "\ \&"
+.TH "GIT\-IGNORE" "1" "2021-11-21" "git\-ignore v1.1.2" "\ \&"
 .ie \n(.g .ds Aq \(aq
 .el       .ds Aq '
 .ss \n[.ss] 0
@@ -37,7 +37,7 @@ it works offline, it does this by caching all available templates and storing th
 $HOME/.cache directory. It is also reliable and efficient, thanks to Rust.
 .SH "SYNOPSIS"
 .sp
-\fBgit\-ignore\fP [\-V|\-\-version] [\-h|\-\-help] [\-l|\-\-list] [\-s|\-\-simple] [\-u|\-\-update] [subcommand] \fB<templates>\fP
+\fBgit\-ignore\fP [\-V|\-\-version] [\-h|\-\-help] [\-a|\-\-auto] [\-l|\-\-list] [\-s|\-\-simple] [\-u|\-\-update] [subcommand] \fB<templates>\fP
 .SH "FLAGS"
 .sp
 \fB\-h, \-\-help\fP
@@ -48,6 +48,11 @@ Print help information
 \fB\-V, \-\-version\fP
 .RS 4
 Print version information
+.RE
+.sp
+\fB\-a, \-\-auto\fP
+.RS 4
+Automatically infer templates based on files in the current directory.
 .RE
 .sp
 \fB\-l, \-\-list\fP

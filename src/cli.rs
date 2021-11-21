@@ -9,6 +9,7 @@ use std::io;
     version = crate_version!(),
     author = crate_authors!(),
     global_setting = AppSettings::DeriveDisplayOrder,
+    global_setting = AppSettings::ArgsNegateSubcommands,
 )]
 #[allow(clippy::upper_case_acronyms)]
 /// Quickly and easily add templates to .gitignore
@@ -54,20 +55,24 @@ pub enum Cmds {
 #[derive(Subcommand, Debug)]
 pub enum AliasCmd {
     /// List available aliases
+    #[clap(visible_alias = "ls")]
     List,
     /// Add a new alias
     Add { name: String, aliases: Vec<String> },
     /// Remove an alias
+    #[clap(visible_alias = "rm")]
     Remove { name: String },
 }
 
 #[derive(Subcommand, Debug)]
 pub enum TemplateCmd {
     /// List available templates
+    #[clap(visible_alias = "ls")]
     List,
     /// Add a new template
     Add { name: String, file_name: String },
     /// Remove a template
+    #[clap(visible_alias = "rm")]
     Remove { name: String },
 }
 

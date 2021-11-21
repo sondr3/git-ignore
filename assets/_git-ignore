@@ -183,8 +183,10 @@ _git-ignore__template__add_commands() {
 _git-ignore__alias_commands() {
     local commands; commands=(
 'list:List available aliases' \
+'ls:List available aliases' \
 'add:Add a new alias' \
 'remove:Remove an alias' \
+'rm:Remove an alias' \
 'help:Print this message or the help of the given subcommand(s)' \
     )
     _describe -t commands 'git-ignore alias commands' commands "$@"
@@ -238,8 +240,10 @@ _git-ignore__template__remove_commands() {
 _git-ignore__template_commands() {
     local commands; commands=(
 'list:List available templates' \
+'ls:List available templates' \
 'add:Add a new template' \
 'remove:Remove a template' \
+'rm:Remove a template' \
 'help:Print this message or the help of the given subcommand(s)' \
     )
     _describe -t commands 'git-ignore template commands' commands "$@"

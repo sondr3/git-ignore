@@ -17,7 +17,7 @@ $HOME/.cache directory. It is also reliable and efficient, thanks to Rust.
 
 == Synopsis
 
-**git-ignore** [-V|--version] [-h|--help] [-l|--list] [-s|--simple] [-u|--update] [subcommand] *<templates>*
+**git-ignore** [-V|--version] [-h|--help] [-a|--auto] [-l|--list] [-s|--simple] [-u|--update] [subcommand] *<templates>*
 
 == Flags
 
@@ -26,6 +26,9 @@ $HOME/.cache directory. It is also reliable and efficient, thanks to Rust.
 
 *-V, --version*::
   Print version information
+
+*-a, --auto*::
+  Automatically infer templates based on files in the current directory.
 
 *-l, --list*::
   List your selected templates, or all available
