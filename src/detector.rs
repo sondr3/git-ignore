@@ -18,31 +18,148 @@ impl Default for Detectors {
     /// Based on https://github.com/starship/starship/tree/master/src/configs
     fn default() -> Self {
         let detectors = vec![
+            Detector::new("crystal", [Matcher::by_file_name("shard.yml")]),
             Detector::new(
-                "java",
+                "dart",
                 [
-                    Matcher::by_file_name("build.gradle"),
-                    Matcher::by_file_name("pom.xml"),
+                    Matcher::by_file_name("pubspec.yaml"),
+                    Matcher::by_file_name("pubspec.yml"),
+                    Matcher::by_file_name("pubspec.lock"),
                 ],
             ),
-            Detector::new("node", [Matcher::by_file_name("package.json")]),
-            Detector::new("python", [Matcher::by_file_name("requirements.txt")]),
+            Detector::new("elixir", [Matcher::by_file_name("mix.exs")]),
+            Detector::new(
+                "elm",
+                [
+                    Matcher::by_file_name("elm.json"),
+                    Matcher::by_file_name("elm-package.json"),
+                    Matcher::by_file_name(".elm-version"),
+                ],
+            ),
+            Detector::new(
+                "erlang",
+                [
+                    Matcher::by_file_name("rebar.config"),
+                    Matcher::by_file_name("erlang.mk"),
+                ],
+            ),
             Detector::new(
                 "haskell",
                 [
                     Matcher::by_file_extension("cabal"),
                     Matcher::by_file_name("stack.yaml"),
+                    Matcher::by_file_name("Setup.hs"),
                 ],
             ),
-            Detector::new("php", [Matcher::by_file_name("composer.json")]),
+            Detector::new(
+                "go",
+                [
+                    Matcher::by_file_name("go.mod"),
+                    Matcher::by_file_name("go.sum"),
+                    Matcher::by_file_name("glide.yaml"),
+                    Matcher::by_file_name("Gopkg.yml"),
+                    Matcher::by_file_name("Gopkg.lock"),
+                    Matcher::by_file_name(".go-version"),
+                ],
+            ),
+            Detector::new(
+                "java",
+                [
+                    Matcher::by_file_name("build.gradle"),
+                    Matcher::by_file_name("pom.xml"),
+                    Matcher::by_file_name("build.gradle.kts"),
+                    Matcher::by_file_name("build.sbt"),
+                    Matcher::by_file_name(".java.version"),
+                    Matcher::by_file_name("deps.edn"),
+                    Matcher::by_file_name("project.clj"),
+                    Matcher::by_file_name("build.boot"),
+                ],
+            ),
+            Detector::new(
+                "julia",
+                [
+                    Matcher::by_file_name("Project.toml"),
+                    Matcher::by_file_name("Manifest.toml"),
+                ],
+            ),
+            Detector::new("nim", [Matcher::by_file_name("nim.cfg")]),
+            Detector::new(
+                "node",
+                [
+                    Matcher::by_file_name("package.json"),
+                    Matcher::by_file_name(".node-version"),
+                    Matcher::by_file_name(".nvmrc"),
+                ],
+            ),
+            Detector::new(
+                "ocaml",
+                [
+                    Matcher::by_file_name("dune"),
+                    Matcher::by_file_name("dune-project"),
+                    Matcher::by_file_name("jbuild"),
+                    Matcher::by_file_name("jbuild-ignore"),
+                    Matcher::by_file_name(".merlin"),
+                    Matcher::by_file_extension("opam"),
+                ],
+            ),
+            Detector::new(
+                "perl",
+                [
+                    Matcher::by_file_name("Makefile.PL"),
+                    Matcher::by_file_name("Build.PL"),
+                    Matcher::by_file_name("cpanfile"),
+                    Matcher::by_file_name("cpanfile.snapshot"),
+                    Matcher::by_file_name("META.json"),
+                    Matcher::by_file_name("META.yml"),
+                    Matcher::by_file_name(".perl-version"),
+                ],
+            ),
+            Detector::new(
+                "composer", // php
+                [
+                    Matcher::by_file_name("composer.json"),
+                    Matcher::by_file_name(".php-version"),
+                ],
+            ),
+            Detector::new(
+                "purescript",
+                [
+                    Matcher::by_file_name("spago.dhall"),
+                    Matcher::by_file_name("packages.dhall"),
+                ],
+            ),
+            Detector::new(
+                "python",
+                [
+                    Matcher::by_file_name("requirements.txt"),
+                    Matcher::by_file_name(".python-version"),
+                    Matcher::by_file_name("pyproject.toml"),
+                    Matcher::by_file_name("Pipfile"),
+                    Matcher::by_file_name("tox.ini"),
+                    Matcher::by_file_name("setup.py"),
+                    Matcher::by_file_name("__init__.py"),
+                ],
+            ),
+            Detector::new("r", [Matcher::by_file_name(".Rprofile")]),
             Detector::new(
                 "ruby",
                 [
                     Matcher::by_file_extension("gemspec"),
                     Matcher::by_file_name("Gemfile"),
+                    Matcher::by_file_name(".ruby-version"),
                 ],
             ),
             Detector::new("rust", [Matcher::by_file_name("Cargo.toml")]),
+            Detector::new(
+                "scala",
+                [
+                    Matcher::by_file_name(".scalaenv"),
+                    Matcher::by_file_name(".sbtenv"),
+                    Matcher::by_file_name("build.sbt"),
+                ],
+            ),
+            Detector::new("swift", [Matcher::by_file_name("Package.swift")]),
+            Detector::new("zig", [Matcher::by_file_extension("swift")]),
         ];
         Detectors { detectors }
     }
