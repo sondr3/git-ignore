@@ -1,3 +1,54 @@
+## 1.2.0
+
+> 2021-12-05
+
+The biggest release yet! From automatically recognizing templates based on files
+in your current directory to custom aliases and templates!
+
+- **Automatic**: When using the `-a/--auto`, `git-ignore` will automatically create `.gitignore`
+  templates by matching against files in your current directory.
+- **Aliases**: Do you use the same templates toghether all the time? Create an alias to combine
+  them.
+- **Templates**: Missing a template from www.gitignore.io? Create your own!
+
+### Commits
+
+* [[`1d9c331479`](https://github.com/sondr3/git-ignore/commit/1d9c331479)] - Add a bunch more languages to detectors 
+* [[`688b672d77`](https://github.com/sondr3/git-ignore/commit/688b672d77)] - \[#7] Auto detect templates based on existing files
+* [[`33af5b4022`](https://github.com/sondr3/git-ignore/commit/33af5b4022)] - Add notice to config\_or! macro when config is missing 
+* [[`cadc69d516`](https://github.com/sondr3/git-ignore/commit/cadc69d516)] - Add visible aliases to subcommands, update man page 
+* [[`738deff37d`](https://github.com/sondr3/git-ignore/commit/738deff37d)] - Early exit if updating and not listing any templates 
+* [[`7a56a7ebc8`](https://github.com/sondr3/git-ignore/commit/7a56a7ebc8)] - Add completions to assets folder 
+* [[`1eefbac6b8`](https://github.com/sondr3/git-ignore/commit/1eefbac6b8)] - Remove man crate, create man pages via asciidoctor 
+* [[`f8e3c63453`](https://github.com/sondr3/git-ignore/commit/f8e3c63453)] - Update man page, fix some spelling 
+* [[`a3c1124c48`](https://github.com/sondr3/git-ignore/commit/a3c1124c48)] - Minor error handling refactoring 
+* [[`72a72733f9`](https://github.com/sondr3/git-ignore/commit/72a72733f9)] - Add anyhow for easier error handling 
+* [[`e97aca5ab9`](https://github.com/sondr3/git-ignore/commit/e97aca5ab9)] - Add --simple flag to ignore aliases and templates 
+* [[`dc748b2cbc`](https://github.com/sondr3/git-ignore/commit/dc748b2cbc)] - Implement creating and reading templates 
+* [[`8f767e9078`](https://github.com/sondr3/git-ignore/commit/8f767e9078)] - Simplify and remove unneeded code 
+* [[`dc7dacd018`](https://github.com/sondr3/git-ignore/commit/dc7dacd018)] - Color aliases, templates when listing 
+* [[`660e99085a`](https://github.com/sondr3/git-ignore/commit/660e99085a)] - Fix some pedantic lints 
+* [[`3b7cbc5072`](https://github.com/sondr3/git-ignore/commit/3b7cbc5072)] - Switch lookup of names from starts\_with to contains 
+* [[`c9b49eb02d`](https://github.com/sondr3/git-ignore/commit/c9b49eb02d)] - Fetch templates from aliases and list them/print them 
+* [[`9ddfa8d2df`](https://github.com/sondr3/git-ignore/commit/9ddfa8d2df)] - Refactor Config::from\_dir function 
+* [[`d558dd1ebc`](https://github.com/sondr3/git-ignore/commit/d558dd1ebc)] - Fix clippy warning 
+* [[`2f8cfebcb1`](https://github.com/sondr3/git-ignore/commit/2f8cfebcb1)] - Add messages when removing aliases and templates 
+* [[`9b3b74714e`](https://github.com/sondr3/git-ignore/commit/9b3b74714e)] - Fix error where config does not get its own path 
+* [[`9a6925357a`](https://github.com/sondr3/git-ignore/commit/9a6925357a)] - Simplify config initialization, don't list empty aliases 
+* [[`9a91755aae`](https://github.com/sondr3/git-ignore/commit/9a91755aae)] - Extract handling of config to a macro 
+* [[`5719bfdf05`](https://github.com/sondr3/git-ignore/commit/5719bfdf05)] - Add methods for listing templates and aliases 
+* [[`71c7f1c5a7`](https://github.com/sondr3/git-ignore/commit/71c7f1c5a7)] - Extract GitIgnore struct to own file 
+* [[`e5f32a119e`](https://github.com/sondr3/git-ignore/commit/e5f32a119e)] - Extract Config to own file, add methods for adding/removing aliases 
+* [[`6751e35588`](https://github.com/sondr3/git-ignore/commit/6751e35588)] - Use Clap from GitHub while waiting for next release 
+* [[`ff2248b602`](https://github.com/sondr3/git-ignore/commit/ff2248b602)] - Extract CLI, add completions 
+* [[`f761896936`](https://github.com/sondr3/git-ignore/commit/f761896936)] - Initial port of commands from structopt to clap v3 
+* [[`5b2a3b8077`](https://github.com/sondr3/git-ignore/commit/5b2a3b8077)] - Simplify getting config directory 
+* [[`4c8746961e`](https://github.com/sondr3/git-ignore/commit/4c8746961e)] - Add handling for templates 
+* [[`73f5cb59b9`](https://github.com/sondr3/git-ignore/commit/73f5cb59b9)] - Convert config handling to subcommands 
+* [[`6ef7eaa0ce`](https://github.com/sondr3/git-ignore/commit/6ef7eaa0ce)] - Implement adding aliases 
+* [[`d5b6793b69`](https://github.com/sondr3/git-ignore/commit/d5b6793b69)] - Start working on a config file 
+* [[`f966329d98`](https://github.com/sondr3/git-ignore/commit/f966329d98)] - Upgrade to Rust 2021 edition, upgrade packages 
+
 ## 1.1.2
 
 > 2021-03-24
