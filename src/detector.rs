@@ -320,7 +320,7 @@ mod tests {
     fn detects_php_from_compose_json() {
         let entry = FakeDirEntry::new("composer.json", Some("json"), true);
         let result = Detectors::default().detects(&Vec::from([entry]));
-        assert_eq!(result, vec!["php"])
+        assert_eq!(result, vec!["composer"])
     }
 
     #[test]
