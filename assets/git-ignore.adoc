@@ -1,8 +1,8 @@
 = git-ignore(1)
 Sondre Nilsen <nilsen.sondre@gmail.com>
-v1.1.2
+v1.2.0
 :doctype: manpage
-:man source: git-ignore v1.1.2
+:man source: git-ignore v1.2.0
 
 == Name
 
@@ -98,7 +98,7 @@ Add an alias for *rust* to *rust, visualstudiocode*::
 
 == Version
 
-v1.1.2
+v1.2.0
 
 == Resources
 

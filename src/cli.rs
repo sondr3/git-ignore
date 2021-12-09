@@ -4,7 +4,7 @@ use std::io;
 
 #[derive(Parser, Debug)]
 #[clap(
-    name = "git ignore", 
+    name = "git ignore",
     about,
     version,
     author,
