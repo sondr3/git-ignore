@@ -13,6 +13,7 @@ in your current directory to custom aliases and templates!
 
 ### Commits
 
+* [[`75a40daa25`](https://github.com/sondr3/git-ignore/commit/75a40daa25)] - Upgrade to clap v3 RC 
 * [[`1d9c331479`](https://github.com/sondr3/git-ignore/commit/1d9c331479)] - Add a bunch more languages to detectors 
 * [[`688b672d77`](https://github.com/sondr3/git-ignore/commit/688b672d77)] - \[#7] Auto detect templates based on existing files
 * [[`33af5b4022`](https://github.com/sondr3/git-ignore/commit/33af5b4022)] - Add notice to config\_or! macro when config is missing 
