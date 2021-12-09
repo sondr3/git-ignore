@@ -1,13 +1,13 @@
-use clap::{crate_authors, crate_description, crate_version, App, AppSettings, Parser, Subcommand};
+use clap::{App, AppSettings, Parser, Subcommand};
 use clap_generate::{generate, Generator, Shell};
 use std::io;
 
 #[derive(Parser, Debug)]
 #[clap(
-    name = "git ignore",
-    about = crate_description!(),
-    version = crate_version!(),
-    author = crate_authors!(),
+    name = "git ignore", 
+    about,
+    version,
+    author,
     global_setting = AppSettings::DeriveDisplayOrder,
     global_setting = AppSettings::ArgsNegateSubcommands,
 )]

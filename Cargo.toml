@@ -21,8 +21,8 @@ lto = "fat"
 [dependencies]
 anyhow = "1"
 attohttpc = { version = "0.18.0", default-features = false, features = ["json", "compress", "tls-rustls"] }
-clap = "3.0.0-beta.5"
-clap_generate = "3.0.0-beta.5"
+clap = { version = "3.0.0-rc.0", features = ["derive", "cargo"] }
+clap_generate = "3.0.0-rc.0"
 colored = "2.0.0"
 directories = "4.0.1"
 serde = { version = "1.0.130", features = ["derive"] }
@@ -30,9 +30,5 @@ serde_json = "1.0.68"
 toml = "0.5"
 
 [build-dependencies]
-clap = "3.0.0-beta.5"
-clap_generate = "3.0.0-beta.5"
-
-[patch.crates-io]
-clap = { git = "https://github.com/clap-rs/clap", branch = "master" } 
-clap_generate = { git = "https://github.com/clap-rs/clap", branch = "master" } 
+clap = { version = "3.0.0-rc.0", features = ["derive", "cargo"] }
+clap_generate = "3.0.0-rc.0"

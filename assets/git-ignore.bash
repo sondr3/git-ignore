@@ -9,7 +9,7 @@ _git-ignore() {
     for i in ${COMP_WORDS[@]}
     do
         case "${i}" in
-            git-ignore)
+            "$1")
                 cmd="git__ignore"
                 ;;
             add)
