@@ -36,6 +36,13 @@ Tired of visiting [gitignore.io](https://www.gitignore.io/) to get templates for
 your own aliases for common combinations of templates, or create your own completely 
 custom ones for even more power.
 
+<details>
+<summary>Demo</summary>
+
+[![asciicast](https://asciinema.org/a/454912.svg)](https://asciinema.org/a/454912)
+
+</details>
+
 # Usage
 
 **NOTE:** Similar to the `nix-search` command, this program prints a message
