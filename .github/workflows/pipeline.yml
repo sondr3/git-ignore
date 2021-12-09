@@ -189,5 +189,12 @@ jobs:
             git-ignore-x86_64-pc-windows-msvc.zip
             git-ignore-x86_64-unknown-linux-gnu.tar.gz
             git-ignore-x86_64-unknown-linux-musl.tar.gz
+            assets/_git-ignore
+            assets/git-ignore.1
+            assets/git-ignore.adoc
+            assets/git-ignore.bash
+            assets/git-ignore.elv
+            assets/git-ignore.fish
+            assets/_git-ignore.ps1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
