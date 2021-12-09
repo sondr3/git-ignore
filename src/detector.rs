@@ -159,7 +159,7 @@ impl Default for Detectors {
                 ],
             ),
             Detector::new("swift", [Matcher::by_file_name("Package.swift")]),
-            Detector::new("zig", [Matcher::by_file_extension("swift")]),
+            Detector::new("zig", [Matcher::by_file_extension("zig")]),
         ];
         Detectors { detectors }
     }
