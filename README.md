@@ -19,6 +19,9 @@
 
 - [What and why](#what-and-why)
 - [Usage](#usage)
+  - [Aliases](#aliases)
+  - [Templates](#templates)
+  - [Configuration](#configuration)
 - [Installation](#installation)
 - [License](#license)
 </details>
