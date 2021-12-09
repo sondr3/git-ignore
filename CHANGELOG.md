@@ -3,7 +3,8 @@
 > 2021-12-05
 
 The biggest release yet! From automatically recognizing templates based on files
-in your current directory to custom aliases and templates!
+in your current directory to custom aliases and templates! Huge thanks to 
+[`sestrella`](https://github.com/sestrella) for contributing the automatic matching functionality.
 
 - **Automatic**: When using the `-a/--auto`, `git-ignore` will automatically create `.gitignore`
   templates by matching against files in your current directory.
