@@ -31,9 +31,9 @@
 Tired of visiting [gitignore.io](https://www.gitignore.io/) to get templates for your
 `.gitignore` all the time? I was. So I [automated](https://xkcd.com/1319/) [it](https://xkcd.com/1205/).
 
-`git ignore` allows you to easily and quickly get all the available templates from 
-[gitignore.io](https://www.gitignore.io/), even while offline. You can also define 
-your own aliases for common combinations of templates, or create your own completely 
+`git ignore` allows you to easily and quickly get all the available templates from
+[gitignore.io](https://www.gitignore.io/), even while offline. You can also define
+your own aliases for common combinations of templates, or create your own completely
 custom ones for even more power.
 
 <details>
@@ -52,7 +52,7 @@ and is purely informational.
 ## Updating templates
 
 To download and cache all available templates, use `--update`. This can also be
-used in combination with any of the other flags/arguments, or be ran as a
+used in combination with any of the other flags/arguments, or be run as a
 standalone flag.
 
 ```sh
@@ -111,7 +111,7 @@ $ git ignore -l rust intellij
 ## Printing templates
 
 Once you've found your templates, you can print them by omitting `-l|--list`. **Note:**
-listing and searcing for templates is inexact, but printing them requires exact matches.
+listing and searching for templates is inexact, but printing them requires exact matches.
 
 ```sh
 $ git ignore rust intellij+all
@@ -127,10 +127,10 @@ $ git ignore rust intellij+all
 
 ## Aliases
 
-Aliases are a way to combine common combinations of templates, if you find 
-yourself always using `node` and `visualstudiocode` in your frontend projects 
-you can create an alias for it for ease of access. Aliases have higher priority 
-than templates from www.gitignore.io, so an alias named `node` will be used 
+Aliases are a way to combine common combinations of templates, if you find
+yourself always using `node` and `visualstudiocode` in your frontend projects
+you can create an alias for it for ease of access. Aliases have higher priority
+than templates from www.gitignore.io, so an alias named `node` will be used
 instead of the template. When listing all available templates, aliases are colored
 yellow to allow you to distinguish them from regular templates.
 
@@ -222,7 +222,7 @@ included man pages).
 
 # Installation
 
-Currently the package is available a couple of places, including Homebrew, AUR and Nix.
+Currently, the package is available a couple of places, including Homebrew, AUR and Nix.
 
 <dl>
   <dt>Cargo</dt>
@@ -239,8 +239,9 @@ Currently the package is available a couple of places, including Homebrew, AUR a
     <ol>
   </dd>
 
-  <dt>Arch</dt>
+  <dt>Arch (replace <code>paru</code> with you favorite AUR tool)</dt>
   <dd><code>paru git-ignore-bin</code></dd>
+  <dd><code>paru git-ignore</code></dd>
 </dl>
 
 ## Release pages
