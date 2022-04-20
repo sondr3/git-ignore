@@ -128,6 +128,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "clap_mangen"
+version = "0.1.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fe896bd5c398a329f01d955185c374626101988455d8ee03b5e7a00c38bc01cf"
+dependencies = [
+ "clap",
+ "roff",
+]
+
+[[package]]
 name = "colored"
 version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -214,6 +224,7 @@ dependencies = [
  "attohttpc",
  "clap",
  "clap_complete",
+ "clap_mangen",
  "colored",
  "directories",
  "serde",
@@ -425,6 +436,12 @@ dependencies = [
  "web-sys",
  "winapi",
 ]
+
+[[package]]
+name = "roff"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b833d8d034ea094b1ea68aa6d5c740e0d04bad9d16568d08ba6f76823a114316"
 
 [[package]]
 name = "rustls"
