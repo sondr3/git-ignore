@@ -129,7 +129,7 @@ jobs:
         run: |
           cd target/${{ matrix.target }}/release
           strip git-ignore.exe
-          cp ../../../assets/* .
+          cp ../assets/* .
           7z a ../../../${{ matrix.name }} git-ignore.exe _git-ignore git-ignore.1 git-ignore.bash git-ignore.elv git-ignore.fish _git-ignore.ps1
           cd -
       - name: Prepare build artifacts [-nix]
@@ -137,7 +137,7 @@ jobs:
         run: |
           cd target/${{ matrix.target }}/release
           strip git-ignore
-          cp ../../../assets/* .
+          cp ../assets/* .
           tar czvf ../../../${{ matrix.name }} git-ignore _git-ignore git-ignore.1 git-ignore.bash git-ignore.elv git-ignore.fish _git-ignore.ps1
           cd -
       - name: Upload build artifact
