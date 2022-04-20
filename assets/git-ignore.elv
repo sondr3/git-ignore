@@ -2,11 +2,11 @@
 use builtin;
 use str;
 
-set edit:completion:arg-completer[git-ignore] = [@words]{
-    fn spaces [n]{
+set edit:completion:arg-completer[git-ignore] = {|@words|
+    fn spaces {|n|
         builtin:repeat $n ' ' | str:join ''
     }
-    fn cand [text desc]{
+    fn cand {|text desc|
         edit:complex-candidate $text &display=$text' '(spaces (- 14 (wcswidth $text)))$desc
     }
     var command = 'git-ignore'
@@ -102,8 +102,6 @@ set edit:completion:arg-completer[git-ignore] = [@words]{
             cand --help 'Print help information'
         }
         &'git-ignore;help'= {
-            cand -h 'Print help information'
-            cand --help 'Print help information'
         }
     ]
     $completions[$command]

@@ -76,7 +76,7 @@ fn main() -> Result<()> {
             TemplateCmd::Remove { name } => config_or!(app, remove_template, &name),
         },
         Some(Cmds::Completion { shell }) => {
-            let mut app = CLI::into_app();
+            let mut app = CLI::command();
             print_completion(shell, &mut app);
             return Ok(());
         }
@@ -114,7 +114,7 @@ fn main() -> Result<()> {
     if opt.list {
         app.list(templates.as_slice(), opt.simple)?;
     } else if templates.is_empty() {
-        let mut app = CLI::into_app();
+        let mut app = CLI::command();
         app.print_help()?;
     } else {
         app.get_templates(templates.as_slice(), opt.simple)?;

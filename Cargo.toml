@@ -19,16 +19,16 @@ path = "src/main.rs"
 lto = "fat"
 
 [dependencies]
-anyhow = "1"
+anyhow = "1.0.56"
 attohttpc = { version = "0.18.0", default-features = false, features = ["json", "compress", "tls-rustls"] }
-clap = { version = "3.0.0-rc.0", features = ["derive", "cargo"] }
-clap_generate = "3.0.0-rc.0"
+clap = { version = "3.1.10", features = ["derive", "cargo"] }
+clap_complete = "3.1.2"
 colored = "2.0.0"
 directories = "4.0.1"
-serde = { version = "1.0.130", features = ["derive"] }
-serde_json = "1.0.68"
-toml = "0.5"
+serde = { version = "1.0.136", features = ["derive"] }
+serde_json = "1.0.79"
+toml = "0.5.9"
 
 [build-dependencies]
-clap = { version = "3.0.0-rc.0", features = ["derive", "cargo"] }
-clap_generate = "3.0.0-rc.0"
+clap = { version = "3.1.10", features = ["derive", "cargo"] }
+clap_complete = "3.1.2"

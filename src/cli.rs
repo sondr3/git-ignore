@@ -1,5 +1,5 @@
-use clap::{App, AppSettings, Parser, Subcommand};
-use clap_generate::{generate, Generator, Shell};
+use clap::{AppSettings, Command, Parser, Subcommand};
+use clap_complete::{generate, Generator, Shell};
 use std::io;
 
 #[derive(Parser, Debug)]
@@ -9,8 +9,8 @@ use std::io;
     version,
     author,
     global_setting = AppSettings::DeriveDisplayOrder,
-    global_setting = AppSettings::ArgsNegateSubcommands,
 )]
+#[clap(args_conflicts_with_subcommands = true)]
 #[allow(clippy::upper_case_acronyms)]
 /// Quickly and easily add templates to .gitignore
 pub struct CLI {
@@ -79,6 +79,6 @@ pub enum TemplateCmd {
     Remove { name: String },
 }
 
-pub fn print_completion<G: Generator>(gen: G, app: &mut App) {
+pub fn print_completion<G: Generator>(gen: G, app: &mut Command) {
     generate(gen, app, app.get_name().to_string(), &mut io::stdout());
 }

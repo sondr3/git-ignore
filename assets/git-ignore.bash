@@ -85,7 +85,7 @@ _git-ignore() {
             return 0
             ;;
         git__ignore__alias__help)
-            opts="-h --version --help"
+            opts="-h --version --help <SUBCOMMAND>..."
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -141,7 +141,7 @@ _git-ignore() {
             return 0
             ;;
         git__ignore__help)
-            opts="-h --help"
+            opts="<SUBCOMMAND>..."
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -197,7 +197,7 @@ _git-ignore() {
             return 0
             ;;
         git__ignore__template__help)
-            opts="-h --version --help"
+            opts="-h --version --help <SUBCOMMAND>..."
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0

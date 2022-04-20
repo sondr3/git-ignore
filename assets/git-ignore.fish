@@ -38,4 +38,3 @@ complete -c git-ignore -n "__fish_seen_subcommand_from template; and __fish_seen
 complete -c git-ignore -n "__fish_seen_subcommand_from init" -l force -d 'Forcefully create config, possibly overwrite existing'
 complete -c git-ignore -n "__fish_seen_subcommand_from init" -s h -l help -d 'Print help information'
 complete -c git-ignore -n "__fish_seen_subcommand_from completion" -s h -l help -d 'Print help information'
-complete -c git-ignore -n "__fish_seen_subcommand_from help" -s h -l help -d 'Print help information'
