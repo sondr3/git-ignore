@@ -19,7 +19,7 @@ path = "src/main.rs"
 lto = "fat"
 
 [dependencies]
-anyhow = "1.0.56"
+anyhow = "1.0.57"
 attohttpc = { version = "0.18.0", default-features = false, features = ["json", "compress", "tls-rustls"] }
 clap = { version = "3.1.10", features = ["derive", "cargo"] }
 clap_complete = "3.1.2"
