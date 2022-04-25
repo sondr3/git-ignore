@@ -20,7 +20,7 @@ lto = "fat"
 
 [dependencies]
 anyhow = "1.0.56"
-attohttpc = { version = "0.18.0", default-features = false, features = ["json", "compress", "tls-rustls"] }
+attohttpc = { version = "0.19.1", default-features = false, features = ["json", "compress", "tls-rustls"] }
 clap = { version = "3.1.10", features = ["derive", "cargo"] }
 clap_complete = "3.1.2"
 colored = "2.0.0"
