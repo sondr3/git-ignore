@@ -32,4 +32,4 @@ toml = "0.5.9"
 [build-dependencies]
 clap = { version = "3.1.18", features = ["derive", "cargo"] }
 clap_complete = "3.1.4"
-clap_mangen = "0.1.6"
+clap_mangen = "0.1.9"
