@@ -7,8 +7,8 @@ mod detector;
 mod ignore;
 
 use anyhow::Result;
-use clap::{IntoApp, Parser};
-use cli::{print_completion, AliasCmd, Cmds, TemplateCmd, CLI};
+use clap::{CommandFactory, Parser};
+use cli::{print_completion, AliasCmd, Cli, Cmds, TemplateCmd};
 use colored::Colorize;
 use config::Config;
 use ignore::Core;
@@ -60,7 +60,7 @@ macro_rules! config_or {
 }
 
 fn main() -> Result<()> {
-    let opt = CLI::parse();
+    let opt = Cli::parse();
     let app = Core::new();
 
     match opt.cmd {
@@ -76,7 +76,7 @@ fn main() -> Result<()> {
             TemplateCmd::Remove { name } => config_or!(app, remove_template, &name),
         },
         Some(Cmds::Completion { shell }) => {
-            let mut app = CLI::command();
+            let mut app = Cli::command();
             print_completion(shell, &mut app);
             return Ok(());
         }
@@ -114,7 +114,7 @@ fn main() -> Result<()> {
     if opt.list {
         app.list(templates.as_slice(), opt.simple)?;
     } else if templates.is_empty() {
-        let mut app = CLI::command();
+        let mut app = Cli::command();
         app.print_help()?;
     } else {
         app.get_templates(templates.as_slice(), opt.simple)?;

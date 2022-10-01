@@ -20,9 +20,9 @@ lto = "fat"
 
 [dependencies]
 anyhow = "1.0.58"
-attohttpc = { version = "0.19.1", default-features = false, features = ["json", "compress", "tls-rustls"] }
-clap = { version = "3.2.8", features = ["derive", "cargo"] }
-clap_complete = "3.2.3"
+attohttpc = { version = "0.22.0", default-features = false, features = ["json", "compress", "tls-rustls"] }
+clap = { version = "4.0.7", features = ["derive", "cargo"] }
+clap_complete = "4.0.2"
 colored = "2.0.0"
 directories = "4.0.1"
 serde = { version = "1.0.138", features = ["derive"] }
@@ -30,6 +30,6 @@ serde_json = "1.0.82"
 toml = "0.5.9"
 
 [build-dependencies]
-clap = { version = "3.2.8", features = ["derive", "cargo"] }
-clap_complete = "3.2.3"
-clap_mangen = "0.1.10"
+clap = { version = "4.0.7", features = ["derive", "cargo"] }
+clap_complete = "4.0.2"
+clap_mangen = "0.2.2"

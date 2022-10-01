@@ -1,4 +1,4 @@
-use clap::{ArgEnum, IntoApp};
+use clap::{CommandFactory, ValueEnum};
 use clap_complete::generate_to;
 use clap_mangen::Man;
 use std::{
@@ -11,7 +11,7 @@ use std::{
 include!("src/cli.rs");
 
 fn build_shell_completion(outdir: &Path) -> Result<(), Error> {
-    let mut app = CLI::command();
+    let mut app = Cli::command();
     let shells = Shell::value_variants();
 
     for shell in shells {
@@ -22,7 +22,7 @@ fn build_shell_completion(outdir: &Path) -> Result<(), Error> {
 }
 
 fn build_manpages(outdir: &Path) -> Result<(), Error> {
-    let app = CLI::command();
+    let app = Cli::command();
 
     let file = outdir.join("git-ignore.1");
     let mut file = File::create(&file)?;

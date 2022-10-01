@@ -1,33 +1,26 @@
-use clap::{AppSettings, Command, Parser, Subcommand};
+use clap::{Command, Parser, Subcommand};
 use clap_complete::{generate, Generator, Shell};
 use std::io;
 
 #[derive(Parser, Debug)]
-#[clap(
-    name = "git ignore",
-    about,
-    version,
-    author,
-    global_setting = AppSettings::DeriveDisplayOrder,
-)]
+#[clap(name = "git ignore", about, version, author)]
 #[clap(args_conflicts_with_subcommands = true)]
-#[allow(clippy::upper_case_acronyms)]
 /// Quickly and easily add templates to .gitignore
-pub struct CLI {
+pub struct Cli {
     /// List <templates> or all available templates.
-    #[clap(short, long)]
+    #[arg(short, long)]
     pub list: bool,
     /// Update templates by fetching them from gitignore.io
-    #[clap(short, long)]
+    #[arg(short, long)]
     pub update: bool,
     /// Ignore all user defined aliases and templates
-    #[clap(short, long)]
+    #[arg(short, long)]
     pub simple: bool,
     /// Autodetect templates based on the existing files
-    #[clap(short, long)]
+    #[arg(short, long)]
     pub auto: bool,
     /// Configuration management
-    #[clap(subcommand)]
+    #[command(subcommand)]
     pub cmd: Option<Cmds>,
     /// Names of templates to show/search for
     pub templates: Vec<String>,
@@ -35,11 +28,9 @@ pub struct CLI {
 
 #[derive(Subcommand, Debug)]
 pub enum Cmds {
-    /// Manage local aliases
-    #[clap(subcommand)]
+    #[command(subcommand)]
     Alias(AliasCmd),
-    /// Manage local templates
-    #[clap(subcommand)]
+    #[command(subcommand)]
     Template(TemplateCmd),
     /// Initialize user configuration
     Init {
@@ -50,32 +41,34 @@ pub enum Cmds {
     /// Generate shell completion
     Completion {
         /// Shell to generate completion for
-        #[clap(arg_enum)]
+        #[clap(value_enum)]
         shell: Shell,
     },
 }
 
 #[derive(Subcommand, Debug)]
+/// Manage local templates
 pub enum AliasCmd {
     /// List available aliases
-    #[clap(visible_alias = "ls")]
+    #[command(visible_alias = "ls")]
     List,
     /// Add a new alias
     Add { name: String, aliases: Vec<String> },
     /// Remove an alias
-    #[clap(visible_alias = "rm")]
+    #[command(visible_alias = "rm")]
     Remove { name: String },
 }
 
 #[derive(Subcommand, Debug)]
+/// Manage local aliases
 pub enum TemplateCmd {
     /// List available templates
-    #[clap(visible_alias = "ls")]
+    #[command(visible_alias = "ls")]
     List,
     /// Add a new template
     Add { name: String, file_name: String },
     /// Remove a template
-    #[clap(visible_alias = "rm")]
+    #[command(visible_alias = "rm")]
     Remove { name: String },
 }
 
