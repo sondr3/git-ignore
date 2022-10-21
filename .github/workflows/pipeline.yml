@@ -13,7 +13,7 @@ jobs:
         with:
           components: rustfmt, clippy
 
-      - uses: Swatinem/rust-cache@v1
+      - uses: Swatinem/rust-cache@v2
 
       - name: build
         run: cargo test --no-run
@@ -41,7 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v1
+      - uses: Swatinem/rust-cache@v2
 
       - run: cargo login $CRATES_IO_TOKEN
       - run: cargo publish
@@ -79,7 +79,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           target: ${{ matrix.target }}
-      - uses: Swatinem/rust-cache@v1
+      - uses: Swatinem/rust-cache@v2
 
       - name: Install musl tools
         if: matrix.target == 'x86_64-unknown-linux-musl'
