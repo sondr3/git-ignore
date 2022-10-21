@@ -1,3 +1,13 @@
+## v1.2.2
+> 2022-10-21
+
+## Summary
+
+Quick bugfix for bash completion panicking when generated from the CLI.
+
+### Commits
+- [[`aa96e7a`](https://github.com/sondr3/git-ignore)] Fix completion panicking when generated from binary
+
 ## v1.2.1
 
 > 2022-10-01
