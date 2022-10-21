@@ -3,7 +3,7 @@ use clap_complete::{generate, Generator, Shell};
 use std::io;
 
 #[derive(Parser, Debug)]
-#[clap(name = "git ignore", about, version, author)]
+#[clap(name = "git-ignore", about, version, author)]
 #[clap(args_conflicts_with_subcommands = true)]
 /// Quickly and easily add templates to .gitignore
 pub struct Cli {
