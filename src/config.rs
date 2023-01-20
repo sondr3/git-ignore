@@ -175,7 +175,7 @@ impl Config {
 
     fn create_dir(path: &Path) {
         if !path.exists() {
-            std::fs::create_dir_all(&path).expect("Could not create config directory");
+            std::fs::create_dir_all(path).expect("Could not create config directory");
         }
 
         let path = path.join("templates");
