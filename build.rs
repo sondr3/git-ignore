@@ -15,7 +15,7 @@ fn build_shell_completion(outdir: &Path) -> Result<(), Error> {
     let shells = Shell::value_variants();
 
     for shell in shells {
-        generate_to(*shell, &mut app, "git-ignore", &outdir)?;
+        generate_to(*shell, &mut app, "git-ignore", outdir)?;
     }
 
     Ok(())
@@ -25,7 +25,7 @@ fn build_manpages(outdir: &Path) -> Result<(), Error> {
     let app = Cli::command();
 
     let file = outdir.join("git-ignore.1");
-    let mut file = File::create(&file)?;
+    let mut file = File::create(file)?;
 
     Man::new(app).render(&mut file)?;
 
