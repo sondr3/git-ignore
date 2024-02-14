@@ -1,7 +1,7 @@
 use crate::{config::Config, detector::Detectors};
 use anyhow::Result;
 use colored::Colorize;
-use directories::ProjectDirs;
+use etcetera::{app_strategy::Xdg, choose_app_strategy, AppStrategy, AppStrategyArgs};
 use serde::{Deserialize, Serialize};
 use std::{
     cmp::Ordering,
@@ -14,9 +14,12 @@ use std::{
     path::{Path, PathBuf},
 };
 
-pub fn project_dirs() -> ProjectDirs {
-    ProjectDirs::from("com", "Sondre Nilsen", "git-ignore")
-        .expect("Could not find project directory.")
+pub fn project_dirs() -> Xdg {
+    choose_app_strategy(AppStrategyArgs {
+        top_level_domain: "com".to_string(),
+        author: "Sondre Aasemoen".to_string(),
+        app_name: "git-ignore".to_string(),
+    }).expect("Could not find project directory.")
 }
 
 #[derive(Debug)]
@@ -99,17 +102,8 @@ impl Core {
     /// directories works on macOS, Linux and Windows. See the documentation for
     /// their locations.
     pub fn new() -> Self {
-        let proj_dir = project_dirs();
-        let cache_dir: PathBuf = proj_dir.cache_dir().into();
-        let ignore_file: PathBuf = [
-            cache_dir
-                .to_str()
-                .expect("Could not parse config directory name, this should never happen"),
-            "ignore.json",
-        ]
-        .iter()
-        .collect();
-
+        let cache_dir = project_dirs().cache_dir();
+        let ignore_file = cache_dir.join("ignore.json");
         let config = Config::from_dir();
 
         Core {

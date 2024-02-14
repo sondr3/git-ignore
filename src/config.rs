@@ -1,6 +1,7 @@
 use crate::ignore::{project_dirs, Type};
 use anyhow::{Context, Result};
 use colored::Colorize;
+use etcetera::AppStrategy;
 use serde::{Deserialize, Serialize};
 use std::{
     collections::HashMap,
@@ -10,16 +11,7 @@ use std::{
 };
 
 fn config_file() -> PathBuf {
-    let dirs = project_dirs();
-
-    [
-        dirs.config_dir()
-            .to_str()
-            .expect("Could not parse config directory name, this should never happen"),
-        "config.toml",
-    ]
-    .iter()
-    .collect()
+        project_dirs().config_dir().join("config.toml")
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
