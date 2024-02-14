@@ -37,6 +37,9 @@ pub enum Cmds {
         /// Forcefully create config, possibly overwrite existing
         #[clap(long)]
         force: bool,
+        /// Migrate from old config path to new
+        #[clap(long)]
+        migrate: bool,
     },
     /// Generate shell completion
     Completion {

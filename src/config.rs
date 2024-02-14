@@ -1,4 +1,4 @@
-use crate::ignore::{project_dirs, Type};
+use crate::ignore::{old_project_dirs, project_dirs, Type};
 use anyhow::{Context, Result};
 use colored::Colorize;
 use etcetera::AppStrategy;
@@ -14,6 +14,10 @@ fn config_file() -> PathBuf {
     project_dirs().config_dir().join("config.toml")
 }
 
+fn old_config_file() -> PathBuf {
+    old_project_dirs().config_dir().join("config.toml")
+}
+
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Config {
     #[serde(skip)]
@@ -23,13 +27,32 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn create(force: bool) -> Result<()> {
+    pub fn create(force: bool, migrate: bool) -> Result<()> {
         let config_file = config_file();
         Config::create_dir(
             config_file
                 .parent()
                 .context("No parent dir for the config_file")?,
         );
+
+        if migrate {
+            let old_config_file = old_config_file();
+            if old_config_file.exists() {
+                std::fs::copy(&old_config_file, &config_file)
+                    .context("Could not copy old config file to new location")?;
+                std::fs::remove_file(&old_config_file)
+                    .context("Could not remove old config file")?;
+                println!(
+                    "{}: Migrated old config file to new location",
+                    "INFO".bold().blue()
+                );
+            } else {
+                eprintln!(
+                    "{}: No old config file found, nothing to migrate",
+                    "WARN".bold().red()
+                );
+            }
+        }
 
         if config_file.exists() && !force {
             println!("{}: config already exist", "INFO".bold().blue());
@@ -45,7 +68,7 @@ impl Config {
     }
 
     pub fn from_dir() -> Option<Self> {
-        let config_file = config_file();
+        let config_file = Config::find_config_file()?;
         if config_file.exists() {
             let file = Path::new(&config_file);
             let file = match read_to_string(file) {
@@ -173,6 +196,24 @@ impl Config {
         let path = path.join("templates");
         if !path.exists() {
             std::fs::create_dir_all(&path).expect("Could not create config directory");
+        }
+    }
+
+    fn find_config_file() -> Option<PathBuf> {
+        let config_file = config_file();
+        let old_config_file = old_config_file();
+
+        if old_config_file.exists() {
+            eprintln!(
+                "{}: Found old config file, please run `{}` to move it. This file will be ignored in a future release.",
+                "WARN".bold().red(),
+                "git ignore init --migrate".italic().blue()
+            );
+            Some(old_config_file)
+        } else if config_file.exists() {
+            Some(config_file)
+        } else {
+            None
         }
     }
 }

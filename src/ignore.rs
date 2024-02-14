@@ -1,6 +1,7 @@
 use crate::{config::Config, detector::Detectors};
 use anyhow::Result;
 use colored::Colorize;
+use directories::ProjectDirs;
 use etcetera::{app_strategy::Xdg, choose_app_strategy, AppStrategy, AppStrategyArgs};
 use serde::{Deserialize, Serialize};
 use std::{
@@ -21,6 +22,11 @@ pub fn project_dirs() -> Xdg {
         app_name: "git-ignore".to_string(),
     })
     .expect("Could not find project directory.")
+}
+
+pub fn old_project_dirs() -> ProjectDirs {
+    ProjectDirs::from("com", "Sondre Nilsen", "git-ignore")
+        .expect("Could not find project directory.")
 }
 
 #[derive(Debug)]
