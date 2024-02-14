@@ -11,7 +11,7 @@ use std::{
 };
 
 fn config_file() -> PathBuf {
-        project_dirs().config_dir().join("config.toml")
+    project_dirs().config_dir().join("config.toml")
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]

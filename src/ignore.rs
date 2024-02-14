@@ -19,7 +19,8 @@ pub fn project_dirs() -> Xdg {
         top_level_domain: "com".to_string(),
         author: "Sondre Aasemoen".to_string(),
         app_name: "git-ignore".to_string(),
-    }).expect("Could not find project directory.")
+    })
+    .expect("Could not find project directory.")
 }
 
 #[derive(Debug)]
@@ -190,7 +191,7 @@ impl Core {
     }
 
     pub fn autodetect_templates(&self) -> Result<Vec<String>> {
-        let entries: Vec<DirEntry> = read_dir(current_dir()?)?.map(|e| e.unwrap()).collect();
+        let entries: Vec<DirEntry> = read_dir(current_dir()?)?.map(Result::unwrap).collect();
         Ok(self.detectors.detects(entries.as_slice()))
     }
 
