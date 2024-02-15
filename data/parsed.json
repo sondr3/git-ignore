@@ -1,0 +1,771 @@
+{
+  "$schema": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "aws": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "azure": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "battery": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "buf": {
+    "detect_files": [
+      "buf.yaml",
+      "buf.gen.yaml",
+      "buf.work.yaml"
+    ],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "bun": {
+    "detect_files": [
+      "bun.lockb",
+      "bunfig.toml"
+    ],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "c": {
+    "detect_files": [],
+    "detect_extensions": [
+      "c",
+      "h"
+    ],
+    "detect_folders": []
+  },
+  "character": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "cmake": {
+    "detect_files": [
+      "CMakeLists.txt",
+      "CMakeCache.txt"
+    ],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "cmd_duration": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "cobol": {
+    "detect_files": [],
+    "detect_extensions": [
+      "cbl",
+      "cob",
+      "CBL",
+      "COB"
+    ],
+    "detect_folders": []
+  },
+  "conda": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "container": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "crystal": {
+    "detect_files": [
+      "shard.yml"
+    ],
+    "detect_extensions": [
+      "cr"
+    ],
+    "detect_folders": []
+  },
+  "daml": {
+    "detect_files": [
+      "daml.yaml"
+    ],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "dart": {
+    "detect_files": [
+      "pubspec.yaml",
+      "pubspec.yml",
+      "pubspec.lock"
+    ],
+    "detect_extensions": [
+      "dart"
+    ],
+    "detect_folders": [
+      ".dart_tool"
+    ]
+  },
+  "deno": {
+    "detect_files": [
+      "deno.json",
+      "deno.jsonc",
+      "mod.ts",
+      "deps.ts",
+      "mod.js",
+      "deps.js"
+    ],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "directory": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "direnv": {
+    "detect_files": [
+      ".envrc"
+    ],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "docker_context": {
+    "detect_files": [
+      "docker-compose.yml",
+      "docker-compose.yaml",
+      "Dockerfile"
+    ],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "dotnet": {
+    "detect_files": [
+      "global.json",
+      "project.json",
+      "Directory.Build.props",
+      "Directory.Build.targets",
+      "Packages.props"
+    ],
+    "detect_extensions": [
+      "csproj",
+      "fsproj",
+      "xproj"
+    ],
+    "detect_folders": []
+  },
+  "elixir": {
+    "detect_files": [
+      "mix.exs"
+    ],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "elm": {
+    "detect_files": [
+      "elm.json",
+      "elm-package.json",
+      ".elm-version"
+    ],
+    "detect_extensions": [
+      "elm"
+    ],
+    "detect_folders": [
+      "elm-stuff"
+    ]
+  },
+  "env_var": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "erlang": {
+    "detect_files": [
+      "rebar.config",
+      "erlang.mk"
+    ],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "fennel": {
+    "detect_files": [],
+    "detect_extensions": [
+      "fnl"
+    ],
+    "detect_folders": []
+  },
+  "fill": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "fossil_branch": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "fossil_metrics": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "gcloud": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "git_branch": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "git_commit": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "git_metrics": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "git_state": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "git_status": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "golang": {
+    "detect_files": [
+      "go.mod",
+      "go.sum",
+      "go.work",
+      "glide.yaml",
+      "Gopkg.yml",
+      "Gopkg.lock",
+      ".go-version"
+    ],
+    "detect_extensions": [
+      "go"
+    ],
+    "detect_folders": [
+      "Godeps"
+    ]
+  },
+  "gradle": {
+    "detect_files": [],
+    "detect_extensions": [
+      "gradle",
+      "gradle.kts"
+    ],
+    "detect_folders": [
+      "gradle"
+    ]
+  },
+  "guix_shell": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "haskell": {
+    "detect_files": [
+      "stack.yaml",
+      "cabal.project"
+    ],
+    "detect_extensions": [
+      "hs",
+      "cabal",
+      "hs-boot"
+    ],
+    "detect_folders": []
+  },
+  "haxe": {
+    "detect_files": [
+      "haxelib.json",
+      "hxformat.json",
+      ".haxerc"
+    ],
+    "detect_extensions": [
+      "hx",
+      "hxml"
+    ],
+    "detect_folders": [
+      ".haxelib",
+      "haxe_libraries"
+    ]
+  },
+  "helm": {
+    "detect_files": [
+      "helmfile.yaml",
+      "Chart.yaml"
+    ],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "hg_branch": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "hostname": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "java": {
+    "detect_files": [
+      "pom.xml",
+      "build.gradle.kts",
+      "build.sbt",
+      ".java-version",
+      "deps.edn",
+      "project.clj",
+      "build.boot",
+      ".sdkmanrc"
+    ],
+    "detect_extensions": [
+      "java",
+      "class",
+      "jar",
+      "gradle",
+      "clj",
+      "cljc"
+    ],
+    "detect_folders": []
+  },
+  "jobs": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "julia": {
+    "detect_files": [
+      "Project.toml",
+      "Manifest.toml"
+    ],
+    "detect_extensions": [
+      "jl"
+    ],
+    "detect_folders": []
+  },
+  "kotlin": {
+    "detect_files": [],
+    "detect_extensions": [
+      "kt",
+      "kts"
+    ],
+    "detect_folders": []
+  },
+  "kubernetes": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "line_break": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "localip": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "lua": {
+    "detect_files": [
+      ".lua-version"
+    ],
+    "detect_extensions": [
+      "lua"
+    ],
+    "detect_folders": [
+      "lua"
+    ]
+  },
+  "memory_usage": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "meson": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "nim": {
+    "detect_files": [
+      "nim.cfg"
+    ],
+    "detect_extensions": [
+      "nim",
+      "nims",
+      "nimble"
+    ],
+    "detect_folders": []
+  },
+  "nix_shell": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "nodejs": {
+    "detect_files": [
+      "package.json",
+      ".node-version",
+      ".nvmrc"
+    ],
+    "detect_extensions": [
+      "js",
+      "mjs",
+      "cjs",
+      "ts",
+      "mts",
+      "cts"
+    ],
+    "detect_folders": [
+      "node_modules"
+    ]
+  },
+  "ocaml": {
+    "detect_files": [
+      "dune",
+      "dune-project",
+      "jbuild",
+      "jbuild-ignore",
+      ".merlin"
+    ],
+    "detect_extensions": [
+      "opam",
+      "ml",
+      "mli",
+      "re",
+      "rei"
+    ],
+    "detect_folders": [
+      "_opam",
+      "esy.lock"
+    ]
+  },
+  "opa": {
+    "detect_files": [],
+    "detect_extensions": [
+      "rego"
+    ],
+    "detect_folders": []
+  },
+  "openstack": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "os": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "package": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "perl": {
+    "detect_files": [
+      "Makefile.PL",
+      "Build.PL",
+      "cpanfile",
+      "cpanfile.snapshot",
+      "META.json",
+      "META.yml",
+      ".perl-version"
+    ],
+    "detect_extensions": [
+      "pl",
+      "pm",
+      "pod"
+    ],
+    "detect_folders": []
+  },
+  "php": {
+    "detect_files": [
+      "composer.json",
+      ".php-version"
+    ],
+    "detect_extensions": [
+      "php"
+    ],
+    "detect_folders": []
+  },
+  "pijul_channel": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "pulumi": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "purescript": {
+    "detect_files": [
+      "spago.dhall"
+    ],
+    "detect_extensions": [
+      "purs"
+    ],
+    "detect_folders": []
+  },
+  "python": {
+    "detect_files": [
+      "requirements.txt",
+      ".python-version",
+      "pyproject.toml",
+      "Pipfile",
+      "tox.ini",
+      "setup.py",
+      "__init__.py"
+    ],
+    "detect_extensions": [
+      "py"
+    ],
+    "detect_folders": []
+  },
+  "raku": {
+    "detect_files": [
+      "META6.json"
+    ],
+    "detect_extensions": [
+      "p6",
+      "pm6",
+      "pod6",
+      "raku",
+      "rakumod"
+    ],
+    "detect_folders": []
+  },
+  "red": {
+    "detect_files": [],
+    "detect_extensions": [
+      "red",
+      "reds"
+    ],
+    "detect_folders": []
+  },
+  "rlang": {
+    "detect_files": [
+      "DESCRIPTION"
+    ],
+    "detect_extensions": [
+      "R",
+      "Rd",
+      "Rmd",
+      "Rproj",
+      "Rsx"
+    ],
+    "detect_folders": [
+      ".Rproj.user"
+    ]
+  },
+  "ruby": {
+    "detect_files": [
+      "Gemfile",
+      ".ruby-version"
+    ],
+    "detect_extensions": [
+      "rb"
+    ],
+    "detect_folders": []
+  },
+  "rust": {
+    "detect_files": [
+      "Cargo.toml"
+    ],
+    "detect_extensions": [
+      "rs"
+    ],
+    "detect_folders": []
+  },
+  "scala": {
+    "detect_files": [
+      ".scalaenv",
+      ".sbtenv",
+      "build.sbt"
+    ],
+    "detect_extensions": [
+      "sbt",
+      "scala"
+    ],
+    "detect_folders": [
+      ".metals"
+    ]
+  },
+  "shell": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "shlvl": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "singularity": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "solidity": {
+    "detect_files": [],
+    "detect_extensions": [
+      "sol"
+    ],
+    "detect_folders": []
+  },
+  "spack": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "status": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "sudo": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "swift": {
+    "detect_files": [
+      "Package.swift"
+    ],
+    "detect_extensions": [
+      "swift"
+    ],
+    "detect_folders": []
+  },
+  "terraform": {
+    "detect_files": [],
+    "detect_extensions": [
+      "tf",
+      "tfplan",
+      "tfstate"
+    ],
+    "detect_folders": [
+      ".terraform"
+    ]
+  },
+  "time": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "typst": {
+    "detect_files": [
+      "template.typ"
+    ],
+    "detect_extensions": [
+      "typ"
+    ],
+    "detect_folders": []
+  },
+  "username": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "vagrant": {
+    "detect_files": [
+      "Vagrantfile"
+    ],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "vcsh": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "vlang": {
+    "detect_files": [
+      "v.mod",
+      "vpkg.json",
+      ".vpkg-lock.json"
+    ],
+    "detect_extensions": [
+      "v"
+    ],
+    "detect_folders": []
+  },
+  "zig": {
+    "detect_files": [],
+    "detect_extensions": [
+      "zig"
+    ],
+    "detect_folders": []
+  },
+  "custom": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "format": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "right_format": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "continuation_prompt": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "scan_timeout": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "command_timeout": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "add_newline": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "follow_symlinks": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "palette": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "palettes": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "profiles": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  }
+}

@@ -280,8 +280,10 @@ dependencies = [
  "colored",
  "directories",
  "etcetera",
+ "quote",
  "serde",
  "serde_json",
+ "syn",
  "toml",
 ]
 

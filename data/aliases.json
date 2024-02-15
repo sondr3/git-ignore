@@ -1,0 +1,7 @@
+{
+	"dotnet": "dotnetcore",
+	"golang": "go",
+	"nodejs": "node",
+	"rlang": "r",
+	"php": "composer"
+}

@@ -1,5 +1,7 @@
 use std::ffi::OsString;
 
+include!(concat!(env!("OUT_DIR"), "/detectors.rs"));
+
 #[derive(Debug)]
 pub struct Detectors {
     detectors: Vec<Detector>,
@@ -15,153 +17,10 @@ impl Detectors {
 }
 
 impl Default for Detectors {
-    /// Based on https://github.com/starship/starship/tree/master/src/configs
     fn default() -> Self {
-        let detectors = vec![
-            Detector::new("crystal", [Matcher::by_file_name("shard.yml")]),
-            Detector::new(
-                "dart",
-                [
-                    Matcher::by_file_name("pubspec.yaml"),
-                    Matcher::by_file_name("pubspec.yml"),
-                    Matcher::by_file_name("pubspec.lock"),
-                ],
-            ),
-            Detector::new("elixir", [Matcher::by_file_name("mix.exs")]),
-            Detector::new(
-                "elm",
-                [
-                    Matcher::by_file_name("elm.json"),
-                    Matcher::by_file_name("elm-package.json"),
-                    Matcher::by_file_name(".elm-version"),
-                ],
-            ),
-            Detector::new(
-                "erlang",
-                [
-                    Matcher::by_file_name("rebar.config"),
-                    Matcher::by_file_name("erlang.mk"),
-                ],
-            ),
-            Detector::new(
-                "haskell",
-                [
-                    Matcher::by_file_extension("cabal"),
-                    Matcher::by_file_name("stack.yaml"),
-                    Matcher::by_file_name("Setup.hs"),
-                ],
-            ),
-            Detector::new(
-                "go",
-                [
-                    Matcher::by_file_name("go.mod"),
-                    Matcher::by_file_name("go.sum"),
-                    Matcher::by_file_name("glide.yaml"),
-                    Matcher::by_file_name("Gopkg.yml"),
-                    Matcher::by_file_name("Gopkg.lock"),
-                    Matcher::by_file_name(".go-version"),
-                ],
-            ),
-            Detector::new(
-                "java",
-                [
-                    Matcher::by_file_name("build.gradle"),
-                    Matcher::by_file_name("pom.xml"),
-                    Matcher::by_file_name("build.gradle.kts"),
-                    Matcher::by_file_name("build.sbt"),
-                    Matcher::by_file_name(".java.version"),
-                    Matcher::by_file_name("deps.edn"),
-                    Matcher::by_file_name("project.clj"),
-                    Matcher::by_file_name("build.boot"),
-                ],
-            ),
-            Detector::new(
-                "julia",
-                [
-                    Matcher::by_file_name("Project.toml"),
-                    Matcher::by_file_name("Manifest.toml"),
-                ],
-            ),
-            Detector::new("nim", [Matcher::by_file_name("nim.cfg")]),
-            Detector::new(
-                "node",
-                [
-                    Matcher::by_file_name("package.json"),
-                    Matcher::by_file_name(".node-version"),
-                    Matcher::by_file_name(".nvmrc"),
-                ],
-            ),
-            Detector::new(
-                "ocaml",
-                [
-                    Matcher::by_file_name("dune"),
-                    Matcher::by_file_name("dune-project"),
-                    Matcher::by_file_name("jbuild"),
-                    Matcher::by_file_name("jbuild-ignore"),
-                    Matcher::by_file_name(".merlin"),
-                    Matcher::by_file_extension("opam"),
-                ],
-            ),
-            Detector::new(
-                "perl",
-                [
-                    Matcher::by_file_name("Makefile.PL"),
-                    Matcher::by_file_name("Build.PL"),
-                    Matcher::by_file_name("cpanfile"),
-                    Matcher::by_file_name("cpanfile.snapshot"),
-                    Matcher::by_file_name("META.json"),
-                    Matcher::by_file_name("META.yml"),
-                    Matcher::by_file_name(".perl-version"),
-                ],
-            ),
-            Detector::new(
-                "composer", // php
-                [
-                    Matcher::by_file_name("composer.json"),
-                    Matcher::by_file_name(".php-version"),
-                ],
-            ),
-            Detector::new(
-                "purescript",
-                [
-                    Matcher::by_file_name("spago.dhall"),
-                    Matcher::by_file_name("packages.dhall"),
-                ],
-            ),
-            Detector::new(
-                "python",
-                [
-                    Matcher::by_file_name("requirements.txt"),
-                    Matcher::by_file_name(".python-version"),
-                    Matcher::by_file_name("pyproject.toml"),
-                    Matcher::by_file_name("Pipfile"),
-                    Matcher::by_file_name("tox.ini"),
-                    Matcher::by_file_name("setup.py"),
-                    Matcher::by_file_name("__init__.py"),
-                ],
-            ),
-            Detector::new("r", [Matcher::by_file_name(".Rprofile")]),
-            Detector::new(
-                "ruby",
-                [
-                    Matcher::by_file_extension("gemspec"),
-                    Matcher::by_file_name("Gemfile"),
-                    Matcher::by_file_name(".ruby-version"),
-                ],
-            ),
-            Detector::new("rust", [Matcher::by_file_name("Cargo.toml")]),
-            Detector::new(
-                "scala",
-                [
-                    Matcher::by_file_name(".scalaenv"),
-                    Matcher::by_file_name(".sbtenv"),
-                    Matcher::by_file_name("build.sbt"),
-                ],
-            ),
-            Detector::new("swift", [Matcher::by_file_name("Package.swift")]),
-            Detector::new("zig", [Matcher::by_file_extension("zig")]),
-        ];
-        Detectors { detectors }
+        Self {
+            detectors: detectors(),
+        }
     }
 }
 
@@ -172,13 +31,6 @@ struct Detector {
 }
 
 impl Detector {
-    fn new<T: Into<String>, MS: Into<Vec<Matcher>>>(template: T, matchers: MS) -> Self {
-        Detector {
-            template: template.into(),
-            matchers: matchers.into(),
-        }
-    }
-
     fn detects<E: DirEntry>(&self, entries: &[E]) -> Option<String> {
         let result = self
             .matchers
@@ -193,13 +45,14 @@ impl Detector {
 }
 
 pub trait DirEntry {
-    fn file_name(&self) -> OsString;
+    fn name(&self) -> OsString;
     fn extension(&self) -> Option<OsString>;
     fn is_file(&self) -> bool;
+    fn is_dir(&self) -> bool;
 }
 
 impl DirEntry for std::fs::DirEntry {
-    fn file_name(&self) -> OsString {
+    fn name(&self) -> OsString {
         self.file_name()
     }
 
@@ -212,29 +65,28 @@ impl DirEntry for std::fs::DirEntry {
         let path = self.path();
         path.is_file()
     }
+
+    fn is_dir(&self) -> bool {
+        let path = self.path();
+        path.is_dir()
+    }
 }
 
 #[derive(Debug)]
 enum Matcher {
-    ByFileExtension(OsString),
-    ByFileName(OsString),
+    FileExtension(OsString),
+    FileName(OsString),
+    DirName(OsString),
 }
 
 impl Matcher {
-    fn by_file_extension<T: Into<OsString>>(extension: T) -> Self {
-        Self::ByFileExtension(extension.into())
-    }
-
-    fn by_file_name<T: Into<OsString>>(name: T) -> Self {
-        Self::ByFileName(name.into())
-    }
-
     fn matches<E: DirEntry>(&self, entry: &E) -> bool {
         match self {
-            Self::ByFileName(name) => entry.is_file() && &entry.file_name() == name,
-            Self::ByFileExtension(extension) => {
+            Self::FileName(name) => entry.is_file() && &entry.name() == name,
+            Self::FileExtension(extension) => {
                 entry.is_file() && entry.extension() == Some(extension.clone())
             }
+            Self::DirName(name) => entry.is_dir() && &entry.name() == name,
         }
     }
 }
@@ -248,20 +100,27 @@ mod tests {
         file_name: OsString,
         extension: Option<OsString>,
         is_file: bool,
+        is_dir: bool,
     }
 
     impl FakeDirEntry {
-        fn new<T: Into<OsString>>(file_name: T, extension: Option<T>, is_file: bool) -> Self {
+        fn new<T: Into<OsString>>(
+            file_name: T,
+            extension: Option<T>,
+            is_file: bool,
+            is_dir: bool,
+        ) -> Self {
             FakeDirEntry {
                 file_name: file_name.into(),
                 extension: extension.map(|pe| pe.into()),
                 is_file,
+                is_dir,
             }
         }
     }
 
     impl DirEntry for FakeDirEntry {
-        fn file_name(&self) -> OsString {
+        fn name(&self) -> OsString {
             self.file_name.clone()
         }
 
@@ -272,75 +131,81 @@ mod tests {
         fn is_file(&self) -> bool {
             self.is_file
         }
+
+        fn is_dir(&self) -> bool {
+            self.is_dir
+        }
     }
 
     #[test]
     fn detects_java_from_build_gradle() {
-        let entry = FakeDirEntry::new("build.gradle", Some("gradle"), true);
+        let entry = FakeDirEntry::new("build.gradle", Some("gradle"), true, false);
         let result = Detectors::default().detects(&Vec::from([entry]));
-        assert_eq!(result, vec!["java"])
+        assert!(result.contains(&"gradle".to_string()));
+        assert!(result.contains(&"java".to_string()));
+        assert!(result.len() == 2);
     }
 
     #[test]
     fn detects_java_from_pom_xml() {
-        let entry = FakeDirEntry::new("pom.xml", Some("xml"), true);
+        let entry = FakeDirEntry::new("pom.xml", Some("xml"), true, false);
         let result = Detectors::default().detects(&Vec::from([entry]));
         assert_eq!(result, vec!["java"])
     }
 
     #[test]
     fn detects_node_from_package_json() {
-        let entry = FakeDirEntry::new("package.json", Some("json"), true);
+        let entry = FakeDirEntry::new("package.json", Some("json"), true, false);
         let result = Detectors::default().detects(&Vec::from([entry]));
         assert_eq!(result, vec!["node"])
     }
 
     #[test]
     fn detects_python_from_requirements_txt() {
-        let entry = FakeDirEntry::new("requirements.txt", Some("txt"), true);
+        let entry = FakeDirEntry::new("requirements.txt", Some("txt"), true, false);
         let result = Detectors::default().detects(&Vec::from([entry]));
         assert_eq!(result, vec!["python"])
     }
 
     #[test]
     fn detects_haskell_from_dot_cabal() {
-        let entry = FakeDirEntry::new("git-ignore.cabal", Some("cabal"), true);
+        let entry = FakeDirEntry::new("git-ignore.cabal", Some("cabal"), true, false);
         let result = Detectors::default().detects(&Vec::from([entry]));
         assert_eq!(result, vec!["haskell"])
     }
 
     #[test]
     fn detects_haskell_from_stack_yaml() {
-        let entry = FakeDirEntry::new("stack.yaml", Some("yaml"), true);
+        let entry = FakeDirEntry::new("stack.yaml", Some("yaml"), true, false);
         let result = Detectors::default().detects(&Vec::from([entry]));
         assert_eq!(result, vec!["haskell"])
     }
 
     #[test]
     fn detects_php_from_compose_json() {
-        let entry = FakeDirEntry::new("composer.json", Some("json"), true);
+        let entry = FakeDirEntry::new("composer.json", Some("json"), true, false);
         let result = Detectors::default().detects(&Vec::from([entry]));
         assert_eq!(result, vec!["composer"])
     }
 
     #[test]
-    fn detects_ruby_from_dot_gemspec() {
-        let entry = FakeDirEntry::new("git-ignore.gemspec", Some("gemspec"), true);
-        let result = Detectors::default().detects(&Vec::from([entry]));
-        assert_eq!(result, vec!["ruby"])
-    }
-
-    #[test]
     fn detects_ruby_from_gemfile() {
-        let entry = FakeDirEntry::new("Gemfile", None, true);
+        let entry = FakeDirEntry::new("Gemfile", None, true, false);
         let result = Detectors::default().detects(&Vec::from([entry]));
         assert_eq!(result, vec!["ruby"])
     }
 
     #[test]
     fn detects_rust_from_cargo_toml() {
-        let entry = FakeDirEntry::new("Cargo.toml", Some("toml"), true);
+        let entry = FakeDirEntry::new("Cargo.toml", Some("toml"), true, false);
         let result = Detectors::default().detects(&Vec::from([entry]));
         assert_eq!(result, vec!["rust"])
+    }
+
+    #[test]
+    fn detects_scala_from_folder() {
+        let entry = FakeDirEntry::new(".metals", None, false, true);
+        let result = Detectors::default().detects(&Vec::from([entry]));
+        assert_eq!(result, vec!["scala"])
     }
 }
