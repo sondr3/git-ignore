@@ -203,7 +203,14 @@ impl Config {
         let config_file = config_file();
         let old_config_file = old_config_file();
 
-        if old_config_file.exists() {
+        if config_file.exists() && old_config_file.exists() {
+            eprintln!(
+                "{}: Found both old and new config file, remove `{}` to silence this warning",
+                "WARN".bold().red(),
+                old_config_file.to_string_lossy().italic().blue()
+            );
+            Some(config_file)
+        } else if old_config_file.exists() {
             eprintln!(
                 "{}: Found old config file, please run `{}` to move it. This file will be ignored in a future release.",
                 "WARN".bold().red(),
