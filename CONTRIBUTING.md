@@ -1,4 +1,11 @@
-# Release checklist
+# Contributing
+
+## Updating data
+
+This should be as simple as running the `get_configs.sh` file in the `data` directory
+and all the matching is automatically applied.
+
+## Release checklist
 
 - [ ] Update version in `Cargo.toml`
 - [ ] Create release commit
