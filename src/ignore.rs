@@ -2,7 +2,7 @@ use crate::{config::Config, detector::Detectors};
 use anyhow::Result;
 use colored::Colorize;
 use directories::ProjectDirs;
-use etcetera::{app_strategy::Xdg, choose_app_strategy, AppStrategy, AppStrategyArgs};
+use etcetera::{choose_app_strategy, AppStrategy, AppStrategyArgs};
 use serde::{Deserialize, Serialize};
 use std::{
     cmp::Ordering,
@@ -15,7 +15,18 @@ use std::{
     path::{Path, PathBuf},
 };
 
-pub fn project_dirs() -> Xdg {
+#[cfg(target_os = "windows")]
+pub fn project_dirs() -> etcetera::app_strategy::Windows {
+    choose_app_strategy(AppStrategyArgs {
+        top_level_domain: "com".to_string(),
+        author: "Sondre Aasemoen".to_string(),
+        app_name: "git-ignore".to_string(),
+    })
+    .expect("Could not find project directory.")
+}
+
+#[cfg(not(target_os = "windows"))]
+pub fn project_dirs() -> etcetera::app_strategy::Xdg {
     choose_app_strategy(AppStrategyArgs {
         top_level_domain: "com".to_string(),
         author: "Sondre Aasemoen".to_string(),
