@@ -1,3 +1,14 @@
+## v1.3.1
+> 2024-02-17
+
+## Summary
+
+Bugfix for miscompilation on Windows.
+
+### Commits
+- [[`6f1d657`](https://github.com/sondr3/git-ignore/commit/6f1d657)] Fix project_dirs failing on Windows
+- [[`31382f3`](https://github.com/sondr3/git-ignore/commit/31382f3)] Fix commit links in changelog [ci skip]
+
 ## v1.3.0
 > 2024-02-17
 
@@ -8,8 +19,6 @@ works. Now we fetch and parse the [starship](https://starship.rs/) matchers for
 their prompt and use those to automatically recognize files, folders and extensions.
 
 ### Commits
-- [[`6f1d657`](https://github.com/sondr3/git-ignore/commit/6f1d657)] Fix project_dirs failing on Windows
-- [[`31382f3`](https://github.com/sondr3/git-ignore/commit/31382f3)] Fix commit links in changelog [ci skip]
 - [[`62684c2`](https://github.com/sondr3/git-ignore/commit/62684c2)] Fix stray println that could mess up redirecting output
 - [[`2a4cdeb`](https://github.com/sondr3/git-ignore/commit/2a4cdeb)] Handle both new and old config existing
 - [[`ff6a284`](https://github.com/sondr3/git-ignore/commit/ff6a284)] Update CONTRIBUTING.md
@@ -245,5 +254,4 @@ www.gitignore.io.
 - [[`c7beeb9472`](https://github.com/sondr3/git-ignore/commit/c7beeb9472)] - List all possible templates from gitignore.io
 - [[`11d66fcf6f`](https://github.com/sondr3/git-ignore/commit/11d66fcf6f)] - Add a very simple CLI interface
 - [[`7c077a87fa`](https://github.com/sondr3/git-ignore/commit/7c077a87fa)] - Forbid the usage of unsafe, fail on warnings and add Travis config
-- [[`7a65ce7915`](https://github.com/sondr3/git-ignore/commit/7a65ce7915)] - In the beginning there was darkness...## vX.x.x
-> 2024-02-17
+- [[`7a65ce7915`](https://github.com/sondr3/git-ignore/commit/7a65ce7915)] - In the beginning there was darkness...
