@@ -42,7 +42,7 @@ impl Config {
                     .context("Could not copy old config file to new location")?;
                 std::fs::remove_file(&old_config_file)
                     .context("Could not remove old config file")?;
-                println!(
+                eprintln!(
                     "{}: Migrated old config file to new location",
                     "INFO".bold().blue()
                 );
@@ -55,7 +55,7 @@ impl Config {
         }
 
         if config_file.exists() && !force {
-            println!("{}: config already exist", "INFO".bold().blue());
+            eprintln!("{}: config already exist", "INFO".bold().blue());
             return Ok(());
         }
 
