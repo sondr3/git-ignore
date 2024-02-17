@@ -1,3 +1,32 @@
+## v1.3.0
+> 2024-02-17
+
+## Summary
+
+Mostly dependency updates and an internal refactor on how the automatic detector 
+works. Now we fetch and parse the [starship](https://starship.rs/) matchers for
+their prompt and use those to automatically recognize files, folders and extensions.
+
+### Commits
+- [[`6f1d657`](https://github.com/sondr3/git-ignore/commit/6f1d657)] Fix project_dirs failing on Windows
+- [[`31382f3`](https://github.com/sondr3/git-ignore/commit/31382f3)] Fix commit links in changelog [ci skip]
+- [[`62684c2`](https://github.com/sondr3/git-ignore/commit/62684c2)] Fix stray println that could mess up redirecting output
+- [[`2a4cdeb`](https://github.com/sondr3/git-ignore/commit/2a4cdeb)] Handle both new and old config existing
+- [[`ff6a284`](https://github.com/sondr3/git-ignore/commit/ff6a284)] Update CONTRIBUTING.md
+- [[`03503a1`](https://github.com/sondr3/git-ignore/commit/03503a1)] Create detectors at build time
+- [[`eba8aa7`](https://github.com/sondr3/git-ignore/commit/eba8aa7)] Warn if using old config path, add migration to init command
+- [[`942df26`](https://github.com/sondr3/git-ignore/commit/942df26)] Minor clippy lint fixes
+- [[`af01c72`](https://github.com/sondr3/git-ignore/commit/af01c72)] Move away from directories, use etcetera instead
+- [[`2a88bc6`](https://github.com/sondr3/git-ignore/commit/2a88bc6)] Bump dependencies
+- [[`ad99c31`](https://github.com/sondr3/git-ignore/commit/ad99c31)] Merge Dependabot GA PRs
+- [[`c39e4c8`](https://github.com/sondr3/git-ignore/commit/c39e4c8)] Bump actions/upload-artifact from 3 to 4
+- [[`1bd59fd`](https://github.com/sondr3/git-ignore/commit/1bd59fd)] Bump actions/download-artifact from 3 to 4
+- [[`5b8f177`](https://github.com/sondr3/git-ignore/commit/5b8f177)] Bump webpki from 0.22.0 to 0.22.2
+- [[`6c6fddf`](https://github.com/sondr3/git-ignore/commit/6c6fddf)] Bump actions/checkout from 3 to 4
+- [[`39b4eac`](https://github.com/sondr3/git-ignore/commit/39b4eac)] Bump bumpalo from 3.11.0 to 3.12.0
+- [[`f294e79`](https://github.com/sondr3/git-ignore/commit/f294e79)] Fix clippy lints
+- [[`53d424c`](https://github.com/sondr3/git-ignore/commit/53d424c)] Update rust-cache action to v2
+
 ## v1.2.2
 > 2022-10-21
 
@@ -216,4 +245,5 @@ www.gitignore.io.
 - [[`c7beeb9472`](https://github.com/sondr3/git-ignore/commit/c7beeb9472)] - List all possible templates from gitignore.io
 - [[`11d66fcf6f`](https://github.com/sondr3/git-ignore/commit/11d66fcf6f)] - Add a very simple CLI interface
 - [[`7c077a87fa`](https://github.com/sondr3/git-ignore/commit/7c077a87fa)] - Forbid the usage of unsafe, fail on warnings and add Travis config
-- [[`7a65ce7915`](https://github.com/sondr3/git-ignore/commit/7a65ce7915)] - In the beginning there was darkness...
+- [[`7a65ce7915`](https://github.com/sondr3/git-ignore/commit/7a65ce7915)] - In the beginning there was darkness...## vX.x.x
+> 2024-02-17
