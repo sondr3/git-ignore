@@ -146,6 +146,12 @@ jobs:
           name: git-ignore-x86_64-apple-darwin.tar.gz
           path: .
 
+      - name: Download Darwin artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: git-ignore-aarch64-apple-darwin.tar.gz
+          path: .
+
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
         with:
@@ -155,11 +161,12 @@ jobs:
       - name: Print directory
         run: ls -R
 
-      - name: Create GitHub release ${{ matrix.target }}
+      - name: Create GitHub release
         uses: softprops/action-gh-release@v1
         with:
           files: |
             git-ignore-x86_64-apple-darwin.tar.gz
+            git-ignore-aarch64-apple-darwin.tar.gz
             git-ignore-x86_64-pc-windows-msvc.zip
             git-ignore-x86_64-unknown-linux-gnu.tar.gz
             git-ignore-x86_64-unknown-linux-musl.tar.gz
