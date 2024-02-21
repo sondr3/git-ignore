@@ -1,3 +1,13 @@
+## v1.3.2
+> 2024-02-21
+
+## Summary
+
+Build native aarch64 binaries for macOS.
+
+### Commits
+- [[`a7469ff`](https://github.com/sondr3/git-ignore)] Also run CI on macOS 14 for M1 builds
+
 ## v1.3.1
 > 2024-02-17
 
