@@ -12,7 +12,11 @@ use cli::{print_completion, AliasCmd, Cli, Cmds, TemplateCmd};
 use colored::Colorize;
 use config::Config;
 use ignore::Core;
-use std::collections::HashSet;
+use std::{
+    collections::HashSet,
+    fs::{File, OpenOptions},
+    io::{self, Write},
+};
 
 macro_rules! config_or {
     ($sel:ident, $fun:ident) => {{
@@ -111,13 +115,41 @@ fn main() -> Result<()> {
         return Ok(());
     }
 
-    if opt.list {
-        app.list(templates.as_slice(), opt.simple)?;
+    let str = if opt.list {
+        app.list(templates.as_slice(), opt.simple)?
     } else if templates.is_empty() {
         let mut app = Cli::command();
-        app.print_help()?;
+        app.render_help().to_string()
     } else {
-        app.get_templates(templates.as_slice(), opt.simple)?;
+        app.get_templates(templates.as_slice(), opt.simple)?
+    };
+
+    if opt.write {
+        let file = std::env::current_dir()?.join(".gitignore");
+        if !file.exists() {
+            eprintln!(
+                "{}: no '.gitignore' file found, creating...",
+                "Info".bold().green()
+            );
+            let mut file = File::create(&file)?;
+            file.write_all(str.as_bytes())?;
+        } else if file.exists() && !opt.force {
+            eprintln!(
+                "{}: '.gitignore' already exists, use '-f' to force write",
+                "Warning".bold().red()
+            );
+        } else if file.exists() && opt.force {
+            eprintln!(
+                "{}: appending results to '.gitignore'",
+                "Info".bold().green()
+            );
+            let mut file = OpenOptions::new().append(true).open(&file)?;
+            file.write_all(str.as_bytes())?;
+        }
+    } else {
+        let stdout = io::stdout();
+        let mut handle = stdout.lock();
+        handle.write_all(str.as_bytes())?;
     }
 
     Ok(())

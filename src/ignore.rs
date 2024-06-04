@@ -8,10 +8,10 @@ use std::{
     cmp::Ordering,
     collections::{HashMap, HashSet},
     env::current_dir,
-    fmt::{write, Display},
+    fmt::{write, Display, Write},
     fs::{read_dir, read_to_string, DirEntry, File},
     hash::{Hash, Hasher},
-    io::Write,
+    io::Write as _,
     path::{Path, PathBuf},
 };
 
@@ -145,7 +145,7 @@ impl Core {
         Ok(())
     }
 
-    pub fn list(&self, names: &[String], simple: bool) -> Result<()> {
+    pub fn list(&self, names: &[String], simple: bool) -> Result<String> {
         let templates = self.all_names(simple)?;
         let mut result = if names.is_empty() {
             templates.into_iter().collect::<Vec<_>>()
@@ -164,16 +164,16 @@ impl Core {
 
         result.sort_unstable();
 
-        for entry in result {
-            println!("  {}", entry);
-        }
+        let result = result.into_iter().fold(String::new(), |mut s, r| {
+            writeln!(s, "  {}", r).unwrap();
+            s
+        });
 
-        Ok(())
+        Ok(result)
     }
 
-    /// Writes the `content` field for each entry in templates from `read_file`
-    /// to `stdout`.
-    pub fn get_templates(&self, names: &[String], simple: bool) -> Result<()> {
+    /// Creates a formatted string of all the configured templates
+    pub fn get_templates(&self, names: &[String], simple: bool) -> Result<String> {
         let (aliases, templates) = match &self.config {
             Some(config) if !simple => (config.aliases.clone(), config.templates.clone()),
             _ => (HashMap::new(), HashMap::new()),
@@ -203,8 +203,7 @@ impl Core {
             result = header;
         }
 
-        println!("{}", result);
-        Ok(())
+        Ok(result)
     }
 
     pub fn autodetect_templates(&self) -> Result<Vec<String>> {

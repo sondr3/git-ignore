@@ -19,6 +19,12 @@ pub struct Cli {
     /// Autodetect templates based on the existing files
     #[arg(short, long)]
     pub auto: bool,
+    /// Write to `.gitignore` file instead of stdout
+    #[arg(short, long)]
+    pub write: bool,
+    /// Forcefully overwrite existing `.gitignore` file
+    #[arg(short, long, requires = "write")]
+    pub force: bool,
     /// Configuration management
     #[command(subcommand)]
     pub cmd: Option<Cmds>,
