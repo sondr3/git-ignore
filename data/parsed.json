@@ -244,6 +244,15 @@
     "detect_extensions": [],
     "detect_folders": []
   },
+  "gleam": {
+    "detect_files": [
+      "gleam.toml"
+    ],
+    "detect_extensions": [
+      "gleam"
+    ],
+    "detect_folders": []
+  },
   "golang": {
     "detect_files": [
       "go.mod",
@@ -401,6 +410,11 @@
     "detect_extensions": [],
     "detect_folders": []
   },
+  "nats": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
   "nim": {
     "detect_files": [
       "nim.cfg"
@@ -454,6 +468,13 @@
       "_opam",
       "esy.lock"
     ]
+  },
+  "odin": {
+    "detect_files": [],
+    "detect_extensions": [
+      "odin"
+    ],
+    "detect_folders": []
   },
   "opa": {
     "detect_files": [],
@@ -535,6 +556,15 @@
     ],
     "detect_extensions": [
       "py"
+    ],
+    "detect_folders": []
+  },
+  "quarto": {
+    "detect_files": [
+      "_quarto.yml"
+    ],
+    "detect_extensions": [
+      "qmd"
     ],
     "detect_folders": []
   },
