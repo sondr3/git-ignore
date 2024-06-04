@@ -6,17 +6,18 @@ mod config;
 mod detector;
 mod ignore;
 
+use std::{
+    collections::HashSet,
+    fs::{File, OpenOptions},
+    io::{self, Write},
+};
+
 use anyhow::Result;
 use clap::{CommandFactory, Parser};
 use cli::{print_completion, AliasCmd, Cli, Cmds, TemplateCmd};
 use colored::Colorize;
 use config::Config;
 use ignore::Core;
-use std::{
-    collections::HashSet,
-    fs::{File, OpenOptions},
-    io::{self, Write},
-};
 
 macro_rules! config_or {
     ($sel:ident, $fun:ident) => {{

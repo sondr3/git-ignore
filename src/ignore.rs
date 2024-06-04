@@ -1,9 +1,3 @@
-use crate::{config::Config, detector::Detectors};
-use anyhow::Result;
-use colored::Colorize;
-use directories::ProjectDirs;
-use etcetera::{choose_app_strategy, AppStrategy, AppStrategyArgs};
-use serde::{Deserialize, Serialize};
 use std::{
     cmp::Ordering,
     collections::{HashMap, HashSet},
@@ -14,6 +8,14 @@ use std::{
     io::Write as _,
     path::{Path, PathBuf},
 };
+
+use anyhow::Result;
+use colored::Colorize;
+use directories::ProjectDirs;
+use etcetera::{choose_app_strategy, AppStrategy, AppStrategyArgs};
+use serde::{Deserialize, Serialize};
+
+use crate::{config::Config, detector::Detectors};
 
 #[cfg(target_os = "windows")]
 pub fn project_dirs() -> etcetera::app_strategy::Windows {

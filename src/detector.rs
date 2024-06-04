@@ -93,8 +93,9 @@ impl Matcher {
 
 #[cfg(test)]
 mod tests {
-    use crate::detector::{Detectors, DirEntry};
     use std::ffi::OsString;
+
+    use crate::detector::{Detectors, DirEntry};
 
     struct FakeDirEntry {
         file_name: OsString,

@@ -1,16 +1,16 @@
+use std::{
+    collections::HashMap,
+    env,
+    fs::File,
+    io::{Error, Write},
+    path::{Path, PathBuf},
+};
+
 use clap::{CommandFactory, ValueEnum};
 use clap_complete::generate_to;
 use clap_mangen::Man;
 use quote::quote;
 use serde::{Deserialize, Serialize};
-use std::{
-    collections::HashMap,
-    env,
-    fs::File,
-    io::Error,
-    io::Write,
-    path::{Path, PathBuf},
-};
 
 include!("src/cli.rs");
 

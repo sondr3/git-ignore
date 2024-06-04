@@ -1,6 +1,7 @@
+use std::io;
+
 use clap::{Command, Parser, Subcommand};
 use clap_complete::{generate, Generator, Shell};
-use std::io;
 
 #[derive(Parser, Debug)]
 #[clap(name = "git-ignore", about, version, author)]

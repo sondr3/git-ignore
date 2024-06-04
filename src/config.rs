@@ -1,14 +1,16 @@
-use crate::ignore::{old_project_dirs, project_dirs, Type};
-use anyhow::{Context, Result};
-use colored::Colorize;
-use etcetera::AppStrategy;
-use serde::{Deserialize, Serialize};
 use std::{
     collections::HashMap,
     fs::{read_to_string, File},
     io::Write,
     path::{Path, PathBuf},
 };
+
+use anyhow::{Context, Result};
+use colored::Colorize;
+use etcetera::AppStrategy;
+use serde::{Deserialize, Serialize};
+
+use crate::ignore::{old_project_dirs, project_dirs, Type};
 
 fn config_file() -> PathBuf {
     project_dirs().config_dir().join("config.toml")
