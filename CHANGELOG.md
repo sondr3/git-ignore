@@ -6,8 +6,8 @@
 Build native aarch64 binaries for macOS.
 
 ### Commits
-- [[`a7469ff`](https://github.com/sondr3/git-ignore)] Also run CI on macOS 14 for M1 builds
-- [[`9cd21c3`](https://github.com/sondr3/git-ignore)] Actually publish packages
+- [[`a7469ff`](https://github.com/sondr3/git-ignore/commit/a7469ff)] Also run CI on macOS 14 for M1 builds
+- [[`9cd21c3`](https://github.com/sondr3/git-ignore/commit/9cd21c3)] Actually publish packages
 
 ## v1.3.1
 > 2024-02-17
