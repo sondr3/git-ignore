@@ -47,7 +47,8 @@ custom ones for even more power.
 
 **NOTE:** Similar to the `nix-search` command, this program prints a message
 to `stderr` about using cached results. This does _not_ interfere with piping
-and is purely informational.
+and is purely informational. You can also optionally use `--write` to automatically
+write the resulting ignores to `$CWD/.gitignore` instead of piping.
 
 ## Updating templates
 
