@@ -36,7 +36,7 @@ pub fn project_dirs() -> etcetera::app_strategy::Xdg {
 }
 
 pub fn old_project_dirs() -> ProjectDirs {
-    ProjectDirs::from("com", "Sondre Nilsen", "git-ignore")
+    ProjectDirs::from("com", "Sondre Aasemoen", "git-ignore")
         .expect("Could not find project directory.")
 }
 

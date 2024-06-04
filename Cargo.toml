@@ -1,5 +1,5 @@
 [package]
-authors = ["Sondre Nilsen <nilsen.sondre@gmail.com>"]
+authors = ["Sondre Aasemoen <sondre@eons.io>"]
 build = "build.rs"
 description = "Quickly and easily fetch .gitignore templates from www.gitignore.io"
 documentation = "https://github.com/sondr3/git-ignore"
