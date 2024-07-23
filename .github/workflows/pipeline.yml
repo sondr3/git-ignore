@@ -126,6 +126,9 @@ jobs:
     name: Create GitHub Release
     needs: github_build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v4
 
@@ -165,6 +168,7 @@ jobs:
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
+          body_path: CHANGELOG.md
           files: |
             git-ignore-x86_64-apple-darwin.tar.gz
             git-ignore-aarch64-apple-darwin.tar.gz
