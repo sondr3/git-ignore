@@ -1,3 +1,25 @@
+## v1.4.0
+> 2024-07-23
+
+## Summary
+
+Add `--write` and `--force` flags to write directly to a `.gitignore` file 
+instead of piping.
+
+### Commits
+- [[`ca0cb9c`](https://github.com/sondr3/git-ignore/commit/ca0cb9c)] Bump dependencies
+- [[`2420ff6`](https://github.com/sondr3/git-ignore/commit/2420ff6)] `old_project_dirs` should use my old name for backwards compatibility
+- [[`324e9b6`](https://github.com/sondr3/git-ignore/commit/324e9b6)] Add rustfmt.toml, update formatting
+- [[`00a75a8`](https://github.com/sondr3/git-ignore/commit/00a75a8)] Update my last name to Aasemoen
+- [[`88d3aaf`](https://github.com/sondr3/git-ignore/commit/88d3aaf)] Update README with --write flag
+- [[`27fa1c7`](https://github.com/sondr3/git-ignore/commit/27fa1c7)] Upgrade dependencies
+- [[`204c5f6`](https://github.com/sondr3/git-ignore/commit/204c5f6)] Fix changelog links in previous release
+- [[`14aae09`](https://github.com/sondr3/git-ignore/commit/14aae09)] Add --write and --force to write directly to .gitignore
+- [[`8e1a54b`](https://github.com/sondr3/git-ignore/commit/8e1a54b)] Update data for ignore files
+- [[`85c0515`](https://github.com/sondr3/git-ignore/commit/85c0515)] Bump rustls from 0.22.2 to 0.22.4
+- [[`dd6471a`](https://github.com/sondr3/git-ignore/commit/dd6471a)] Bump the dependencies group with 1 update
+- [[`cd75a88`](https://github.com/sondr3/git-ignore/commit/cd75a88)] Add aarch64 to publish target list
+
 ## v1.3.2/v1.3.3
 > 2024-02-21
 
