@@ -115,6 +115,7 @@
     "detect_files": [
       "deno.json",
       "deno.jsonc",
+      "deno.lock",
       "mod.ts",
       "deps.ts",
       "mod.js",
@@ -410,6 +411,14 @@
     "detect_extensions": [],
     "detect_folders": []
   },
+  "mojo": {
+    "detect_files": [],
+    "detect_extensions": [
+      "mojo",
+      "🔥"
+    ],
+    "detect_folders": []
+  },
   "nats": {
     "detect_files": [],
     "detect_extensions": [],
@@ -537,7 +546,9 @@
   },
   "purescript": {
     "detect_files": [
-      "spago.dhall"
+      "spago.dhall",
+      "spago.yaml",
+      "spago.lock"
     ],
     "detect_extensions": [
       "purs"
@@ -552,10 +563,12 @@
       "Pipfile",
       "tox.ini",
       "setup.py",
-      "__init__.py"
+      "__init__.py",
+      "pixi.toml"
     ],
     "detect_extensions": [
-      "py"
+      "py",
+      "ipynb"
     ],
     "detect_folders": []
   },

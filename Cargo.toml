@@ -19,26 +19,26 @@ path = "src/main.rs"
 lto = "fat"
 
 [dependencies]
-anyhow = "1.0.86"
-attohttpc = { version = "0.28.0", default-features = false, features = [
+anyhow = "1.0.95"
+attohttpc = { version = "0.28.2", default-features = false, features = [
 	"json",
 	"compress",
 	"tls-rustls",
 ] }
-clap = { version = "4.5.9", features = ["derive", "cargo"] }
-clap_complete = "4.5.8"
-colored = "2.1.0"
+clap = { version = "4.5.23", features = ["derive", "cargo"] }
+clap_complete = "4.5.40"
+colored = "2.2.0"
 directories = "5"
 etcetera = "0.8.0"
-serde = { version = "1.0.204", features = ["derive"] }
-serde_json = "1.0.120"
-toml = "0.8.15"
+serde = { version = "1.0.216", features = ["derive"] }
+serde_json = "1.0.134"
+toml = "0.8.19"
 
 [build-dependencies]
-clap = { version = "4.5.9", features = ["derive", "cargo"] }
-clap_complete = "4.5.8"
-clap_mangen = "0.2.22"
-quote = "1.0.36"
-serde = { version = "1.0.204", features = ["derive"] }
-serde_json = "1.0.120"
-syn = "2.0.72"
+clap = { version = "4.5.23", features = ["derive", "cargo"] }
+clap_complete = "4.5.40"
+clap_mangen = "0.2.24"
+quote = "1.0.38"
+serde = { version = "1.0.216", features = ["derive"] }
+serde_json = "1.0.134"
+syn = "2.0.91"
