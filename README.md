@@ -18,11 +18,11 @@
 <br />
 
 - [What and why](#what-and-why)
+- [Installation](#installation)
 - [Usage](#usage)
   - [Aliases](#aliases)
   - [Templates](#templates)
   - [Configuration](#configuration)
-- [Installation](#installation)
 - [License](#license)
 </details>
 
@@ -42,6 +42,33 @@ custom ones for even more power.
 [![asciicast](https://asciinema.org/a/454912.svg)](https://asciinema.org/a/454912)
 
 </details>
+
+# Installation
+
+Currently, the package is available a couple of places, including Homebrew, AUR and Nix.
+
+<dl>
+  <dt>Cargo</dt>
+  <dd><code>cargo install git-ignore-generator</code></dd>
+
+  <dt>Nix</dt>
+  <dd><code>nix-env -iA nixpkgs.gitAndTools.git-ignore</code></dd>
+
+  <dt>Homebrew</dt>
+  <dd><code>brew install git-ignore</code></dd>
+
+  <dt>Arch (replace <code>paru</code> with you favorite AUR tool)</dt>
+  <dd><code>paru git-ignore-bin</code></dd>
+  <dd><code>paru git-ignore</code></dd>
+</dl>
+
+## Release pages
+
+You can also download the matching release from the [release
+tab](https://github.com/sondr3/git-ignore/releases), extracting the archive and
+placing the binary in your `$PATH`. Note that for Linux the
+`unknown-linux-musl.tar.gz` is preferred as it is statically linked and thus
+should run on any Linux distribution.
 
 # Usage
 
@@ -220,38 +247,6 @@ source or save them with the `git ignore completion <shell>` command.
 
 Finally, help is always available with `git ignore help`/`git ignore -h` (or `--help` if your installation
 included man pages).
-
-# Installation
-
-Currently, the package is available a couple of places, including Homebrew, AUR and Nix.
-
-<dl>
-  <dt>Cargo</dt>
-  <dd><code>cargo install git-ignore-generator</code></dd>
-
-  <dt>Nix</dt>
-  <dd><code>nix-env -iA nixpkgs.gitAndTools.git-ignore</code></dd>
-
-  <dt>Homebrew</dt>
-  <dd>
-    <ol>
-      <li><code>brew tap sondr3/homebrew-taps</code></li>
-      <li><code>brew install git-ignore</code></li>
-    <ol>
-  </dd>
-
-  <dt>Arch (replace <code>paru</code> with you favorite AUR tool)</dt>
-  <dd><code>paru git-ignore-bin</code></dd>
-  <dd><code>paru git-ignore</code></dd>
-</dl>
-
-## Release pages
-
-You can also download the matching release from the [release
-tab](https://github.com/sondr3/git-ignore/releases), extracting the archive and
-placing the binary in your `$PATH`. Note that for Linux the
-`unknown-linux-musl.tar.gz` is preferred as it is statically linked and thus
-should run on any Linux distribution.
 
 # LICENSE
 
