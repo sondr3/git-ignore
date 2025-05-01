@@ -1,8 +1,9 @@
 use std::{
     collections::HashMap,
-    fs::{File, read_to_string},
+    fs::{read_to_string, File},
     io::Write,
     path::{Path, PathBuf},
+    sync::LazyLock,
 };
 
 use anyhow::{Context, Result};
@@ -10,56 +11,42 @@ use colored::Colorize;
 use etcetera::AppStrategy;
 use serde::{Deserialize, Serialize};
 
-use crate::ignore::{PROJECT_DIRS, Type};
+use crate::ignore::{Type, PROJECT_DIRS};
 
-fn config_file() -> PathBuf {
-    PROJECT_DIRS.config_dir().join("config.toml")
-}
+static CONFIG_FILE: LazyLock<PathBuf> =
+    LazyLock::new(|| PROJECT_DIRS.config_dir().join("config.toml"));
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Config {
-    #[serde(skip)]
-    pub path: PathBuf,
     pub aliases: HashMap<String, Vec<String>>,
     pub templates: HashMap<String, String>,
 }
 
 impl Config {
     pub fn create(force: bool) -> Result<()> {
-        let config_file = config_file();
         Config::create_dir(
-            config_file
+            CONFIG_FILE
                 .parent()
                 .context("No parent dir for the config_file")?,
         );
 
-        if config_file.exists() && !force {
+        if CONFIG_FILE.exists() && !force {
             eprintln!("{}: config already exist", "INFO".bold().blue());
             return Ok(());
         }
 
-        if config_file.exists() && force {
+        if CONFIG_FILE.exists() && force {
             eprintln!("{}: overwriting existing config file", "WARN".bold().red());
         }
 
-        let config = Config::new(config_file);
+        let config = Config::new();
         config.write()
     }
 
     pub fn from_dir() -> Option<Self> {
-        let config_file = config_file();
-        if config_file.exists() {
-            let file = Path::new(&config_file);
-            let file = match read_to_string(file) {
-                Ok(content) => content,
-                Err(_) => return None,
-            };
-
-            match toml::from_str::<Config>(&file).as_mut() {
-                Ok(config) => {
-                    config.path = config_file;
-                    Some(config.clone())
-                }
+        if CONFIG_FILE.exists() {
+            match read_to_string(CONFIG_FILE.as_path()) {
+                Ok(content) => toml::from_str::<Config>(&content).ok(),
                 Err(_) => None,
             }
         } else {
@@ -105,8 +92,8 @@ impl Config {
     }
 
     pub fn add_template(&mut self, name: String, file_name: String) -> Result<()> {
-        let file = self
-            .path
+        let file = PROJECT_DIRS
+            .config_dir()
             .parent()
             .context("Could not get parent directory of config file")?
             .join("templates")
@@ -152,16 +139,15 @@ impl Config {
         Ok(content)
     }
 
-    fn new(path: PathBuf) -> Self {
+    fn new() -> Self {
         Self {
             aliases: HashMap::default(),
             templates: HashMap::default(),
-            path,
         }
     }
 
     fn write(&self) -> Result<()> {
-        let mut file = File::create(&self.path)?;
+        let mut file = File::create(CONFIG_FILE.as_path())?;
         file.write_all(toml::to_string_pretty(self)?.as_bytes())?;
 
         Ok(())
