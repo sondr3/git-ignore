@@ -11,7 +11,6 @@ use std::{
 
 use anyhow::Result;
 use colored::Colorize;
-use directories::ProjectDirs;
 use etcetera::{AppStrategy, AppStrategyArgs, choose_app_strategy};
 use serde::{Deserialize, Serialize};
 
@@ -35,12 +34,6 @@ pub fn project_dirs() -> etcetera::app_strategy::Xdg {
         app_name: "git-ignore".to_string(),
     })
     .expect("Could not find project directory.")
-}
-
-pub fn old_project_dirs() -> ProjectDirs {
-    // note to self: this is for backwards compatibility so use my old name
-    ProjectDirs::from("com", "Sondre Nilsen", "git-ignore")
-        .expect("Could not find project directory.")
 }
 
 #[derive(Debug)]

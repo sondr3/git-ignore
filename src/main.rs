@@ -69,7 +69,7 @@ fn main() -> Result<()> {
     let app = Core::new();
 
     match opt.cmd {
-        Some(Cmds::Init { force, migrate }) => return Config::create(force, migrate),
+        Some(Cmds::Init { force }) => return Config::create(force),
         Some(Cmds::Alias(cmd)) => match cmd {
             AliasCmd::List => config_or!(app, list_aliases),
             AliasCmd::Add { name, aliases } => config_or!(app, add_alias, name, aliases),

@@ -1,6 +1,6 @@
 use std::{
     collections::HashMap,
-    fs::{read_to_string, File},
+    fs::{File, read_to_string},
     io::Write,
     path::{Path, PathBuf},
 };
@@ -10,14 +10,10 @@ use colored::Colorize;
 use etcetera::AppStrategy;
 use serde::{Deserialize, Serialize};
 
-use crate::ignore::{old_project_dirs, project_dirs, Type};
+use crate::ignore::{Type, project_dirs};
 
 fn config_file() -> PathBuf {
     project_dirs().config_dir().join("config.toml")
-}
-
-fn old_config_file() -> PathBuf {
-    old_project_dirs().config_dir().join("config.toml")
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -29,32 +25,13 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn create(force: bool, migrate: bool) -> Result<()> {
+    pub fn create(force: bool) -> Result<()> {
         let config_file = config_file();
         Config::create_dir(
             config_file
                 .parent()
                 .context("No parent dir for the config_file")?,
         );
-
-        if migrate {
-            let old_config_file = old_config_file();
-            if old_config_file.exists() {
-                std::fs::copy(&old_config_file, &config_file)
-                    .context("Could not copy old config file to new location")?;
-                std::fs::remove_file(&old_config_file)
-                    .context("Could not remove old config file")?;
-                eprintln!(
-                    "{}: Migrated old config file to new location",
-                    "INFO".bold().blue()
-                );
-            } else {
-                eprintln!(
-                    "{}: No old config file found, nothing to migrate",
-                    "WARN".bold().red()
-                );
-            }
-        }
 
         if config_file.exists() && !force {
             eprintln!("{}: config already exist", "INFO".bold().blue());
@@ -203,23 +180,8 @@ impl Config {
 
     fn find_config_file() -> Option<PathBuf> {
         let config_file = config_file();
-        let old_config_file = old_config_file();
 
-        if config_file.exists() && old_config_file.exists() {
-            eprintln!(
-                "{}: Found both old and new config file, remove `{}` to silence this warning",
-                "WARN".bold().red(),
-                old_config_file.to_string_lossy().italic().blue()
-            );
-            Some(config_file)
-        } else if old_config_file.exists() {
-            eprintln!(
-                "{}: Found old config file, please run `{}` to move it. This file will be ignored in a future release.",
-                "WARN".bold().red(),
-                "git ignore init --migrate".italic().blue()
-            );
-            Some(old_config_file)
-        } else if config_file.exists() {
+        if config_file.exists() {
             Some(config_file)
         } else {
             None
