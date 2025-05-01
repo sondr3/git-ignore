@@ -1,6 +1,6 @@
 use std::{
     collections::HashMap,
-    fs::{read_to_string, File},
+    fs::{File, read_to_string},
     io::Write,
     path::{Path, PathBuf},
     sync::LazyLock,
@@ -11,12 +11,12 @@ use colored::Colorize;
 use etcetera::AppStrategy;
 use serde::{Deserialize, Serialize};
 
-use crate::ignore::{Type, PROJECT_DIRS};
+use crate::ignore::{PROJECT_DIRS, Type};
 
 static CONFIG_FILE: LazyLock<PathBuf> =
     LazyLock::new(|| PROJECT_DIRS.config_dir().join("config.toml"));
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
+#[derive(Deserialize, Serialize, Default, Debug, Clone)]
 pub struct Config {
     pub aliases: HashMap<String, Vec<String>>,
     pub templates: HashMap<String, String>,
@@ -39,18 +39,24 @@ impl Config {
             eprintln!("{}: overwriting existing config file", "WARN".bold().red());
         }
 
-        let config = Config::new();
+        let config = Config::default();
         config.write()
     }
 
-    pub fn from_dir() -> Option<Self> {
+    pub fn new() -> Result<Self> {
         if CONFIG_FILE.exists() {
             match read_to_string(CONFIG_FILE.as_path()) {
-                Ok(content) => toml::from_str::<Config>(&content).ok(),
-                Err(_) => None,
+                Ok(content) => toml::from_str::<Config>(&content).context("could not parse config"),
+                Err(_) => anyhow::bail!("could not read config file"),
             }
         } else {
-            None
+            eprintln!(
+                "{}",
+                "No config found, run `git ignore init` to create it."
+                    .bold()
+                    .yellow()
+            );
+            Ok(Config::default())
         }
     }
 
@@ -137,13 +143,6 @@ impl Config {
         let content = read_to_string(dir)?;
 
         Ok(content)
-    }
-
-    fn new() -> Self {
-        Self {
-            aliases: HashMap::default(),
-            templates: HashMap::default(),
-        }
     }
 
     fn write(&self) -> Result<()> {

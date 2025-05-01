@@ -43,7 +43,7 @@ pub struct Core {
     cache_dir: PathBuf,
     ignore_file: PathBuf,
     detectors: Detectors,
-    pub config: Option<Config>,
+    pub config: Config,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -116,18 +116,18 @@ impl Core {
     /// `directories` we support crossplatform caching of our results, the cache
     /// directories works on macOS, Linux and Windows. See the documentation for
     /// their locations.
-    pub fn new() -> Self {
+    pub fn new() -> Result<Self> {
         let cache_dir = PROJECT_DIRS.cache_dir();
         let ignore_file = cache_dir.join("ignore.json");
-        let config = Config::from_dir();
+        let config = Config::new()?;
 
-        Core {
+        Ok(Core {
             server: "https://www.gitignore.io/api/list?format=json".into(),
             cache_dir,
             ignore_file,
             detectors: Detectors::default(),
             config,
-        }
+        })
     }
 
     /// Both updates and initializes `git-ignore`. Creates the cache directory
@@ -171,9 +171,10 @@ impl Core {
 
     /// Creates a formatted string of all the configured templates
     pub fn get_templates(&self, names: &[String], simple: bool) -> Result<String> {
-        let (aliases, templates) = match &self.config {
-            Some(config) if !simple => (config.aliases.clone(), config.templates.clone()),
-            _ => (HashMap::new(), HashMap::new()),
+        let (aliases, templates) = if simple {
+            (HashMap::new(), HashMap::new())
+        } else {
+            (self.config.aliases.clone(), self.config.templates.clone())
         };
 
         let ignore_file = self.read_file()?;
@@ -215,12 +216,7 @@ impl Core {
             return Ok(templates.keys().cloned().collect());
         }
 
-        let config_names = match &self.config {
-            Some(config) => config.names(),
-            _ => vec![],
-        };
-
-        let mut combined: HashSet<Type> = config_names.into_iter().collect();
+        let mut combined: HashSet<Type> = self.config.names().into_iter().collect();
         combined.extend(templates.keys().cloned());
 
         Ok(combined)

@@ -19,66 +19,21 @@ use colored::Colorize;
 use config::Config;
 use ignore::Core;
 
-macro_rules! config_or {
-    ($sel:ident, $fun:ident) => {{
-        if let Some(config) = $sel.config {
-            config.$fun();
-        } else {
-            eprintln!(
-                "{}",
-                "No config found, run `git ignore init` to create it."
-                    .bold()
-                    .yellow()
-            );
-        }
-
-        return Ok(());
-    }};
-    ($sel:ident, $fun:ident, $name:expr) => {{
-        if let Some(mut config) = $sel.config {
-            config.$fun($name)?;
-        } else {
-            eprintln!(
-                "{}",
-                "No config found, run `git ignore init` to create it."
-                    .bold()
-                    .yellow()
-            );
-        }
-
-        return Ok(());
-    }};
-    ($sel:ident, $fun:ident, $name:expr, $vals:expr) => {{
-        if let Some(mut config) = $sel.config {
-            config.$fun($name, $vals)?;
-        } else {
-            eprintln!(
-                "{}",
-                "No config found, run `git ignore init` to create it."
-                    .bold()
-                    .yellow()
-            );
-        }
-
-        return Ok(());
-    }};
-}
-
 fn main() -> Result<()> {
     let opt = Cli::parse();
-    let app = Core::new();
+    let mut app = Core::new()?;
 
     match opt.cmd {
         Some(Cmds::Init { force }) => return Config::create(force),
         Some(Cmds::Alias(cmd)) => match cmd {
-            AliasCmd::List => config_or!(app, list_aliases),
-            AliasCmd::Add { name, aliases } => config_or!(app, add_alias, name, aliases),
-            AliasCmd::Remove { name } => config_or!(app, remove_alias, &name),
+            AliasCmd::List => app.config.list_aliases(),
+            AliasCmd::Add { name, aliases } => app.config.add_alias(name, aliases)?,
+            AliasCmd::Remove { name } => app.config.remove_alias(&name)?,
         },
         Some(Cmds::Template(cmd)) => match cmd {
-            TemplateCmd::List => config_or!(app, list_templates),
-            TemplateCmd::Add { name, file_name } => config_or!(app, add_template, name, file_name),
-            TemplateCmd::Remove { name } => config_or!(app, remove_template, &name),
+            TemplateCmd::List => app.config.list_templates(),
+            TemplateCmd::Add { name, file_name } => app.config.add_template(name, file_name)?,
+            TemplateCmd::Remove { name } => app.config.remove_template(&name)?,
         },
         Some(Cmds::Completion { shell }) => {
             let mut app = Cli::command();
