@@ -1,6 +1,6 @@
 use std::{
     collections::HashMap,
-    fs::{File, read_to_string},
+    fs::{read_to_string, File},
     io::Write,
     path::{Path, PathBuf},
 };
@@ -10,7 +10,7 @@ use colored::Colorize;
 use etcetera::AppStrategy;
 use serde::{Deserialize, Serialize};
 
-use crate::ignore::{Type, old_project_dirs, project_dirs};
+use crate::ignore::{old_project_dirs, project_dirs, Type};
 
 fn config_file() -> PathBuf {
     project_dirs().config_dir().join("config.toml")
@@ -142,7 +142,7 @@ impl Config {
         );
 
         let mut file = File::create(file)?;
-        file.write_all(format!("\n### {} ###\n", name).as_bytes())?;
+        file.write_all(format!("### {} ###\n", name).as_bytes())?;
 
         self.templates.insert(name, file_name);
         self.write()
