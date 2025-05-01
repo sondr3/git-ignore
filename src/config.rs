@@ -1,6 +1,6 @@
 use std::{
     collections::HashMap,
-    fs::{File, read_to_string},
+    fs::{read_to_string, File},
     io::Write,
     path::{Path, PathBuf},
 };
@@ -10,7 +10,7 @@ use colored::Colorize;
 use etcetera::AppStrategy;
 use serde::{Deserialize, Serialize};
 
-use crate::ignore::{Type, project_dirs};
+use crate::ignore::{project_dirs, Type};
 
 fn config_file() -> PathBuf {
     project_dirs().config_dir().join("config.toml")
@@ -47,7 +47,7 @@ impl Config {
     }
 
     pub fn from_dir() -> Option<Self> {
-        let config_file = Config::find_config_file()?;
+        let config_file = config_file();
         if config_file.exists() {
             let file = Path::new(&config_file);
             let file = match read_to_string(file) {
@@ -174,17 +174,7 @@ impl Config {
 
         let path = path.join("templates");
         if !path.exists() {
-            std::fs::create_dir_all(&path).expect("Could not create config directory");
-        }
-    }
-
-    fn find_config_file() -> Option<PathBuf> {
-        let config_file = config_file();
-
-        if config_file.exists() {
-            Some(config_file)
-        } else {
-            None
+            std::fs::create_dir_all(&path).expect("Could not create templates directory");
         }
     }
 }
