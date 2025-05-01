@@ -82,6 +82,11 @@ pub enum TemplateCmd {
     Remove { name: String },
 }
 
-pub fn print_completion<G: Generator>(gen: G, app: &mut Command) {
-    generate(gen, app, app.get_name().to_string(), &mut io::stdout());
+pub fn print_completion<G: Generator>(generator: G, app: &mut Command) {
+    generate(
+        generator,
+        app,
+        app.get_name().to_string(),
+        &mut io::stdout(),
+    );
 }
