@@ -1,6 +1,6 @@
 use std::{
     collections::HashMap,
-    fs::{File, read_to_string},
+    fs::{read_to_string, File},
     io::Write,
     path::{Path, PathBuf},
     sync::LazyLock,
@@ -11,7 +11,7 @@ use colored::Colorize;
 use etcetera::AppStrategy;
 use serde::{Deserialize, Serialize};
 
-use crate::ignore::{PROJECT_DIRS, Type};
+use crate::ignore::{Type, PROJECT_DIRS};
 
 static CONFIG_FILE: LazyLock<PathBuf> =
     LazyLock::new(|| PROJECT_DIRS.config_dir().join("config.toml"));
@@ -50,12 +50,6 @@ impl Config {
                 Err(_) => anyhow::bail!("could not read config file"),
             }
         } else {
-            eprintln!(
-                "{}",
-                "No config found, run `git ignore init` to create it."
-                    .bold()
-                    .yellow()
-            );
             Ok(Config::default())
         }
     }
