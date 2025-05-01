@@ -1,6 +1,6 @@
 use std::{
     collections::HashMap,
-    fs::{read_to_string, File},
+    fs::{File, read_to_string},
     io::Write,
     path::{Path, PathBuf},
 };
@@ -10,10 +10,10 @@ use colored::Colorize;
 use etcetera::AppStrategy;
 use serde::{Deserialize, Serialize};
 
-use crate::ignore::{project_dirs, Type};
+use crate::ignore::{PROJECT_DIRS, Type};
 
 fn config_file() -> PathBuf {
-    project_dirs().config_dir().join("config.toml")
+    PROJECT_DIRS.config_dir().join("config.toml")
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -146,7 +146,7 @@ impl Config {
     }
 
     pub fn read_template(path: &str) -> Result<String> {
-        let dir = project_dirs().config_dir().join("templates").join(path);
+        let dir = PROJECT_DIRS.config_dir().join("templates").join(path);
         let content = read_to_string(dir)?;
 
         Ok(content)

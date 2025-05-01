@@ -7,6 +7,7 @@ use std::{
     hash::{Hash, Hasher},
     io::Write as _,
     path::{Path, PathBuf},
+    sync::LazyLock,
 };
 
 use anyhow::Result;
@@ -17,24 +18,24 @@ use serde::{Deserialize, Serialize};
 use crate::{config::Config, detector::Detectors};
 
 #[cfg(target_os = "windows")]
-pub fn project_dirs() -> etcetera::app_strategy::Windows {
+pub static PROJECT_DIRS: LazyLock<etcetera::app_strategy::Windows> = LazyLock::new(|| {
     choose_app_strategy(AppStrategyArgs {
         top_level_domain: "com".to_string(),
         author: "Sondre Aasemoen".to_string(),
         app_name: "git-ignore".to_string(),
     })
     .expect("Could not find project directory.")
-}
+});
 
 #[cfg(not(target_os = "windows"))]
-pub fn project_dirs() -> etcetera::app_strategy::Xdg {
+pub static PROJECT_DIRS: LazyLock<etcetera::app_strategy::Xdg> = LazyLock::new(|| {
     choose_app_strategy(AppStrategyArgs {
         top_level_domain: "com".to_string(),
         author: "Sondre Aasemoen".to_string(),
         app_name: "git-ignore".to_string(),
     })
     .expect("Could not find project directory.")
-}
+});
 
 #[derive(Debug)]
 pub struct Core {
@@ -116,7 +117,7 @@ impl Core {
     /// directories works on macOS, Linux and Windows. See the documentation for
     /// their locations.
     pub fn new() -> Self {
-        let cache_dir = project_dirs().cache_dir();
+        let cache_dir = PROJECT_DIRS.cache_dir();
         let ignore_file = cache_dir.join("ignore.json");
         let config = Config::from_dir();
 
