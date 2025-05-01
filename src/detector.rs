@@ -144,7 +144,7 @@ mod tests {
         let result = Detectors::default().detects(&Vec::from([entry]));
         assert!(result.contains(&"gradle".to_string()));
         assert!(result.contains(&"java".to_string()));
-        assert!(result.len() == 2);
+        assert_eq!(result.len(), 2);
     }
 
     #[test]
