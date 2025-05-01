@@ -14,7 +14,7 @@ use std::{
 
 use anyhow::Result;
 use clap::{CommandFactory, Parser};
-use cli::{print_completion, AliasCmd, Cli, Cmds, TemplateCmd};
+use cli::{AliasCmd, Cli, Cmds, TemplateCmd, print_completion};
 use colored::Colorize;
 use config::Config;
 use ignore::Core;

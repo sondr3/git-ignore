@@ -2,8 +2,8 @@ use std::{
     cmp::Ordering,
     collections::{HashMap, HashSet},
     env::current_dir,
-    fmt::{write, Display, Write},
-    fs::{read_dir, read_to_string, DirEntry, File},
+    fmt::{Display, Write, write},
+    fs::{DirEntry, File, read_dir, read_to_string},
     hash::{Hash, Hasher},
     io::Write as _,
     path::{Path, PathBuf},
@@ -12,7 +12,7 @@ use std::{
 use anyhow::Result;
 use colored::Colorize;
 use directories::ProjectDirs;
-use etcetera::{choose_app_strategy, AppStrategy, AppStrategyArgs};
+use etcetera::{AppStrategy, AppStrategyArgs, choose_app_strategy};
 use serde::{Deserialize, Serialize};
 
 use crate::{config::Config, detector::Detectors};
