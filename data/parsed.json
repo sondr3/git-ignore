@@ -30,6 +30,7 @@
   },
   "bun": {
     "detect_files": [
+      "bun.lock",
       "bun.lockb",
       "bunfig.toml"
     ],
@@ -80,6 +81,21 @@
   "container": {
     "detect_files": [],
     "detect_extensions": [],
+    "detect_folders": []
+  },
+  "cpp": {
+    "detect_files": [],
+    "detect_extensions": [
+      "cpp",
+      "cc",
+      "cxx",
+      "c++",
+      "hpp",
+      "hh",
+      "hxx",
+      "h++",
+      "tcc"
+    ],
     "detect_folders": []
   },
   "crystal": {
@@ -411,6 +427,18 @@
     "detect_extensions": [],
     "detect_folders": []
   },
+  "mise": {
+    "detect_files": [
+      "mise.toml",
+      "mise.local.toml",
+      ".mise.toml",
+      ".mise.local.toml"
+    ],
+    "detect_extensions": [],
+    "detect_folders": [
+      ".mise"
+    ]
+  },
   "mojo": {
     "detect_files": [],
     "detect_extensions": [
@@ -420,6 +448,11 @@
     "detect_folders": []
   },
   "nats": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "netns": {
     "detect_files": [],
     "detect_extensions": [],
     "detect_folders": []
@@ -444,7 +477,10 @@
     "detect_files": [
       "package.json",
       ".node-version",
-      ".nvmrc"
+      ".nvmrc",
+      "!bunfig.toml",
+      "!bun.lock",
+      "!bun.lockb"
     ],
     "detect_extensions": [
       "js",
@@ -539,6 +575,14 @@
     "detect_extensions": [],
     "detect_folders": []
   },
+  "pixi": {
+    "detect_files": [
+      "pixi.toml",
+      "pixi.lock"
+    ],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
   "pulumi": {
     "detect_files": [],
     "detect_extensions": [],
@@ -563,8 +607,7 @@
       "Pipfile",
       "tox.ini",
       "setup.py",
-      "__init__.py",
-      "pixi.toml"
+      "__init__.py"
     ],
     "detect_extensions": [
       "py",
