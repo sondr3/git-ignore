@@ -3,6 +3,7 @@
 
 mod cli;
 mod config;
+mod data;
 mod detector;
 mod ignore;
 
@@ -76,8 +77,10 @@ fn main() -> Result<()> {
     } else if templates.is_empty() {
         let mut app = Cli::command();
         app.render_help().to_string()
+    } else if opt.simple {
+        app.get_templates_simple(templates.as_slice())?
     } else {
-        app.get_templates(templates.as_slice(), opt.simple)?
+        app.get_templates(templates.as_slice())?
     };
 
     if opt.write {

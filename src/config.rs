@@ -1,6 +1,6 @@
 use std::{
     collections::HashMap,
-    fs::{read_to_string, File},
+    fs::{File, read_to_string},
     io::Write,
     path::{Path, PathBuf},
     sync::LazyLock,
@@ -11,7 +11,7 @@ use colored::Colorize;
 use etcetera::AppStrategy;
 use serde::{Deserialize, Serialize};
 
-use crate::ignore::{Type, PROJECT_DIRS};
+use crate::{data::Type, ignore::PROJECT_DIRS};
 
 static CONFIG_FILE: LazyLock<PathBuf> =
     LazyLock::new(|| PROJECT_DIRS.config_dir().join("config.toml"));
