@@ -14,7 +14,7 @@ use etcetera::{AppStrategy, AppStrategyArgs, choose_app_strategy};
 
 use crate::{
     config::Config,
-    data::{IgnoreData, Type},
+    data::{IgnoreData, Type, TypeName},
     detector::Detectors,
 };
 
@@ -111,19 +111,20 @@ impl Core {
         let mut result = String::new();
 
         for name in names {
-            if let Some(val) = data.user_templates.get(name) {
-                let template = Config::read_template(val)?;
-                result.push_str(&template);
-            } else if let Some(val) = data.aliases.get(name) {
+            if let Some(val) = data.get_user_template(name) {
+                result.push_str(&val);
+            } else if let Some(val) = data.get_alias(name) {
                 for alias in val {
-                    if let Some(language) = data.get_template(alias) {
-                        result.push_str(language);
+                    if let Some(val) = data.get_user_template(&alias) {
+                        result.push_str(&val);
+                    } else if let Some(language) = data.get_template(&alias) {
+                        result.push_str(&language);
                     } else {
                         eprintln!("{}: No such alias", name.bold().yellow());
                     }
                 }
-            } else if let Some(language) = data.templates.get(name) {
-                result.push_str(&language.contents);
+            } else if let Some(language) = data.get_template(name) {
+                result.push_str(&language);
             }
         }
 
@@ -141,8 +142,8 @@ impl Core {
         let mut result = String::new();
 
         for name in names {
-            if let Some(language) = data.templates.get(name) {
-                result.push_str(&language.contents);
+            if let Some(language) = data.get_template(name) {
+                result.push_str(&language);
             }
         }
 
@@ -160,20 +161,24 @@ impl Core {
         Ok(self.detectors.detects(entries.as_slice()))
     }
 
-    fn all_names(&self, simple: bool) -> Result<HashSet<Type>> {
+    fn all_names(&self, simple: bool) -> Result<HashSet<TypeName>> {
         let data = IgnoreData::new(&self.ignore_file, &self.config)?;
 
         let keys = data
-            .templates
-            .keys()
-            .map(|v| Type::Normal(v.clone()))
+            .data
+            .iter()
+            .map(|v| match v {
+                Type::Template { key, .. } => TypeName::Template(key.clone()),
+                Type::Alias { key, .. } => TypeName::Alias(key.clone()),
+                Type::UserTemplate { key, .. } => TypeName::UserTemplate(key.clone()),
+            })
             .collect();
 
         if simple {
             return Ok(keys);
         }
 
-        let mut combined: HashSet<Type> = self.config.names().into_iter().collect();
+        let mut combined: HashSet<TypeName> = self.config.names().into_iter().collect();
         combined.extend(keys);
 
         Ok(combined)

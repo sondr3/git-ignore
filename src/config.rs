@@ -11,7 +11,7 @@ use colored::Colorize;
 use etcetera::AppStrategy;
 use serde::{Deserialize, Serialize};
 
-use crate::{data::Type, ignore::PROJECT_DIRS};
+use crate::{data::TypeName, ignore::PROJECT_DIRS};
 
 static CONFIG_FILE: LazyLock<PathBuf> =
     LazyLock::new(|| PROJECT_DIRS.config_dir().join("config.toml"));
@@ -121,12 +121,12 @@ impl Config {
         self.write()
     }
 
-    pub fn names(&self) -> Vec<Type> {
+    pub fn names(&self) -> Vec<TypeName> {
         let aliases = self.aliases.keys();
         let templates = self.templates.keys();
 
-        let mut res: Vec<_> = aliases.cloned().map(Type::Alias).collect();
-        res.extend(templates.cloned().map(Type::Template));
+        let mut res: Vec<_> = aliases.cloned().map(TypeName::Alias).collect();
+        res.extend(templates.cloned().map(TypeName::UserTemplate));
         res.sort_unstable();
 
         res
