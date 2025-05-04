@@ -20,11 +20,14 @@ use colored::Colorize;
 use ignore::Core;
 use user_data::UserData;
 
-use crate::data::IgnoreData;
+use crate::{
+    data::IgnoreData,
+    ignore::{cache_exists, get_templates, list},
+};
 
 fn main() -> Result<()> {
     let opt = Cli::parse();
-    let app = Core::new()?;
+    let app = Core::new();
     let mut user_data = UserData::new()?;
     let ignore_data = IgnoreData::new(&user_data)?;
 
@@ -56,11 +59,11 @@ fn main() -> Result<()> {
             return Ok(());
         }
         _ => {}
-    };
+    }
 
     if opt.update {
         app.update()?;
-    } else if app.cache_exists() {
+    } else if cache_exists() {
         eprintln!(
             "{}: You are using cached results, pass '-u' to update the cache\n",
             "Info".bold().green(),
@@ -87,12 +90,12 @@ fn main() -> Result<()> {
     }
 
     let str = if opt.list {
-        app.list(&ignore_data, templates.as_slice())?
+        list(&ignore_data, templates.as_slice())
     } else if templates.is_empty() {
         let mut app = Cli::command();
         app.render_help().to_string()
     } else {
-        app.get_templates(&ignore_data, templates.as_slice())?
+        get_templates(&ignore_data, templates.as_slice())
     };
 
     if opt.write {

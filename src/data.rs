@@ -162,9 +162,9 @@ pub enum Type {
 impl PartialEq for Type {
     fn eq(&self, other: &Self) -> bool {
         match (self, other) {
-            (Type::Template { key: k1, .. }, Type::Template { key: k2, .. }) => k1 == k2,
-            (Type::Alias { key: k1, .. }, Type::Alias { key: k2, .. }) => k1 == k2,
-            (Type::UserTemplate { key: k1, .. }, Type::UserTemplate { key: k2, .. }) => k1 == k2,
+            (Type::Template { key: k1, .. }, Type::Template { key: k2, .. })
+            | (Type::Alias { key: k1, .. }, Type::Alias { key: k2, .. })
+            | (Type::UserTemplate { key: k1, .. }, Type::UserTemplate { key: k2, .. }) => k1 == k2,
             _ => false,
         }
     }
@@ -195,9 +195,9 @@ impl Ord for Type {
 impl Type {
     pub fn key(&self) -> &str {
         match self {
-            Self::Template { key, .. } => key,
-            Self::Alias { key, .. } => key,
-            Self::UserTemplate { key, .. } => key,
+            Self::Template { key, .. }
+            | Self::Alias { key, .. }
+            | Self::UserTemplate { key, .. } => key,
         }
     }
 }

@@ -86,7 +86,7 @@ impl UserData {
         );
 
         let mut file = File::create(file)?;
-        file.write_all(format!("### {} ###\n", name).as_bytes())?;
+        file.write_all(format!("\n### {name} ###\n").as_bytes())?;
 
         self.templates.insert(name, file_name);
         self.write()

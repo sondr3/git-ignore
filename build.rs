@@ -37,7 +37,7 @@ fn collect_detectors(out_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
             if let Some(alias) = aliases.get(&k) {
                 acc.insert(alias.clone(), v);
             } else {
-                acc.insert(k.clone(), v);
+                acc.insert(k, v);
             }
             acc
         })
@@ -79,7 +79,7 @@ fn collect_detectors(out_dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
             },
         };
 
-        writeln!(output, "{}", detector_code)?;
+        writeln!(output, "{detector_code}")?;
     }
 
     writeln!(

@@ -46,11 +46,11 @@ impl Core {
     /// `directories` we support crossplatform caching of our results, the cache
     /// directories works on macOS, Linux and Windows. See the documentation for
     /// their locations.
-    pub fn new() -> Result<Self> {
-        Ok(Core {
+    pub fn new() -> Self {
+        Core {
             server: "https://www.gitignore.io/api/list?format=json".into(),
             detectors: Detectors::default(),
-        })
+        }
     }
 
     /// Both updates and initializes `git-ignore`. Creates the cache directory
@@ -58,72 +58,14 @@ impl Core {
     /// [gitignore.io](https://www.gitignore.io), saving them in the cache
     /// directory.
     pub fn update(&self) -> Result<()> {
-        self.create_dirs()?;
+        create_cache()?;
         self.fetch_gitignore()?;
 
         eprintln!("{}: Update successful", "Info".bold().green());
         Ok(())
     }
 
-    pub fn list(&self, data: &IgnoreData, names: &[String]) -> Result<String> {
-        let templates = data.keys();
-
-        let mut result = if names.is_empty() {
-            templates.into_iter().collect::<Vec<_>>()
-        } else {
-            let mut result = Vec::new();
-
-            for entry in templates {
-                for name in names {
-                    if entry.contains(name) {
-                        result.push(entry.clone());
-                    }
-                }
-            }
-            result
-        };
-
-        result.sort_unstable();
-
-        let result = result.into_iter().fold(String::new(), |mut s, r| {
-            writeln!(s, "  {}", r).unwrap();
-            s
-        });
-
-        Ok(result)
-    }
-
     /// Creates a formatted string of all the configured templates
-    pub fn get_templates(&self, data: &IgnoreData, names: &[String]) -> Result<String> {
-        let mut result = String::new();
-
-        for name in names {
-            if let Some(val) = data.get_user_template(name) {
-                result.push_str(&val);
-            } else if let Some(val) = data.get_alias(name) {
-                for alias in val {
-                    if let Some(val) = data.get_user_template(&alias) {
-                        result.push_str(&val);
-                    } else if let Some(language) = data.get_template(&alias) {
-                        result.push_str(&language);
-                    } else {
-                        eprintln!("{}: No such alias", name.bold().yellow());
-                    }
-                }
-            } else if let Some(language) = data.get_template(name) {
-                result.push_str(&language);
-            }
-        }
-
-        if !result.is_empty() {
-            let mut header = "\n\n### Created by https://www.gitignore.io".to_string();
-            header.push_str(&result);
-            result = header;
-        }
-
-        Ok(result)
-    }
-
     pub fn autodetect_templates(&self) -> Result<Vec<String>> {
         let entries: Vec<DirEntry> = read_dir(current_dir()?)?.map(Result::unwrap).collect();
         Ok(self.detectors.detects(entries.as_slice()))
@@ -139,19 +81,72 @@ impl Core {
 
         Ok(())
     }
+}
 
-    /// Returns true if the cache directory or `ignore.json` file exists, false
-    /// otherwise.
-    pub fn cache_exists(&self) -> bool {
-        CACHE_DIR.exists() || CACHE_FILE.exists()
-    }
+pub fn list(data: &IgnoreData, names: &[String]) -> String {
+    let templates = data.keys();
 
-    /// Creates the cache dir if it doesn't exist.
-    fn create_dirs(&self) -> std::io::Result<()> {
-        if !self.cache_exists() {
-            std::fs::create_dir_all(CACHE_DIR.as_path())?;
+    let mut result = if names.is_empty() {
+        templates.into_iter().collect::<Vec<_>>()
+    } else {
+        let mut result = Vec::new();
+
+        for entry in templates {
+            for name in names {
+                if entry.contains(name) {
+                    result.push(entry.clone());
+                }
+            }
         }
+        result
+    };
 
-        Ok(())
+    result.sort_unstable();
+
+    result.into_iter().fold(String::new(), |mut s, r| {
+        writeln!(s, "  {r}").unwrap();
+        s
+    })
+}
+
+pub fn get_templates(data: &IgnoreData, names: &[String]) -> String {
+    let mut result = String::new();
+
+    for name in names {
+        if let Some(val) = data.get_user_template(name) {
+            result.push_str(&val);
+        } else if let Some(val) = data.get_alias(name) {
+            for alias in val {
+                if let Some(val) = data.get_user_template(&alias) {
+                    result.push_str(&val);
+                } else if let Some(language) = data.get_template(&alias) {
+                    result.push_str(&language);
+                } else {
+                    eprintln!("{}: No such alias", name.bold().yellow());
+                }
+            }
+        } else if let Some(language) = data.get_template(name) {
+            result.push_str(&language);
+        }
     }
+
+    if !result.is_empty() {
+        let mut header = "\n\n### Created by https://www.gitignore.io".to_string();
+        header.push_str(&result);
+        result = header;
+    }
+
+    result
+}
+
+pub fn cache_exists() -> bool {
+    CACHE_DIR.exists() || CACHE_FILE.exists()
+}
+
+fn create_cache() -> std::io::Result<()> {
+    if !cache_exists() {
+        std::fs::create_dir_all(CACHE_DIR.as_path())?;
+    }
+
+    Ok(())
 }
