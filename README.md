@@ -20,10 +20,11 @@
 - [What and why](#what-and-why)
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Aliases](#aliases)
-  - [Templates](#templates)
-  - [Configuration](#configuration)
+    - [Aliases](#aliases)
+    - [Templates](#templates)
+    - [Configuration](#configuration)
 - [License](#license)
+
 </details>
 
 # What and why
@@ -199,7 +200,9 @@ The file name is the name of the file in `$HOME/.config/git-ignore/templates`.
 ```sh
 $ git ignore template list
 Available templates:
-docs => "docs.txt"
+docs:
+### docs ###
+*.docx
 ```
 
 ### Adding
@@ -208,15 +211,15 @@ All templates are created in `$HOME/.config/git-ignore/templates`. So the name
 you give for the file is the filename that is used in this directory.
 
 ```sh
-$ git ignore template add docs docs.txt
-Created template docs at ~/.config/git-config/templates/docs.txt
+$ git ignore template add docs
+Created template docs at ~/.config/git-config/templates/docs.ignore
 ```
 
 ### Removing
 
 ```sh
-$ git ignore template remove node
-Removed template node
+$ git ignore template remove docs
+Removed template docs
 ```
 
 ## Configuration
@@ -235,7 +238,7 @@ node = [
 ]
 
 [templates]
-docs = 'docs.txt'
+docs = 'docs.ignore'
 ```
 
 ## Completion

@@ -32,9 +32,9 @@ pub struct Cli {
 
 #[derive(Subcommand, Debug)]
 pub enum Cmds {
-    #[command(subcommand)]
+    #[command(subcommand, visible_alias = "aliases")]
     Alias(AliasCmd),
-    #[command(subcommand)]
+    #[command(subcommand, visible_alias = "templates")]
     Template(TemplateCmd),
     /// Initialize user configuration
     Init {
@@ -51,7 +51,12 @@ pub enum Cmds {
 }
 
 #[derive(Subcommand, Debug)]
-/// Manage local templates
+/// Manage user defined aliases
+///
+/// Aliases are user defined mapping between a name and one or more other
+/// templates and aliases and have preference over regular templates when
+/// searching. So an `alias` called `node` that maps to `[node, deno]` will
+/// write those to templates as a single one when running `git ignore node`.
 pub enum AliasCmd {
     /// List available aliases
     #[command(visible_alias = "ls")]
@@ -64,12 +69,19 @@ pub enum AliasCmd {
 }
 
 #[derive(Subcommand, Debug)]
-/// Manage local aliases
+/// Manage user defined templates
+///
+/// A template is a user defined ignore for applications or software that does
+/// not exist in the existing database. These have the highest preference when
+/// searching.
 pub enum TemplateCmd {
     /// List available templates
     #[command(visible_alias = "ls")]
     List,
     /// Add a new template
+    ///
+    /// You'll need to edit the file created under `file_name` to finish
+    /// creating a template
     Add { name: String, file_name: String },
     /// Remove a template
     #[command(visible_alias = "rm")]
