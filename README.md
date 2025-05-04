@@ -207,8 +207,8 @@ docs:
 
 ### Adding
 
-All templates are created in `$HOME/.config/git-ignore/templates`. So the name
-you give for the file is the filename that is used in this directory.
+All templates are created in `$HOME/.config/git-ignore/templates` with the
+filename `<name>.ignore`.
 
 ```sh
 $ git ignore template add docs
