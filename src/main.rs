@@ -91,8 +91,6 @@ fn main() -> Result<()> {
     } else if templates.is_empty() {
         let mut app = Cli::command();
         app.render_help().to_string()
-    } else if opt.simple {
-        app.get_templates_simple(&ignore_data, templates.as_slice())?
     } else {
         app.get_templates(&ignore_data, templates.as_slice())?
     };

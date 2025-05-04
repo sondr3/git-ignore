@@ -124,24 +124,6 @@ impl Core {
         Ok(result)
     }
 
-    pub fn get_templates_simple(&self, data: &IgnoreData, names: &[String]) -> Result<String> {
-        let mut result = String::new();
-
-        for name in names {
-            if let Some(language) = data.get_template(name) {
-                result.push_str(&language);
-            }
-        }
-
-        if !result.is_empty() {
-            let mut header = "\n\n### Created by https://www.gitignore.io".to_string();
-            header.push_str(&result);
-            result = header;
-        }
-
-        Ok(result)
-    }
-
     pub fn autodetect_templates(&self) -> Result<Vec<String>> {
         let entries: Vec<DirEntry> = read_dir(current_dir()?)?.map(Result::unwrap).collect();
         Ok(self.detectors.detects(entries.as_slice()))

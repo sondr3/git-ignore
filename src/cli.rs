@@ -14,9 +14,6 @@ pub struct Cli {
     /// Update templates by fetching them from gitignore.io
     #[arg(short, long)]
     pub update: bool,
-    /// Ignore all user defined aliases and templates
-    #[arg(short, long)]
-    pub simple: bool,
     /// Autodetect templates based on the existing files
     #[arg(short, long)]
     pub auto: bool,
