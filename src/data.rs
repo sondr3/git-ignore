@@ -4,14 +4,20 @@ use std::{
     fmt::{Display, write},
     fs::read_to_string,
     hash::{Hash, Hasher},
-    path::Path,
+    path::PathBuf,
+    sync::LazyLock,
 };
 
 use anyhow::Result;
 use colored::Colorize;
+use etcetera::AppStrategy;
 use serde::{Deserialize, Serialize};
 
-use crate::config::Config;
+use crate::{ignore::PROJECT_DIRS, user_data::UserData};
+
+pub static CACHE_DIR: LazyLock<PathBuf> = LazyLock::new(|| PROJECT_DIRS.cache_dir());
+pub static CACHE_FILE: LazyLock<PathBuf> =
+    LazyLock::new(|| PROJECT_DIRS.cache_dir().join("ignore.json"));
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Language {
@@ -28,8 +34,8 @@ pub struct IgnoreData {
 }
 
 impl IgnoreData {
-    pub fn new(path: &Path, config: &Config) -> Result<Self> {
-        let file = read_to_string(path)?;
+    pub fn new(user_data: &UserData) -> Result<Self> {
+        let file = read_to_string(CACHE_FILE.as_path())?;
         let templates: HashMap<String, Language> = serde_json::from_str(&file)?;
 
         let mut data: Vec<_> = templates
@@ -41,19 +47,19 @@ impl IgnoreData {
             .collect();
 
         data.extend(
-            config
+            user_data
                 .aliases
                 .clone()
                 .into_iter()
                 .map(|(k, v)| Type::Alias { key: k, aliases: v }),
         );
 
-        let user_templates: Vec<_> = config
+        let user_templates: Vec<_> = user_data
             .templates
             .clone()
             .into_iter()
             .map(|(name, path)| {
-                let template = Config::read_template(&path)?;
+                let template = UserData::read_template(&path)?;
                 Ok(Type::UserTemplate {
                     key: name,
                     content: template,
@@ -65,6 +71,54 @@ impl IgnoreData {
         data.sort_unstable();
 
         Ok(IgnoreData { data })
+    }
+
+    pub fn keys(&self) -> impl Iterator<Item = TypeName> {
+        self.data.iter().map(TypeName::from)
+    }
+
+    pub fn list_aliases(&self) {
+        let aliases = self
+            .data
+            .iter()
+            .filter(|v| matches!(v, Type::Alias { .. }))
+            .collect::<Vec<_>>();
+
+        if aliases.is_empty() {
+            return println!("{}", "No aliases defined".blue());
+        }
+
+        println!("{}", "Available aliases:".bold().green());
+        for kind in aliases {
+            println!(
+                "{} => {:?}",
+                TypeName::from(kind),
+                self.get_alias(kind.key())
+                    .expect("Found alias is missing, this is an internal error")
+            );
+        }
+    }
+
+    pub fn list_templates(&self) {
+        let templates = self
+            .data
+            .iter()
+            .filter(|v| matches!(v, Type::UserTemplate { .. }))
+            .collect::<Vec<_>>();
+
+        if templates.is_empty() {
+            return println!("{}", "No templates defined".blue());
+        }
+
+        println!("{}", "Available templates:".bold().green());
+        for kind in templates {
+            println!(
+                "{}:\n{}",
+                TypeName::from(kind),
+                self.get_user_template(kind.key())
+                    .expect("Found template is missing, this is an internal error")
+            );
+        }
     }
 
     pub fn get_template(&self, name: &str) -> Option<String> {
@@ -138,6 +192,16 @@ impl Ord for Type {
     }
 }
 
+impl Type {
+    pub fn key(&self) -> &str {
+        match self {
+            Self::Template { key, .. } => key,
+            Self::Alias { key, .. } => key,
+            Self::UserTemplate { key, .. } => key,
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 pub enum TypeName {
     Template(String),
@@ -145,12 +209,22 @@ pub enum TypeName {
     UserTemplate(String),
 }
 
+impl From<&Type> for TypeName {
+    fn from(value: &Type) -> Self {
+        match value {
+            Type::Template { key, .. } => TypeName::Template(key.clone()),
+            Type::Alias { key, .. } => TypeName::Alias(key.clone()),
+            Type::UserTemplate { key, .. } => TypeName::UserTemplate(key.clone()),
+        }
+    }
+}
+
 impl Display for TypeName {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             TypeName::Template(name) => write(f, format_args!("{}", name)),
-            TypeName::Alias(name) => write(f, format_args!("{}", name.yellow())),
-            TypeName::UserTemplate(name) => write(f, format_args!("{}", name.blue())),
+            TypeName::Alias(name) => write(f, format_args!("{}", name.yellow().bold())),
+            TypeName::UserTemplate(name) => write(f, format_args!("{}", name.blue().bold())),
         }
     }
 }

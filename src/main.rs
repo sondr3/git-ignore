@@ -2,10 +2,10 @@
 #![forbid(unsafe_code)]
 
 mod cli;
-mod config;
 mod data;
 mod detector;
 mod ignore;
+mod user_data;
 
 use std::{
     collections::HashSet,
@@ -17,25 +17,39 @@ use anyhow::Result;
 use clap::{CommandFactory, Parser};
 use cli::{AliasCmd, Cli, Cmds, TemplateCmd, print_completion};
 use colored::Colorize;
-use config::Config;
 use ignore::Core;
+use user_data::UserData;
+
+use crate::data::IgnoreData;
 
 fn main() -> Result<()> {
     let opt = Cli::parse();
-    let mut app = Core::new()?;
+    let app = Core::new()?;
+    let mut user_data = UserData::new()?;
+    let ignore_data = IgnoreData::new(&user_data)?;
 
     match opt.cmd {
-        Some(Cmds::Init { force }) => return Config::create(force),
-        Some(Cmds::Alias(cmd)) => match cmd {
-            AliasCmd::List => app.config.list_aliases(),
-            AliasCmd::Add { name, aliases } => app.config.add_alias(name, aliases)?,
-            AliasCmd::Remove { name } => app.config.remove_alias(&name)?,
-        },
-        Some(Cmds::Template(cmd)) => match cmd {
-            TemplateCmd::List => app.config.list_templates(),
-            TemplateCmd::Add { name, file_name } => app.config.add_template(name, file_name)?,
-            TemplateCmd::Remove { name } => app.config.remove_template(&name)?,
-        },
+        Some(Cmds::Init { force }) => return UserData::create(force),
+        Some(Cmds::Alias(cmd)) => {
+            return match cmd {
+                AliasCmd::List => {
+                    ignore_data.list_aliases();
+                    return Ok(());
+                }
+                AliasCmd::Add { name, aliases } => user_data.add_alias(name, aliases),
+                AliasCmd::Remove { name } => user_data.remove_alias(&name),
+            };
+        }
+        Some(Cmds::Template(cmd)) => {
+            return match cmd {
+                TemplateCmd::List => {
+                    ignore_data.list_templates();
+                    return Ok(());
+                }
+                TemplateCmd::Add { name, file_name } => user_data.add_template(name, file_name),
+                TemplateCmd::Remove { name } => user_data.remove_template(&name),
+            };
+        }
         Some(Cmds::Completion { shell }) => {
             let mut app = Cli::command();
             print_completion(shell, &mut app);
@@ -73,14 +87,14 @@ fn main() -> Result<()> {
     }
 
     let str = if opt.list {
-        app.list(templates.as_slice(), opt.simple)?
+        app.list(&ignore_data, templates.as_slice())?
     } else if templates.is_empty() {
         let mut app = Cli::command();
         app.render_help().to_string()
     } else if opt.simple {
-        app.get_templates_simple(templates.as_slice())?
+        app.get_templates_simple(&ignore_data, templates.as_slice())?
     } else {
-        app.get_templates(templates.as_slice())?
+        app.get_templates(&ignore_data, templates.as_slice())?
     };
 
     if opt.write {

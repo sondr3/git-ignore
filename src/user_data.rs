@@ -11,20 +11,20 @@ use colored::Colorize;
 use etcetera::AppStrategy;
 use serde::{Deserialize, Serialize};
 
-use crate::{data::TypeName, ignore::PROJECT_DIRS};
+use crate::ignore::PROJECT_DIRS;
 
 static CONFIG_FILE: LazyLock<PathBuf> =
     LazyLock::new(|| PROJECT_DIRS.config_dir().join("config.toml"));
 
 #[derive(Deserialize, Serialize, Default, Debug, Clone)]
-pub struct Config {
+pub struct UserData {
     pub aliases: HashMap<String, Vec<String>>,
     pub templates: HashMap<String, String>,
 }
 
-impl Config {
+impl UserData {
     pub fn create(force: bool) -> Result<()> {
-        Config::create_dir(
+        UserData::create_dir(
             CONFIG_FILE
                 .parent()
                 .context("No parent dir for the config_file")?,
@@ -39,29 +39,20 @@ impl Config {
             eprintln!("{}: overwriting existing config file", "WARN".bold().red());
         }
 
-        let config = Config::default();
+        let config = UserData::default();
         config.write()
     }
 
     pub fn new() -> Result<Self> {
         if CONFIG_FILE.exists() {
             match read_to_string(CONFIG_FILE.as_path()) {
-                Ok(content) => toml::from_str::<Config>(&content).context("could not parse config"),
+                Ok(content) => {
+                    toml::from_str::<UserData>(&content).context("could not parse config")
+                }
                 Err(_) => anyhow::bail!("could not read config file"),
             }
         } else {
-            Ok(Config::default())
-        }
-    }
-
-    pub fn list_aliases(&self) {
-        if self.aliases.is_empty() {
-            return println!("{}", "No aliases defined".blue());
-        }
-
-        println!("{}", "Available aliases:".bold().green());
-        for (name, aliases) in &self.aliases {
-            println!("{} => {:?}", name.blue(), aliases);
+            Ok(UserData::default())
         }
     }
 
@@ -78,17 +69,6 @@ impl Config {
             println!("No alias named {} found", name.blue());
         }
         self.write()
-    }
-
-    pub fn list_templates(&self) {
-        if self.templates.is_empty() {
-            return println!("{}", "No templates defined".blue());
-        }
-
-        println!("{}", "Available templates:".bold().green());
-        for (name, path) in &self.templates {
-            println!("{} => {:?}", name.blue(), path);
-        }
     }
 
     pub fn add_template(&mut self, name: String, file_name: String) -> Result<()> {
@@ -119,17 +99,6 @@ impl Config {
             println!("No template named {} found", name.blue());
         }
         self.write()
-    }
-
-    pub fn names(&self) -> Vec<TypeName> {
-        let aliases = self.aliases.keys();
-        let templates = self.templates.keys();
-
-        let mut res: Vec<_> = aliases.cloned().map(TypeName::Alias).collect();
-        res.extend(templates.cloned().map(TypeName::UserTemplate));
-        res.sort_unstable();
-
-        res
     }
 
     pub fn read_template(path: &str) -> Result<String> {

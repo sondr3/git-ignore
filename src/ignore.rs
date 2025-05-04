@@ -1,20 +1,17 @@
 use std::{
-    collections::HashSet,
     env::current_dir,
     fmt::Write,
     fs::{DirEntry, File, read_dir},
     io::Write as _,
-    path::PathBuf,
     sync::LazyLock,
 };
 
 use anyhow::Result;
 use colored::Colorize;
-use etcetera::{AppStrategy, AppStrategyArgs, choose_app_strategy};
+use etcetera::{AppStrategyArgs, choose_app_strategy};
 
 use crate::{
-    config::Config,
-    data::{IgnoreData, Type, TypeName},
+    data::{CACHE_DIR, CACHE_FILE, IgnoreData},
     detector::Detectors,
 };
 
@@ -41,10 +38,7 @@ pub static PROJECT_DIRS: LazyLock<etcetera::app_strategy::Xdg> = LazyLock::new(|
 #[derive(Debug)]
 pub struct Core {
     server: String,
-    cache_dir: PathBuf,
-    ignore_file: PathBuf,
     detectors: Detectors,
-    pub config: Config,
 }
 
 impl Core {
@@ -53,16 +47,9 @@ impl Core {
     /// directories works on macOS, Linux and Windows. See the documentation for
     /// their locations.
     pub fn new() -> Result<Self> {
-        let cache_dir = PROJECT_DIRS.cache_dir();
-        let ignore_file = cache_dir.join("ignore.json");
-        let config = Config::new()?;
-
         Ok(Core {
             server: "https://www.gitignore.io/api/list?format=json".into(),
-            cache_dir,
-            ignore_file,
             detectors: Detectors::default(),
-            config,
         })
     }
 
@@ -78,8 +65,9 @@ impl Core {
         Ok(())
     }
 
-    pub fn list(&self, names: &[String], simple: bool) -> Result<String> {
-        let templates = self.all_names(simple)?;
+    pub fn list(&self, data: &IgnoreData, names: &[String]) -> Result<String> {
+        let templates = data.keys();
+
         let mut result = if names.is_empty() {
             templates.into_iter().collect::<Vec<_>>()
         } else {
@@ -106,8 +94,7 @@ impl Core {
     }
 
     /// Creates a formatted string of all the configured templates
-    pub fn get_templates(&self, names: &[String]) -> Result<String> {
-        let data = IgnoreData::new(&self.ignore_file, &self.config)?;
+    pub fn get_templates(&self, data: &IgnoreData, names: &[String]) -> Result<String> {
         let mut result = String::new();
 
         for name in names {
@@ -137,8 +124,7 @@ impl Core {
         Ok(result)
     }
 
-    pub fn get_templates_simple(&self, names: &[String]) -> Result<String> {
-        let data = IgnoreData::new(&self.ignore_file, &self.config)?;
+    pub fn get_templates_simple(&self, data: &IgnoreData, names: &[String]) -> Result<String> {
         let mut result = String::new();
 
         for name in names {
@@ -161,35 +147,12 @@ impl Core {
         Ok(self.detectors.detects(entries.as_slice()))
     }
 
-    fn all_names(&self, simple: bool) -> Result<HashSet<TypeName>> {
-        let data = IgnoreData::new(&self.ignore_file, &self.config)?;
-
-        let keys = data
-            .data
-            .iter()
-            .map(|v| match v {
-                Type::Template { key, .. } => TypeName::Template(key.clone()),
-                Type::Alias { key, .. } => TypeName::Alias(key.clone()),
-                Type::UserTemplate { key, .. } => TypeName::UserTemplate(key.clone()),
-            })
-            .collect();
-
-        if simple {
-            return Ok(keys);
-        }
-
-        let mut combined: HashSet<TypeName> = self.config.names().into_iter().collect();
-        combined.extend(keys);
-
-        Ok(combined)
-    }
-
     /// Fetches all the templates from [gitignore.io](http://gitignore.io/),
     /// and writes the contents to the cache for easy future retrieval.
     fn fetch_gitignore(&self) -> Result<()> {
         let res = attohttpc::get(&self.server).send()?;
 
-        let mut file = File::create(&self.ignore_file)?;
+        let mut file = File::create(CACHE_FILE.as_path())?;
         file.write_all(&res.bytes()?)?;
 
         Ok(())
@@ -198,13 +161,13 @@ impl Core {
     /// Returns true if the cache directory or `ignore.json` file exists, false
     /// otherwise.
     pub fn cache_exists(&self) -> bool {
-        self.cache_dir.exists() || self.ignore_file.exists()
+        CACHE_DIR.exists() || CACHE_FILE.exists()
     }
 
     /// Creates the cache dir if it doesn't exist.
     fn create_dirs(&self) -> std::io::Result<()> {
         if !self.cache_exists() {
-            std::fs::create_dir_all(&self.cache_dir)?;
+            std::fs::create_dir_all(CACHE_DIR.as_path())?;
         }
 
         Ok(())
