@@ -71,13 +71,9 @@ impl UserData {
         self.write()
     }
 
-    pub fn add_template(&mut self, name: String, file_name: String) -> Result<()> {
-        let file = PROJECT_DIRS
-            .config_dir()
-            .parent()
-            .context("Could not get parent directory of config file")?
-            .join("templates")
-            .join(&file_name);
+    pub fn add_template(&mut self, name: String) -> Result<()> {
+        let file_name = format!("{}.ignore", name);
+        let file = PROJECT_DIRS.config_dir().join("templates").join(&file_name);
 
         println!(
             "Created template {} at {}",

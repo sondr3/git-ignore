@@ -49,7 +49,7 @@ fn main() -> Result<()> {
                     ignore_data.list_templates();
                     return Ok(());
                 }
-                TemplateCmd::Add { name, file_name } => user_data.add_template(name, file_name),
+                TemplateCmd::Add { name } => user_data.add_template(name),
                 TemplateCmd::Remove { name } => user_data.remove_template(&name),
             };
         }

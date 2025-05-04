@@ -80,9 +80,8 @@ pub enum TemplateCmd {
     List,
     /// Add a new template
     ///
-    /// You'll need to edit the file created under `file_name` to finish
-    /// creating a template
-    Add { name: String, file_name: String },
+    /// You'll need to edit the file created to finish creating a template
+    Add { name: String },
     /// Remove a template
     #[command(visible_alias = "rm")]
     Remove { name: String },
