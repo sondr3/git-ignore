@@ -21,8 +21,8 @@ use ignore::Core;
 use user_data::UserData;
 
 use crate::{
-    data::IgnoreData,
-    ignore::{cache_exists, get_templates, list},
+    data::{IgnoreData, get_templates, list},
+    ignore::cache_exists,
 };
 
 fn main() -> Result<()> {

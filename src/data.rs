@@ -1,7 +1,7 @@
 use std::{
     cmp::Ordering,
     collections::HashMap,
-    fmt::{Display, write},
+    fmt::{Display, Write, write},
     fs::read_to_string,
     hash::{Hash, Hasher},
     path::PathBuf,
@@ -266,4 +266,60 @@ impl TypeName {
         let inner = self.inner();
         inner.contains(name)
     }
+}
+
+pub fn list(data: &IgnoreData, names: &[String]) -> String {
+    let templates = data.keys();
+
+    let mut result = if names.is_empty() {
+        templates.into_iter().collect::<Vec<_>>()
+    } else {
+        let mut result = Vec::new();
+
+        for entry in templates {
+            for name in names {
+                if entry.contains(name) {
+                    result.push(entry.clone());
+                }
+            }
+        }
+        result
+    };
+
+    result.sort_unstable();
+
+    result.into_iter().fold(String::new(), |mut s, r| {
+        writeln!(s, "  {r}").unwrap();
+        s
+    })
+}
+
+pub fn get_templates(data: &IgnoreData, names: &[String]) -> String {
+    let mut result = String::new();
+
+    for name in names {
+        if let Some(val) = data.get_user_template(name) {
+            result.push_str(&val);
+        } else if let Some(val) = data.get_alias(name) {
+            for alias in val {
+                if let Some(val) = data.get_user_template(&alias) {
+                    result.push_str(&val);
+                } else if let Some(language) = data.get_template(&alias) {
+                    result.push_str(&language);
+                } else {
+                    eprintln!("{}: No such alias", name.bold().yellow());
+                }
+            }
+        } else if let Some(language) = data.get_template(name) {
+            result.push_str(&language);
+        }
+    }
+
+    if !result.is_empty() {
+        let mut header = "\n\n### Created by https://www.gitignore.io".to_string();
+        header.push_str(&result);
+        result = header;
+    }
+
+    result
 }
