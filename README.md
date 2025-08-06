@@ -58,6 +58,9 @@ Currently, the package is available a couple of places, including Homebrew, AUR 
   <dt>Homebrew</dt>
   <dd><code>brew install git-ignore</code></dd>
 
+  <dt>Homebrew (conflict-free name)</dt>
+  <dd><code>brew install sondr3/homebrew-taps/git-ignorers</code></dd>
+
   <dt>Arch (replace <code>paru</code> with you favorite AUR tool)</dt>
   <dd><code>paru git-ignore-bin</code></dd>
   <dd><code>paru git-ignore</code></dd>
