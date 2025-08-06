@@ -72,7 +72,7 @@ impl UserData {
     }
 
     pub fn add_template(&mut self, name: String) -> Result<()> {
-        let file_name = format!("{}.ignore", name);
+        let file_name = format!("{name}.ignore");
         let file = PROJECT_DIRS.config_dir().join("templates").join(&file_name);
 
         println!(

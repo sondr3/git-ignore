@@ -222,7 +222,7 @@ impl From<&Type> for TypeName {
 impl Display for TypeName {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            TypeName::Template(name) => write(f, format_args!("{}", name)),
+            TypeName::Template(name) => write(f, format_args!("{name}")),
             TypeName::Alias(name) => write(f, format_args!("{}", name.yellow().bold())),
             TypeName::UserTemplate(name) => write(f, format_args!("{}", name.blue().bold())),
         }
