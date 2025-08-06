@@ -4,6 +4,56 @@
     "detect_extensions": [],
     "detect_folders": []
   },
+  "format": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "right_format": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "continuation_prompt": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "scan_timeout": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "command_timeout": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "add_newline": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "follow_symlinks": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "palette": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "palettes": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "profiles": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
   "aws": {
     "detect_files": [],
     "detect_extensions": [],
@@ -154,6 +204,8 @@
   },
   "docker_context": {
     "detect_files": [
+      "compose.yml",
+      "compose.yaml",
       "docker-compose.yml",
       "docker-compose.yaml",
       "Dockerfile"
@@ -338,6 +390,11 @@
     "detect_folders": []
   },
   "hg_branch": {
+    "detect_files": [],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
+  "hg_state": {
     "detect_files": [],
     "detect_extensions": [],
     "detect_folders": []
@@ -792,6 +849,13 @@
     ],
     "detect_folders": []
   },
+  "xmake": {
+    "detect_files": [
+      "xmake.lua"
+    ],
+    "detect_extensions": [],
+    "detect_folders": []
+  },
   "zig": {
     "detect_files": [],
     "detect_extensions": [
@@ -800,56 +864,6 @@
     "detect_folders": []
   },
   "custom": {
-    "detect_files": [],
-    "detect_extensions": [],
-    "detect_folders": []
-  },
-  "format": {
-    "detect_files": [],
-    "detect_extensions": [],
-    "detect_folders": []
-  },
-  "right_format": {
-    "detect_files": [],
-    "detect_extensions": [],
-    "detect_folders": []
-  },
-  "continuation_prompt": {
-    "detect_files": [],
-    "detect_extensions": [],
-    "detect_folders": []
-  },
-  "scan_timeout": {
-    "detect_files": [],
-    "detect_extensions": [],
-    "detect_folders": []
-  },
-  "command_timeout": {
-    "detect_files": [],
-    "detect_extensions": [],
-    "detect_folders": []
-  },
-  "add_newline": {
-    "detect_files": [],
-    "detect_extensions": [],
-    "detect_folders": []
-  },
-  "follow_symlinks": {
-    "detect_files": [],
-    "detect_extensions": [],
-    "detect_folders": []
-  },
-  "palette": {
-    "detect_files": [],
-    "detect_extensions": [],
-    "detect_folders": []
-  },
-  "palettes": {
-    "detect_files": [],
-    "detect_extensions": [],
-    "detect_folders": []
-  },
-  "profiles": {
     "detect_files": [],
     "detect_extensions": [],
     "detect_folders": []
